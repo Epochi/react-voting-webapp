@@ -14,6 +14,7 @@ const Dropdown = ({open,label,icon,menuItems,onButtonClick,onRequestClose,onMous
             <Button
             label={label}
             icon={icon}
+            onMouseDown={onMouseDown}
             onTouchTap={onButtonClick}
             />
             <div onMouseDown={onMouseDown} className={cx("menu__container")}>

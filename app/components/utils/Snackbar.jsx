@@ -4,7 +4,7 @@ import styles from 'scss/components/_snackbar';
 import LoadingBar from 'components/utils/LoadingBar'
 const cx = classNames.bind(styles);
 
-const Snackbar = ({isWaiting}) => {
+const Snackbar = () => {
     return(
         <div className={cx("snackbar-wrapper")}>
             <LoadingBar/>
@@ -13,9 +13,7 @@ const Snackbar = ({isWaiting}) => {
 
     
 };
-Snackbar.propTypes = {
-  isWaiting: PropTypes.bool.isRequired
-};
+
 
 export default Snackbar;
 

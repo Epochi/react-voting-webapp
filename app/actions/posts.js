@@ -16,7 +16,7 @@ if (__TEST__) {
 
 //Post creation
 
-function createNewPost(){
+function createNewPost(type, content){
     return {type: types.CREATE_POST_NEW};
 }
  

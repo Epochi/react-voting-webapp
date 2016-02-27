@@ -9,7 +9,7 @@ const cx = classNames.bind(Object.assign(styles, layout));
 const PostsView = ({}) => {  {
     
     return (
-    <div className={cx('mdl-layout__content',"height")}>    
+    <div className={cx('mdl-layout__content',"height","main-view")}>    
         Posts are good
     </div>    
   		);

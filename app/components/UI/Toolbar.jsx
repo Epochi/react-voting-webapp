@@ -8,7 +8,7 @@ const cx = classNames.bind(Object.assign(layout,palette));
 const Toolbar = ({children, username, snackbar,logo}) => {  
 
     return (
-          <header className={cx("mdl-layout__header","mdl-color--white",'mdl-layout--fixed-header',"mdl-color-text--grey-800")}>
+          <header className={cx("mdl-layout__header","mdl-color--white", "mdl-color-text--grey-800")}>
             <div className={cx("mdl-layout__header-row")}>
               <span className={cx("mdl-layout-title")}>{logo}</span>
               <div className={cx("mdl-layout-spacer")}></div>

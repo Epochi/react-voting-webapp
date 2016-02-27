@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Header from 'components/UI/Header';
-import { logOut, clearLoginDialogs, createNewPost } from 'actions/users';
+import { logOut, clearLoginDialogs } from 'actions/users';
+import { createNewPost } from 'actions/posts';
 
 /*
 import classNames from 'classnames/bind';
@@ -45,8 +46,8 @@ const mapDispatchToProps = (dispatch) => {
     handleClear: () => {
       dispatch(clearLoginDialogs())
     },
-    handleNewPost: () => {
-      dispatch(createNewPost())
+    handleNewPost: (type, content) => {
+      dispatch(createNewPost(type, content))
     }
   }
 }

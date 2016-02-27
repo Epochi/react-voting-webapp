@@ -2,11 +2,92 @@
     position:fixed;
     height:100vh;
     width:100vw;
-    background-color: rgba(0, 0, 0, 0.541176);
+    top:0;
+    left:0;
+    background-color:rgba(0, 0, 0, 0.541176);
     z-index:1000;
+    overflow-y:scroll;
 }
 .modal-window{
+    top:20%;
+    left:50%;
+    transform:translate(-50%, 0%);
     position:fixed;
     margin: auto;
     z-index:1100;
+    max-width:720px;
+    width:75%;
+    background-color:#FFF;
+    padding: 14px 20px;
 }
+.exit-icon{
+    display:inline-block;
+    float: right;
+}
+.modal-title{
+    display:inline-block;
+    font-size: 24px;
+    font-weight: 400;
+}
+.modal-header{
+    display: block;
+    padding-bottom:14px;
+}
+.modal-header > div{
+    display: inline-block;
+    margin-right:20px;
+    text-align:center;
+    font-size:20px;
+    cursor:pointer;
+}
+.modal-content{
+    width:100%;
+}
+.modal-actions{
+    float: right;
+    padding-top:10px;
+}
+.modal-content > div > div{
+    width:100%;
+    padding:8px 0px;
+    font-size: 20px;
+}
+.modal-content input[name=title]{
+    width:100%;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    display: block;
+    font-size: 16px;
+    font-family: "Helvetica","Arial",sans-serif;
+    margin: 0;
+    padding: 4px 0;
+    width: 100%;
+    background: 0 0;
+    text-align: left;
+    color: inherit;
+    
+    &:focus{
+        outline: none;
+    }
+}
+.modal-content textarea[name=description]{
+    width:100%;
+    max-width:100%;
+    height: 200px;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,.12);
+    display: block;
+    font-size: 16px;
+    font-family: "Helvetica","Arial",sans-serif;
+    margin: 0;
+    padding: 4px 0;
+    width: 100%;
+    background: 0 0;
+    text-align: left;
+    color: inherit;
+    
+    &:focus{
+        outline: none;
+    }
+}
+

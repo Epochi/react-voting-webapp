@@ -5,17 +5,17 @@ const cx = classNames.bind(styles);
 
 
 const Button = ({onTouchTap, onClick, children, label, classes, icon }) => {
+let classesProp = classes ? classes.split(" ") : null;  
 let css = ['mdl-button'];
-let iconButton = icon ?(classes=['icon'] ,iconButton = <i className={cx("material-icons") + " material-icons"}>{icon}</i>): null;
+let iconButton = icon ?(classesProp=['icon'] ,iconButton = <i className={cx("material-icons") + " material-icons"}>{icon}</i>): null;
 
-if(Array.isArray(classes)){
-    classes.map(function(customClass){
+if(Array.isArray(classesProp)){
+    classesProp.map(function(customClass){
       let cc = 'mdl-button--' + customClass;
       css.push(cc);
     });
 }
 let className = cx(css);
-
 return(
   <button onTouchTap={onTouchTap} onClick={onClick} className={className}>
     {iconButton}{label}{children}
@@ -26,7 +26,7 @@ Button.propTypes = {
   onTouchTap: PropTypes.func,
   onClick: PropTypes.func,
   children: PropTypes.node,
-  classes: PropTypes.array,
+  classes: PropTypes.string,
   label: PropTypes.string,
   icon: PropTypes.string
 };

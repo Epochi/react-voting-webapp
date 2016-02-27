@@ -34,7 +34,8 @@ Header.propTypes = {
   username: PropTypes.string,
   isWaiting: PropTypes.bool.isRequired,
   handleLogOut: PropTypes.func,
-  handleClear: PropTypes.func
+  handleClear: PropTypes.func,
+  handleNewPost: PropTypes.func
 };
 
 export default Header;

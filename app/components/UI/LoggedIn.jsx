@@ -89,13 +89,14 @@ UserDropdown.propTypes = {
 
 
 
-const UserUI = ({username, handleLogOut}) => {
-  return <div className={cx("inline-wrapper")}><Button label={username}/><UserDropdown handleLogOut={handleLogOut}/><NewPostModal/></div>
+const UserUI = ({username, handleLogOut,handleNewPost}) => {
+  return <div className={cx("inline-wrapper")}><Button label={username}/><UserDropdown handleLogOut={handleLogOut}/><NewPostModal handleNewPost={handleNewPost}/></div>
 };
 
 UserUI.propTypes = {
   username: PropTypes.string,
   handleLogOut: PropTypes.func,
+  handleNewPost: PropTypes.func
 };
 
 export default UserUI;
