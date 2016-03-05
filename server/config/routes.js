@@ -1,12 +1,13 @@
 /**
  * Routes for express app
  */
-var topics = require('../controllers/topics');
+var posts = require('../controllers/posts');
+var votes = require('../controllers/votes')
 var express = require('express');
 var users = require('../controllers/users');
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var Topic = mongoose.model('Topic');
+var Post = mongoose.model('Post');
 var App = require('../../public/assets/app.server');
 
 module.exports = function(app, passport) {
@@ -14,7 +15,6 @@ module.exports = function(app, passport) {
 
   app.get('/auth/logout', users.logout);
   app.post('/auth/signup', users.create);
-  
   app.post('/auth/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { 
@@ -36,30 +36,27 @@ module.exports = function(app, passport) {
     });
   })(req, res, next);
 });
-  /*
-  app.post('/auth/users/session',
-    passport.authenticate('local', {
-      failureRedirect: '/ziegHail',
-      failureFlash: 'Invalid email or password.'
-    }), users.session);
-    */
+
   app.get('/users/:userId', users.show);  
   //app.param('userId', users.load);
     
 
-  // topic routes
-  app.get('/topic', topics.all);
+  // post routes
+  
+  app.get('/home', posts.all);
+  app.get('/post', posts.all);
+  app.put('/p/:subport/:id/title',function(req, res, next){
+    console.log('putting in subbort');
+     votes.voted(req,res,next);
+  });
+  app.post('/post', users.userAuthenticated, posts.create);
 
-  app.post('/topic', function(req, res) {
-    topics.add(req, res);
+  app.put('/post', function(req, res) {
+    posts.update(req, res);
   });
 
-  app.put('/topic', function(req, res) {
-    topics.update(req, res);
-  });
-
-  app.delete('/topic', function(req, res) {
-    topics.remove(req, res);
+  app.delete('/post', function(req, res) {
+    posts.remove(req, res);
   });
   
   

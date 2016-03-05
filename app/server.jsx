@@ -17,7 +17,7 @@ const clientConfig = {
 
 // Fetch and call the callback function after the response
 // is converted to returned and converted to json
-function fetchTopics(callback, api='topic') {
+function fetchHome(callback, api='home') {
   fetch(`http://${clientConfig.host}:${clientConfig.port}/${api}`)
     .then(res => res.json())
     .then(json => callback(json));
@@ -66,13 +66,13 @@ function renderFullPage(renderedContent, initialState, head={
  */
 export default function render(req, res) {
 
-  fetchTopics(apiResult => {
+  fetchHome(apiResult => {
     const history = createMemoryHistory();
     const authenticated = req.isAuthenticated();
     const user = authenticated ? req.user.name : null;
     const store = configureStore({
-      topic: {
-        topics: apiResult
+      posts: {
+        posts: apiResult
       },
       user: {
         username: user,

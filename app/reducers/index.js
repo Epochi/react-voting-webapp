@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
 import user from 'reducers/user';
-import topic from 'reducers/topic';
+import posts from 'reducers/posts';
 import emailSignUp from 'reducers/emailsignup';
 import locallogin from 'reducers/locallogin';
+import ui from 'reducers/ui';
 import { routeReducer as routing } from 'react-router-redux';
 
 // Combine reducers with routeReducer which keeps track of
@@ -10,9 +11,10 @@ import { routeReducer as routing } from 'react-router-redux';
 const rootReducer = combineReducers({
   user,
   emailSignUp,
-  topic,
+  posts,
   routing,
-  locallogin
+  locallogin,
+  ui
 });
 
 export default rootReducer;

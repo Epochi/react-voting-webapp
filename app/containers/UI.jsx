@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import Header from 'components/UI/Header';
 import { logOut, clearLoginDialogs } from 'actions/users';
-import { createNewPost } from 'actions/posts';
 
 /*
 import classNames from 'classnames/bind';
@@ -26,13 +25,9 @@ function mapDispatchToProps(dispatch) {
 export default connect(mapStateToProps, mapDispatchToProps)(UI);
 */ 
 
-//just fucking bury it
-
-
 const mapStateToProps = (state) => {
   return {
     authenticated: state.user.authenticated,
-    isWaiting: state.user.isWaiting,
     username: state.user.username
   }
 }
@@ -45,9 +40,6 @@ const mapDispatchToProps = (dispatch) => {
     },
     handleClear: () => {
       dispatch(clearLoginDialogs())
-    },
-    handleNewPost: (type, content) => {
-      dispatch(createNewPost(type, content))
     }
   }
 }

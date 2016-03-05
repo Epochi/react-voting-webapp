@@ -11,36 +11,26 @@ var oAuthTypes = [
   'linkedin'
 ];
 
-
-
-/**
- * User Schema
- *   email: { type: String, unique: true, lowercase: true},
-  username: { type: String, unique: true},
-  password: String,
-  tokens: Array,
-  resetPasswordToken: String,
-  google: {}
- */
- 
- 
-
 var UserSchema = new Schema({
   name: { type: String, default: '' },
   email: { type: String, default: '', unique: true, lowercase: true },
   username: { type: String, default: '', unique: true, lowercase: true },
+  userThing: {type: String, ref: "UserVote"},
   provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
+  upvoted: [],
   facebook: {},
   twitter: {},
   github: {},
   google: {},
   linkedin: {}
-});
+},{ autoIndex: false });
 
 var validatePresenceOf = value => value && value.length;
+
+
 
 /**
  * Virtuals

@@ -4,27 +4,24 @@ import styles from 'scss/components/_snackbar';
 import LoadingBar from 'components/utils/LoadingBar'
 const cx = classNames.bind(styles);
 
-const Snackbar = () => {
+const Snackbar = ({messageOpen, message, isWaiting}) => {
     return(
-        <div className={cx("snackbar-wrapper")}>
+        <div>
+        {isWaiting ? (
+          <div className={cx("snackbar-wrapper")}>
             <LoadingBar/>
+        </div> 
+        ) : (null)
+        }
         </div>
         )
-
     
 };
 
+Snackbar.PropTypes = {
+    isWaiting: PropTypes.bool,
+    
+}
+
 
 export default Snackbar;
-
-/*
-return !isWaiting ? (
-    <div className={cx("snackbar-wrapper")}>
-            {LoadingBar}
-    </div>
-    ) : (
-    <div>
-    </div>
-    
-    );
-*/

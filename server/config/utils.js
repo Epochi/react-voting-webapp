@@ -7,4 +7,7 @@ exports.validateWhitespaces = function (string) {
     return !re.test(string);
 };
 
-
+exports.sanitizeTitle = function (string){
+    var sanitized = string.toLowerCase().split(" ",8).join("_");
+    return sanitized;
+}

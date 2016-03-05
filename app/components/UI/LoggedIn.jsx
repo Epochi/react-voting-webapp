@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import FontIcon from 'material-ui/lib/font-icon';
 import Button from 'components/utils/Button';
 import Dropdown from 'components/utils/Dropdown';
-import NewPostModal from 'components/Posts/NewPostModal';
+import NewPost from 'components/Posts/NewPostModal';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_inline-block';
 const cx = classNames.bind(styles);
@@ -89,14 +89,13 @@ UserDropdown.propTypes = {
 
 
 
-const UserUI = ({username, handleLogOut,handleNewPost}) => {
-  return <div className={cx("inline-wrapper")}><Button label={username}/><UserDropdown handleLogOut={handleLogOut}/><NewPostModal handleNewPost={handleNewPost}/></div>
+const UserUI = ({username, handleLogOut}) => {
+  return <div className={cx("inline-wrapper")}><span>{username}</span><UserDropdown handleLogOut={handleLogOut}/><NewPost/></div>
 };
 
 UserUI.propTypes = {
   username: PropTypes.string,
-  handleLogOut: PropTypes.func,
-  handleNewPost: PropTypes.func
+  handleLogOut: PropTypes.func
 };
 
 export default UserUI;

@@ -1,0 +1,34 @@
+.post{
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+    margin: 20px auto;
+    flex-grow: 1;
+}
+.vote__button{
+    width: 32px;
+    height: 24px;
+    position:relative;
+    display:block;
+    color:#8899a6;
+        
+    & > i{
+        margin: -9px 0px 4px 4px;
+        display:block;
+        width:32px;
+        height:14px;
+    }
+    & > span{
+        display:block;
+        text-align: center;
+        font-size:13px;
+        margin-top: -3px;;
+    }
+    &.voted{
+        color:#4CAF50;
+    }
+}
+.title{
+    
+    &.mdl-card__title{
+        padding: 16px 4px !important;
+    }
+}

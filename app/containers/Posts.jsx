@@ -1,27 +1,23 @@
 import React, {PropTypes} from 'react';
 import { connect } from 'react-redux';
 import PostsView from 'components/Posts/PostsView';
-import { logOut, clearLoginDialogs, createNewPost } from 'actions/users';
+import { postVote,postUnvote } from 'actions/posts';
 
 const mapStateToProps = (state) => {
   return {
-    authenticated: state.user.authenticated,
-    isWaiting: state.user.isWaiting,
-    username: state.user.username
+      posts: state.posts.posts,
+      voted: state.posts.voted
   }
 }
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleLogOut: () => {
-      dispatch(logOut())
+    postVote: (id) => {
+      dispatch(postUnvote(id))
     },
-    handleClear: () => {
-      dispatch(clearLoginDialogs())
-    },
-    handleNewPost: () => {
-      dispatch(createNewPost())
+    postUnvote: (id) => {
+      dispatch(postUnvote(id))
     }
   }
 }

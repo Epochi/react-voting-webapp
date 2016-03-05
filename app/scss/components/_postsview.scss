@@ -8,4 +8,17 @@
 }
 .main-view{
   margin-top:48px;
+  background-color: #F5F8FA;
+}
+.grid-centered{
+  justify-content:center;
+}
+.main-grid{
+  max-width:590px;
+}
+
+@media screen and (max-width: 1024px){
+  .main-view{
+  margin-top:40px;
+}
 }

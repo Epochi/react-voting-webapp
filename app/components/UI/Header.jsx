@@ -12,19 +12,16 @@ const getUINavigation = (authenticated, username) => {
 }
 */
 
-const Header = ({isWaiting, authenticated, username, handleClear, handleLogOut, handleNewPost}) => {  {
+const Header = ({ authenticated, username, handleClear, handleLogOut}) => {  {
     
-    let children =  !authenticated ? (<AuthenticationDialogs handleClear={handleClear} />) :  (<UserUI handleNewPost={handleNewPost} username={username} handleLogOut={handleLogOut}/>);
+    let children =  !authenticated ? (<AuthenticationDialogs handleClear={handleClear} />) :  (<UserUI  username={username} handleLogOut={handleLogOut}/>);
     let logo = <Link to="/">YouLogo</Link>;
     return (
-    <div>    
         <Toolbar
         logo={logo}
         >
         {children}
         </Toolbar>
-        {isWaiting ? (<Snackbar/>) : (null)}
-    </div>    
   		);
   }
 };
@@ -32,10 +29,11 @@ const Header = ({isWaiting, authenticated, username, handleClear, handleLogOut, 
 Header.propTypes = {
   authenticated: PropTypes.bool.isRequired,
   username: PropTypes.string,
-  isWaiting: PropTypes.bool.isRequired,
   handleLogOut: PropTypes.func,
-  handleClear: PropTypes.func,
-  handleNewPost: PropTypes.func
+  handleClear: PropTypes.func
 };
 
 export default Header;
+
+
+//{isWaiting ? (<Snackbar/>) : (null)}

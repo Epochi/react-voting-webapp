@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var wrap = require('co-express');
 var User = mongoose.model('User');
+var UserThing = mongoose.model('UserThing');
 
 /**
  * Load
@@ -23,16 +24,26 @@ exports.create = wrap(function* (req, res, next) {
    next({stack: 'ValidationError', errors: { passwordConfirmation: {path: "passwordConfirmation", message: "Slaptažodžiai turi būti vienodi" }, hashed_password: {path: "hashed_password", message: "Slaptažodžiai turi būti vienodi"} }  }) ;
   }
   */
+
    var user =  new User({
     name: req.body.username,
     username: req.body.username,
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
+    userThing: req.body.username
   });
   
   user.provider = 'local';
   user.setPassword(req.body.password, req.body.passwordConfirmation);
-  yield user.save();
+  yield user.save(function(err){
+    if(err){return next(err)}
+      var userThing = new UserThing({
+        username: user.username
+      });
+      userThing.save(function(err){
+        if(err){return next(err);}
+      });
+  });
     req.logIn(user, function(err) {
       if (err) {
         console.log ('passport SignUp > login error');
@@ -54,6 +65,13 @@ exports.show = function (req, res) {
   });
 };
 
+
+exports.userAuthenticated = function(req, res, next){
+  if (!req.isAuthenticated()) 
+    res.send(401);
+  else
+    next();
+};
 /*
 exports.signin = function () {};
 */
