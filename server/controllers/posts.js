@@ -7,10 +7,18 @@ var Post = mongoose.model('Post');
  * List
  */
 exports.hot = function(req,res) {
-  
+  Post.find({}).sort({score:1}).limit(20).exec(function(err, posts){
+    if(err){return console.log('Error in first query')}
+    //console.log(posts);
+    //console.log("POSTS <  POSTS OBJECT >");
+    //console.dir(posts);
+    console.log('responding with posts');
+    res.json(posts);
+  });
   
 }; 
- 
+
+
 exports.all = function(req, res) {
   Post.find({}).exec(function(err, posts) {
     if(!err) {
@@ -50,17 +58,6 @@ exports.create = function(req, res, next) {
   });
 };
 
-exports.voted = function(req,res,next) {
-    if(!req.body.voted){
-    Post.findOneAndUpdate({_id: req.body.id},  {$inc: { score: 1}}, function(err){
-      if(err){
-        return next(err) }
-        
-    })
-      
-      }
-    }
-
 
 /**
  * Update a post
@@ -96,10 +93,6 @@ exports.update = function(req, res) {
 /**
  * 
  */
-exports.increment = function(req, res) {
-  var query = { id: req.body.id };
-  
-};
 
 /**
  * Remove a post

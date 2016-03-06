@@ -1,34 +1,58 @@
-import { createStore, compose, applyMiddleware } from 'redux';
-import rootReducer from 'reducers';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { devTools } from 'redux-devtools';
+import { reduxReactRouter } from 'redux-router';
 import thunk from 'redux-thunk';
+import createHistory from 'history/lib/createBrowserHistory';
 import createLogger from 'redux-logger';
-import { syncHistory } from 'react-router-redux';
+import promiseMiddleware from 'api/promiseMiddleware';
+import rootReducer from 'reducers';
 
-/*
- * @param {Object} initial state to bootstrap our stores with for server-side rendering
- * @param {History Object} a history object. We use `createMemoryHistory` for server-side rendering,
- *                          while using browserHistory for client-side rendering.
- */
-export default function configureStore(initialState, history) {
-  let middleware = [ thunk ];
-  // Installs hooks that always keep react-router and redux
-  // store in sync
-  const router = syncHistory(history);
-  if (__DEV__) {
-    middleware.push(router, createLogger());
-  } else {
-    middleware.push(router);
-  }
+const middlewareBuilder = () => {
+
+  let middleware = {};
+  let universalMiddleware = [thunk,promiseMiddleware];
+  let allComposeElements = [];
   
-  const finalCreateStore = applyMiddleware(...middleware)(createStore);
+  if(process.browser){
+    if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'){
+      middleware = applyMiddleware(...universalMiddleware);
+      allComposeElements = [
+        middleware,
+        reduxReactRouter({
+          createHistory
+        })
+      ]
+    }else{
+      middleware = applyMiddleware(...universalMiddleware,createLogger());
+      allComposeElements = [
+        middleware,
+        reduxReactRouter({
+          createHistory
+        }),
+        devTools()
+      ]
+    }
+  }else{
+    middleware = applyMiddleware(...universalMiddleware);
+    allComposeElements = [
+      middleware
+    ]
+  }
 
+  return allComposeElements;
+
+}
+
+const finalCreateStore = compose(...middlewareBuilder())(createStore);
+
+export default function configureStore(initialState) {
   const store = finalCreateStore(rootReducer, initialState);
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('reducers', () => {
-      const nextReducer = require('reducers');
-      store.replaceReducer(nextReducer);
+      const nextRootReducer = require('reducers');
+      store.replaceReducer(nextRootReducer);
     });
   }
 

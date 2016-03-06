@@ -1,7 +1,7 @@
 // Including es6-promise so isomorphic fetch will work
 import 'es6-promise';
 import fetch from 'isomorphic-fetch';
-
+import request from 'axios';
 import * as types from 'constants';
 
 // Note this can be extracted out later
@@ -14,6 +14,7 @@ import * as types from 'constants';
  * @param String endpoint - defaults to /login
  * @return Promise
  */
+ /*
 function makeUserRequest(method, data, api='/auth/login') {
   return fetch(api, {
     method: method,
@@ -24,7 +25,14 @@ function makeUserRequest(method, data, api='/auth/login') {
     },
     body: JSON.stringify(data)
   });
+}*/
+
+function makeUserRequest(method, data, api='/auth/login') {
+  return request[method](api, data);
 }
+
+
+
 
 //clear local login and signup form and error fields
 export function clearLoginDialogs() {

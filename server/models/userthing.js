@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var userThingSchema = new mongoose.Schema({
     username: {type: String, unique: true, lowercase: true },
-    postVotes: []
+    postVotes: [{type: String, unique: true}]
 },{autoIndex: false});
 
 

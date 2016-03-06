@@ -15,18 +15,17 @@ var UserSchema = new Schema({
   name: { type: String, default: '' },
   email: { type: String, default: '', unique: true, lowercase: true },
   username: { type: String, default: '', unique: true, lowercase: true },
-  userThing: {type: String, ref: "UserVote"},
+  userThing: {type: String, ref: "UserThing"},
   provider: { type: String, default: '' },
   hashed_password: { type: String, default: '' },
   salt: { type: String, default: '' },
   authToken: { type: String, default: '' },
-  upvoted: [],
   facebook: {},
   twitter: {},
   github: {},
   google: {},
   linkedin: {}
-},{ autoIndex: false });
+});
 
 var validatePresenceOf = value => value && value.length;
 
@@ -234,4 +233,4 @@ UserSchema.statics = {
   }
 };
 
-module.exports =mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);
