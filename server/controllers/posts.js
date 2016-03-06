@@ -9,10 +9,9 @@ var Post = mongoose.model('Post');
 exports.hot = function(req,res) {
   Post.find({}).sort({score:1}).limit(20).exec(function(err, posts){
     if(err){return console.log('Error in first query')}
-    //console.log(posts);
-    //console.log("POSTS <  POSTS OBJECT >");
-    //console.dir(posts);
     console.log('responding with posts');
+    console.log(req.user.votes);
+    
     res.json(posts);
   });
   

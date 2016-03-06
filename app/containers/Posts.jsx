@@ -9,7 +9,7 @@ PostsView.need = [
 ];
 
 function mapStateToProps(state) {
-  let { selectedPort, postsByPort } = state;
+  let { selectedPort, postsByPort} = state;
   selectedPort = selectedPort.present;
   postsByPort = postsByPort.present;
   const {
@@ -27,7 +27,8 @@ function mapStateToProps(state) {
     posts,
     isFetching,
     lastUpdated,
-    error
+    error,
+    authenticated: state.user.authenticated
   };
 }
 

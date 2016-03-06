@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = mongoose.model('User');
-
+var UserThing = mongoose.model('UserThing');
 var local = require('./passport/local');
 /*
 var google = require('./passport/google');
@@ -21,16 +21,23 @@ var github = require('./passport/github');
 module.exports = function (passport) {
   // serialize sessions
   passport.serializeUser(function(user, done) {
-    var sessionUser = { _id: user._id, name: user.name }
+    console.log('serializing user')
+    var sessionUser = { _id: user._id, name: user.name, votes: user.votes }
     done(null, sessionUser)
   })
 
   passport.deserializeUser(function(id, done) {
     User.load({ criteria: { _id: id }, select: 'name' }, function (err, user) {
-      console.log('desiarizing user');
-      done(err, user)
-    })
-  })
+      console.log('desiarizing user: '+user);
+      var username = user.name.toLowerCase();
+      UserThing.load({criteria: {username: username}, select: 'postVotes'}, function(err,userThing){
+        console.log(userThing.postVotes);
+        var sessionUser = {_id: user._id, name: user.name, votes: userThing.postVotes};
+        console.log(sessionUser);
+        done(err,sessionUser);
+      });
+    });
+  });
 
   // use these strategies
   passport.use(local);

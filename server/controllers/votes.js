@@ -6,14 +6,11 @@ var Post = mongoose.model('Post');
 // Try to add a vote, if vote was already found, delete the vote
 exports.votedPost = function(req, res, next) {
     var username = req.user.name.toLowerCase();
-
-
-
     UserThing.findOneAndUpdate({
             username: username
         }, {
             $push: {
-                postVotes: req.body._id
+                postVotes: req.params.id
             }
         },
         function(err, newvote) {
@@ -22,7 +19,7 @@ exports.votedPost = function(req, res, next) {
                         username: username
                     }, {
                         $push: {
-                            postVotes: req.body._id
+                            postVotes: req.params.id
                         }
                     },
                     function(err, oldvote) {
@@ -30,7 +27,7 @@ exports.votedPost = function(req, res, next) {
                             return next(err)
                         }
                         Post.findOneAndUpdate({
-                            _id: req.body._id
+                            _id: req.params.id
                         }, {
                             $inc: {
                                 score: 1
@@ -42,7 +39,7 @@ exports.votedPost = function(req, res, next) {
             }
             else {
                 Post.findOneAndUpdate({
-                    _id: req.body._id
+                    _id: req.params.id
                 }, {
                     $inc: {
                         score: 1
@@ -52,13 +49,14 @@ exports.votedPost = function(req, res, next) {
 
 
         }
-    )
+    );
+    return res.status(200).send({message: "Voted"});
 
 };
 
 
 /*
-    postVotes.addToSet(req.body._id)
+    postVotes.addToSet(req.params.id)
   Project.findOneAndUpdate(
         {_id: req.query.pid},
         {$addToSet: {links: {url: req.query.url , title: req.query.title} }}, 
@@ -90,7 +88,7 @@ exports.votedPost = function(req, res, next) {
           {
               $and:  [
                   {username: username},
-                  {postVotes: [req.body._id]}
+                  {postVotes: [req.params.id]}
                   
                   ]
           });
@@ -98,11 +96,11 @@ exports.votedPost = function(req, res, next) {
       if(!vote){
           UserThing.update(
               {username: username},
-              {$addToSet: {postVotes: req.body._id}},
+              {$addToSet: {postVotes: req.params.id}},
               function(err, newvote) {
                   if(err){return next(err)}
                   Post.findOneAndUpdate(
-                      {_id: req.body._id},
+                      {_id: req.params.id},
                       {$inc : {score : 1}}
                       )
               }

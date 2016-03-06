@@ -13,8 +13,7 @@ const cx = classNames.bind(Object.assign(styles, layout, grid));
 class PostsView extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleRefreshClick = this.handleRefreshClick.bind(this);
+    this.handleLikePost = this.handleLikePost.bind(this);
   }
 
   componentDidMount() {
@@ -28,27 +27,29 @@ class PostsView extends Component {
       this.props.fetchPostsIfNeeded(selectedPort);
     }
   }
-
-  handleChange(nextPort) {
-    this.props.selectPort(nextPort);
+  
+  handleLikePost(post){
+    if(this.props.authenticated){
+      let liked=post.liked ? post.liked : false;
+      this.props.likePost(post.id, post.data.permalink, liked);
+    }else {
+       //give login dialog or little info card
+    }
+     
   }
 
-  handleRefreshClick(e) {
-    e.preventDefault();
-    const { selectedPort } = this.props;
-    this.props.invalidatePort(selectedPort);
-    this.props.fetchPostsIfNeeded(selectedPort);
-  }
 
   render () {
-         const {posts, isFetching, lastUpdated, error } = this.props;
+         const {posts, isFetching, lastUpdated, error, handleLikePost } = this.props;
                 return (
                 <main className={cx('mdl-layout__content',"main-view")}>
                     <div className={cx('mdl-grid','main-grid')}>
                           {posts.map((post, i) =>
                               <Post
                                 key={post._id}
-                                {...post}
+                                post={post}
+                                liked={post.liked ? post.liked : false}
+                                onClick={() => this.handleLikePost(post)}
                             />
                         )}
                     </div>
@@ -63,7 +64,8 @@ PostsView.propTypes = {
   posts: PropTypes.array.isRequired,
   error: PropTypes.object,
   isFetching: PropTypes.bool.isRequired,
-  lastUpdated: PropTypes.number
+  lastUpdated: PropTypes.number,
+  authenticated: PropTypes.bool.isRequired
 };
 
 export default PostsView;

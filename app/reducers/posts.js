@@ -57,10 +57,7 @@ export function postsByPort(state = { }, action) {
     let postsArray = [];
     if(action.req && action.req.data){
       let data = action.req.data;
-      
       postsArray = data.map(function(child){
-        console.log('child_____________________');
-        console.log(child);
         return child;
       });
     }

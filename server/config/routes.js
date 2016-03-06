@@ -48,8 +48,12 @@ module.exports = function(app, passport) {
 
   app.get('/hot', posts.hot);
   app.get('/post', posts.all);
-  //app.get('/post', posts.all);
-  app.put('/p/:subport/:id/title', function(req, res, next) {
+  
+  app.param(['subport', 'id','title'], function (req, res, next, value) {
+  next();
+    });
+  
+  app.put('/p/:subport/:id/:title', function(req, res, next) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
   });
@@ -74,14 +78,14 @@ module.exports = function(app, passport) {
   */
   //Catch all and user agent for css styling
   //more info at https://github.com/callemall/material-ui/pull/2172#issuecomment-157404901
-  
+  /*
   app.use(function(req, res, next) {
     GLOBAL.navigator = {
       userAgent: req.headers['user-agent']
     };
     next();
   });
-
+*/
   app.get('/*', function(req, res, next) {
     App(req, res);
   });

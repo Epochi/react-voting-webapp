@@ -13,6 +13,8 @@ export const POSTS_GET_REQUEST = 'POSTS_GET_REQUEST';
 export const SELECT_PORT = 'SELECT_PORT';
 export const INVALIDATE_PORT = 'INVALIDATE_PORT';
   
+export const POSTS_LIKE = 'POSTS_LIKE';
+export const POSTS_UNLIKE = 'POSTS_UNLIKE';
 
 polyfill();
 
@@ -150,6 +152,7 @@ export function invalidatePort(port) {
 export function fetchPosts(port = 'hot') {
   console.log('fetch posts: port   ' + port)
   console.dir(port);
+  
   return {
     type: POSTS_GET,
     port,
@@ -174,4 +177,21 @@ export function fetchPostsIfNeeded(port) {
       return dispatch(fetchPosts(port));
     }
   };
+}
+
+export function likePost(id,permalink,liked){
+  console.log('like post func');
+  if(!liked){
+    return{
+      type: POSTS_LIKE,
+      id,
+      promise: request.put(permalink,liked)
+    };
+  }else{
+   return{
+      type: POSTS_UNLIKE,
+      id,
+      promise: request.put(permalink,liked)
+    };
+  }
 }
