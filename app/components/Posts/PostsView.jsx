@@ -16,33 +16,19 @@ class PostsView extends Component {
     this.handleLikePost = this.handleLikePost.bind(this);
   }
 
-  componentDidMount() {
-    const { selectedPort } = this.props;
-    this.props.fetchPostsIfNeeded(selectedPort);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedPort !== this.props.selectedPort) {
-      const { selectedPort } = nextProps;
-      this.props.fetchPostsIfNeeded(selectedPort);
-    }
-  }
-  
   handleLikePost(post, i){
-    if(this.props.authenticated){
+   
       var liked = post.liked ? true : false;
       console.log('liked or nat');
       console.log(liked);
       this.props.likePost(i, post.data.permalink, liked);
-    }else {
-       //give login dialog or little info card
-    }
+
      
   }
 
 
   render () {
-         const {posts, isFetching, lastUpdated, error, handleLikePost } = this.props;
+         const {posts } = this.props;
                 return (
                 <main className={cx('mdl-layout__content',"main-view")}>
                     <div className={cx('mdl-grid','main-grid')}>
@@ -62,11 +48,7 @@ class PostsView extends Component {
 
 
 PostsView.propTypes = {
-  selectedPort: PropTypes.string.isRequired,
   posts: PropTypes.array.isRequired,
-  error: PropTypes.object,
-  isFetching: PropTypes.bool.isRequired,
-  lastUpdated: PropTypes.number,
   authenticated: PropTypes.bool.isRequired
 };
 

@@ -5,7 +5,7 @@ import {SELECT_PORT,
   POSTS_LIKE_SUCCESS,
   POSTS_UNLIKE_SUCCESS,
   POSTS_GET, POSTS_GET_REQUEST, POSTS_GET_SUCCESS, POSTS_GET_FAILURE
-} from '../actions/posts';
+} from 'actions/posts';
 
 function posts(state = {
   error: {},
@@ -90,4 +90,6 @@ export function postsByPort(state = { }, action) {
     return state;
   }
 }
+
+
 

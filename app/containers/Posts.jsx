@@ -9,25 +9,8 @@ PostsView.need = [
 ];
 
 function mapStateToProps(state) {
-  let { selectedPort, postsByPort} = state;
-  selectedPort = selectedPort.present;
-  postsByPort = postsByPort.present;
-  const {
-    isFetching,
-    lastUpdated,
-    error,
-    items: posts
-  } = postsByPort[selectedPort] || {
-    isFetching: true,
-    error:{},
-    items: []
-  };
-
   return {
-    posts,
-    isFetching,
-    lastUpdated,
-    error,
+    posts: state.postsByPort.posts,
     authenticated: state.user.authenticated
   };
 }
