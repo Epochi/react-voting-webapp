@@ -28,10 +28,12 @@ class PostsView extends Component {
     }
   }
   
-  handleLikePost(post){
+  handleLikePost(post, i){
     if(this.props.authenticated){
-      let liked=post.liked ? post.liked : false;
-      this.props.likePost(post.id, post.data.permalink, liked);
+      var liked = post.liked ? true : false;
+      console.log('liked or nat');
+      console.log(liked);
+      this.props.likePost(i, post.data.permalink, liked);
     }else {
        //give login dialog or little info card
     }
@@ -46,10 +48,10 @@ class PostsView extends Component {
                     <div className={cx('mdl-grid','main-grid')}>
                           {posts.map((post, i) =>
                               <Post
-                                key={post._id}
+                                key={i}
                                 post={post}
                                 liked={post.liked ? post.liked : false}
-                                onClick={() => this.handleLikePost(post)}
+                                onClick={() => this.handleLikePost(post, i)}
                             />
                         )}
                     </div>

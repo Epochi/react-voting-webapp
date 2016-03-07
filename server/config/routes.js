@@ -47,9 +47,10 @@ module.exports = function(app, passport) {
   // post routes
 
   app.get('/hot', posts.hot);
-  app.get('/post', posts.all);
+  //app.get('/post', posts.all);
   
   app.param(['subport', 'id','title'], function (req, res, next, value) {
+    console.log("APP.PARAM CAN SEE: " + value);
   next();
     });
   

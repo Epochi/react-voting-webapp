@@ -1,12 +1,10 @@
-// Including es6-promise so isomorphic fetch will work
 import { polyfill } from 'es6-promise';
-//import fetch from 'isomorphic-fetch';
 import request from 'axios';
 import md5 from 'spark-md5';
 import * as types from 'constants';
 
-export const POSTS_GET = 'GET_POSTS';
-export const POSTS_GET_SUCCESS = 'GET_POSTS_SUCCESS';
+export const POSTS_GET = 'POSTS_GET';
+export const POSTS_GET_SUCCESS = 'POSTS_GET_SUCCESS';
 export const POSTS_GET_FAILURE = 'POSTS_GET_FAILURE';
 export const POSTS_GET_REQUEST = 'POSTS_GET_REQUEST';
 
@@ -15,12 +13,22 @@ export const INVALIDATE_PORT = 'INVALIDATE_PORT';
   
 export const POSTS_LIKE = 'POSTS_LIKE';
 export const POSTS_UNLIKE = 'POSTS_UNLIKE';
+export const POSTS_LIKE_SUCCESS = 'POSTS_LIKE_SUCCESS';
+export const POSTS_UNLIKE_SUCCESS = 'POSTS_UNLIKE_SUCCESS';
 
 polyfill();
 
 function makePostRequest(method, data, api='/post') {
-  return request[method](api, data);
+  return request({
+    url: api,
+    method: method,
+    data: data,
+    withCredentials: true
+  });
 }
+
+
+
 
 
 //Post creation
@@ -94,46 +102,16 @@ export function getPosts(){
             })
             .then((json) => dispatch(loadPosts(json)))
             .catch(({errors}) => dispatch(loadPostError(errors)));  
-    }
+    };
 }
 
 function loadPosts(data){
-  return {type: types.POSTS_LOAD_REQUEST, data}
-};
+  return {type: types.POSTS_LOAD_REQUEST, data};
+}
 
 function loadPostError(errors){
   
 }
-
-export function postVoteRequest(data){
-  if(data.liked){
-  dispatch => {postVote(data)};
-  return {type: types.POSTS_LIKE, data};
-  }else {
-  dispatch => {postVote(data)};
-  return {type: types.POSTS_UNLIKE, data};
-  }
-}
-
-function postVote(data){
-    console.log("vote action");
-    var newdata = {_id: data._id, liked: data.liked};
-    return dispatch => {
-      return makePostRequest('put', newdata, '/p/'+data.subport+'/'+data.id+'/'+data.title)
-              .then(response => {
-                let json = response.json();
-                console.dir(response);
-                console.dir(json);
-                if (response.status >= 400) {
-                    return json.then(err => Promise.reject(err));
-                } else {
-                  return json;
-                }
-            })
-            .catch(({errors}) => dispatch(loadPostError(errors)));  
-    };
-}
-
 
 export function selectPort(port) {
   return {
@@ -149,10 +127,8 @@ export function invalidatePort(port) {
   };
 }
 
-export function fetchPosts(port = 'hot') {
-  console.log('fetch posts: port   ' + port)
-  console.dir(port);
-  
+export function fetchPosts(port='hot') {
+  console.log('fetch posts: port   ' + port);
   return {
     type: POSTS_GET,
     port,
@@ -179,19 +155,19 @@ export function fetchPostsIfNeeded(port) {
   };
 }
 
-export function likePost(id,permalink,liked){
-  console.log('like post func');
+export function likePost(i,permalink,liked){
+  console.log('like post func:_' + i);
   if(!liked){
     return{
       type: POSTS_LIKE,
-      id,
-      promise: request.put(permalink,liked)
+      i,
+      promise: makePostRequest('put', {liked: liked}, permalink)
     };
   }else{
    return{
       type: POSTS_UNLIKE,
-      id,
-      promise: request.put(permalink,liked)
+      i,
+      promise: makePostRequest('put', {liked: liked}, permalink)
     };
   }
 }

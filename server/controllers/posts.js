@@ -10,8 +10,6 @@ exports.hot = function(req,res) {
   Post.find({}).sort({score:1}).limit(20).exec(function(err, posts){
     if(err){return console.log('Error in first query')}
     console.log('responding with posts');
-    console.log(req.user.votes);
-    
     res.json(posts);
   });
   

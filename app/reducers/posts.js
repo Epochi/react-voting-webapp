@@ -1,11 +1,11 @@
-import {GET_POSTS,
-  POSTS_GET_SUCCESS,
-  POSTS_GET_FAILURE,
-  POSTS_GET_REQUEST,
-  SELECT_PORT,
-  INVALIDATE_PORT
-} from 'actions/posts'
-
+import {SELECT_PORT,
+  INVALIDATE_PORT,
+  POSTS_LIKE,
+  POSTS_UNLIKE,
+  POSTS_LIKE_SUCCESS,
+  POSTS_UNLIKE_SUCCESS,
+  POSTS_GET, POSTS_GET_REQUEST, POSTS_GET_SUCCESS, POSTS_GET_FAILURE
+} from '../actions/posts';
 
 function posts(state = {
   error: {},
@@ -40,7 +40,7 @@ function posts(state = {
   }
 }
 
-export function selectedPort(state = 'hot', action) {
+export function selectedPort(state='hot', action) {
   switch (action.type) {
   case SELECT_PORT:
     return action.port;
@@ -69,7 +69,8 @@ export function postsByPort(state = { }, action) {
         receivedAt: Date.now()
       })
     });
-
+    
+    
   case POSTS_GET_FAILURE:
     return Object.assign({}, state, {
       [action.port]: posts(state[action.port], {
@@ -83,10 +84,10 @@ export function postsByPort(state = { }, action) {
         }
       })
     });
-
+    
+    
   default:
     return state;
   }
 }
-
 
