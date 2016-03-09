@@ -10,6 +10,7 @@ var _ = require('lodash');
 var Post = mongoose.model('Post');
 var App = require('../../public/assets/app.server');
 
+
 module.exports = function(app, passport) {
   // user routes
 
@@ -49,11 +50,7 @@ module.exports = function(app, passport) {
   app.get('/hot', posts.hot);
   //app.get('/post', posts.all);
   
-  app.param(['subport', 'id','title'], function (req, res, next, value) {
-    console.log("APP.PARAM CAN SEE: " + value);
-  next();
-    });
-  
+
   app.put('/p/:subport/:id/:title', function(req, res, next) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
@@ -87,7 +84,7 @@ module.exports = function(app, passport) {
     next();
   });
 */
-  app.get('/*', function(req, res, next) {
+  app.get('*', function(req, res, next) {
     App(req, res);
   });
 

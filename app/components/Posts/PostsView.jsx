@@ -17,13 +17,12 @@ class PostsView extends Component {
   }
 
   handleLikePost(post, i){
-   
+   if(this.props.authenticated){
       var liked = post.liked ? true : false;
       console.log('liked or nat');
       console.log(liked);
       this.props.likePost(i, post.data.permalink, liked);
-
-     
+    }
   }
 
 

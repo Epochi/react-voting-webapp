@@ -1,13 +1,12 @@
 import React from 'react';
-import {  renderToString} from 'react-dom/server';
-import {RouterContext, match, createMemoryHistory} from 'react-router'
-import fetch from 'isomorphic-fetch';
-import {Provider} from 'react-redux';
+import { renderToString } from 'react-dom/server';
+import { RouterContext, match, createMemoryHistory } from 'react-router';
+import axios from 'axios';
+import { Provider } from 'react-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
 import headconfig from 'components/Meta';
-import {fetchComponentDataBeforeRender} from 'api/fetchComponentDataBeforeRender';
-import axios from 'axios';
+import { fetchComponentDataBeforeRender } from 'api/fetchComponentDataBeforeRender';
 
 global.navigator = {
   navigator: 'all'
@@ -95,40 +94,35 @@ export default function render(req, res) {
    * If all three parameters are `undefined`, this means that there was no route found matching the
    * given location.
    */
-  match({
-    routes, location: req.url
-  }, (error, redirectLocation, renderProps) => {
+  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error) {
       res.status(500).send(error.message);
-    }
-    else if (redirectLocation) {
+    } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
-    }
-    else if (renderProps) {
+    } else if (renderProps) {
 
       const InitialView = (
         <Provider store={store}>
-              <RouterContext {...renderProps} />
-          </Provider>
+            <RouterContext {...renderProps} />
+        </Provider>
       );
 
+      //This method waits for all render component promises to resolve before returning to browser
       fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params)
-        .then(html => {
-          const componentHTML = renderToString(InitialView);
-          const initialState = store.getState();
-          res.status(200).end(renderFullPage(componentHTML, initialState, {
-            title: headconfig.title,
-            meta: headconfig.meta,
-            link: headconfig.link
-          }));
-        })
-        .catch(err => {
-          res.end(renderFullPage("", {}));
-        });
-        
-    }
-    else {
+      .then(html => {
+        const componentHTML = renderToString(InitialView);
+        const initialState = store.getState();
+        res.status(200).end(renderFullPage(componentHTML, initialState, {
+          title: headconfig.title,
+          meta: headconfig.meta,
+          link: headconfig.link
+        }));
+      })
+      .catch(err => {
+        res.end(renderFullPage("",{}));
+      });
+    } else {
       res.status(404).send('Not Found');
     }
   });
-};
+}

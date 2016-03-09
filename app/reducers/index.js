@@ -1,4 +1,27 @@
 import { combineReducers } from 'redux';
+import user from 'reducers/user';
+import postsByPort from 'reducers/posts';
+import emailSignUp from 'reducers/emailsignup';
+import locallogin from 'reducers/locallogin';
+import ui from 'reducers/ui';
+import { routerReducer as routing } from 'react-router-redux';
+
+// Combine reducers with routeReducer which keeps track of
+// router state
+const rootReducer = combineReducers({
+  user,
+  emailSignUp,
+  locallogin,
+  postsByPort,
+  ui,
+  routing
+});
+
+export default rootReducer;
+
+/*
+
+import { combineReducers } from 'redux';
 import { routerStateReducer } from 'redux-router';
 import undoable from 'redux-undo';
 import user from 'reducers/user';
@@ -23,3 +46,5 @@ const rootReducer = combineReducers({
 });
 
 export default rootReducer;
+*/
+

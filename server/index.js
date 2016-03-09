@@ -28,7 +28,7 @@ if (isDev) {
 }
 
 // Bootstrap passport config
-require('./config/passport')(passport);
+require('./config/passport')(app, passport);
 // Bootstrap application settings
 require('./config/express')(app, passport);
 // Bootstrap routes

@@ -18,7 +18,7 @@ var github = require('./passport/github');
  * Expose
  */
 
-module.exports = function (passport) {
+module.exports = function (app, passport, config) {
   // serialize sessions
   passport.serializeUser(function(user, done) {
     console.log('serializing user')

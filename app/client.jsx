@@ -1,18 +1,17 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
+import { Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
-import injectTapEventPlugin from 'react-tap-event-plugin';
-injectTapEventPlugin();
-import createBrowserHistory from 'history/lib/createBrowserHistory'
 
 // Grab the state from a global injected into
 // server-generated HTML
 const initialState = window.__INITIAL_STATE__;
-const history = createBrowserHistory();
-const store = configureStore(initialState);
+
+const store = configureStore(initialState, browserHistory);
+const history = syncHistoryWithStore(browserHistory, store);
 const routes = createRoutes(store);
 
 // Router converts <Route> element hierarchy to a route config:
@@ -23,5 +22,3 @@ render(
       {routes}
     </Router>
   </Provider>, document.getElementById('app'));
-
-

@@ -1,58 +1,36 @@
-import { createStore, applyMiddleware, compose } from 'redux';
-import { devTools } from 'redux-devtools';
-import { reduxReactRouter } from 'redux-router';
+import { createStore, applyMiddleware } from 'redux';
+import { routerMiddleware } from 'react-router-redux';
 import thunk from 'redux-thunk';
-import createHistory from 'history/lib/createBrowserHistory';
-import createLogger from 'redux-logger';
-import promiseMiddleware from 'api/promiseMiddleware';
 import rootReducer from 'reducers';
+import promiseMiddleware from 'api/promiseMiddleware';
+import createLogger from 'redux-logger';
 
-const middlewareBuilder = () => {
-
-  let middleware = {};
-  let universalMiddleware = [thunk,promiseMiddleware];
-  let allComposeElements = [];
-  
-  if(process.browser){
-    if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'test'){
-      middleware = applyMiddleware(...universalMiddleware);
-      allComposeElements = [
-        middleware,
-        reduxReactRouter({
-          createHistory
-        })
-      ]
-    }else{
-      middleware = applyMiddleware(...universalMiddleware,createLogger());
-      allComposeElements = [
-        middleware,
-        reduxReactRouter({
-          createHistory
-        }),
-        devTools()
-      ]
-    }
-  }else{
-    middleware = applyMiddleware(...universalMiddleware);
-    allComposeElements = [
-      middleware
-    ]
+/*
+ * @param {Object} initial state to bootstrap our stores with for server-side rendering
+ * @param {History Object} a history object. We use `createMemoryHistory` for server-side rendering,
+ *                          while using browserHistory for client-side
+ *                          rendering.
+ */
+export default function configureStore(initialState, history) {
+  let middleware = [ thunk, promiseMiddleware ];
+  // Installs hooks that always keep react-router and redux
+  // store in sync
+  const reactRouterReduxMiddleware = routerMiddleware(history);
+  if (__DEV__) {
+    middleware.push(reactRouterReduxMiddleware, createLogger());
+  } else {
+    middleware.push(reactRouterReduxMiddleware);
   }
 
-  return allComposeElements;
+  const finalCreateStore = applyMiddleware(...middleware)(createStore);
 
-}
-
-const finalCreateStore = compose(...middlewareBuilder())(createStore);
-
-export default function configureStore(initialState) {
   const store = finalCreateStore(rootReducer, initialState);
 
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('reducers', () => {
-      const nextRootReducer = require('reducers');
-      store.replaceReducer(nextRootReducer);
+      const nextReducer = require('reducers');
+      store.replaceReducer(nextReducer);
     });
   }
 
