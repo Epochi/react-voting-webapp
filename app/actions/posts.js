@@ -18,13 +18,9 @@ export const POSTS_UNLIKE_SUCCESS = 'POSTS_UNLIKE_SUCCESS';
 
 polyfill();
 
-function makePostRequest(method, data, api='/post') {
-  return request({
-    url: api,
-    method: method,
-    data: data,
-    withCredentials: true
-  });
+
+function makePostRequest(method, id, data, api='/p') {
+  return request[method](api + (id ? ('/' + id) : ''), data);
 }
 
 
@@ -86,25 +82,6 @@ function makePostRequest(method, data, api='/post') {
 }
 */
 
-export function getPosts(){
-      console.log("load posts");
-      return dispatch => {
-        return makePostRequest('get')
-            .then(response => {
-                let json = response.json();
-                console.dir(response);
-                console.dir(json);
-                if (response.status >= 400) {
-                    return json.then(err => Promise.reject(err));
-                } else {
-                  return json;
-                }
-            })
-            .then((json) => dispatch(loadPosts(json)))
-            .catch(({errors}) => dispatch(loadPostError(errors)));  
-    };
-}
-
 function loadPosts(data){
   return {type: types.POSTS_LOAD_REQUEST, data};
 }
@@ -127,47 +104,29 @@ export function invalidatePort(port) {
   };
 }
 
-export function fetchPosts(port='hot') {
-  console.log('fetch posts: port   ' + port);
+export function fetchPosts(data,id,api='hot') {
   return {
     type: POSTS_GET,
-    port,
-    promise: request.get('/'+ port)
+    subport: api,
+    promise: makePostRequest('get',id, undefined, api)
   };
 }
 
-function shouldFetchPosts(state, port) {
-  const posts = state.postsByPort[port];
-  if (!posts) {
-    return true;
-  } else if (posts.isFetching) {
-    return false;
-  } else {
-    return posts.didInvalidate;
-  }
-}
 
-export function fetchPostsIfNeeded(port) {
-  return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), port)) {
-      return dispatch(fetchPosts(port));
-    }
-  };
-}
 
-export function likePost(i,permalink,liked){
-  console.log('like post func:_' + i);
+export function likePost(index,permalink,liked){
+  console.log('like post func:_' + index);
   if(!liked){
     return{
       type: POSTS_LIKE,
-      i,
-      promise: makePostRequest('put', {liked: liked}, permalink)
+      index,
+      promise: makePostRequest('put',undefined, {liked: liked}, permalink)
     };
   }else{
    return{
       type: POSTS_UNLIKE,
-      i,
-      promise: makePostRequest('put', {liked: liked}, permalink)
+      index,
+      promise: makePostRequest('put',undefined, {liked: liked}, permalink)
     };
   }
 }

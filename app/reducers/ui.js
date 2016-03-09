@@ -14,13 +14,15 @@ import {
 } from 'constants';
 
 
+
 export default function ui(state={
   isWaiting: false,
   messageOpen: false,
   message: null,
   newPost: {
       open: false
-  }
+  },
+  selectedPort: 'hot'
   }, action={}) {
   switch (action.type) {
     case CREATE_POST_REQUEST:

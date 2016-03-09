@@ -10,11 +10,19 @@ var commonLoaders = [
      * Read more http://babeljs.io/docs/usage/experimental/
      */
     test: /\.js$|\.jsx$/,
-    loaders: ['babel'],
-    include: path.join(__dirname, '..', 'app')
+    loader: 'babel',
+    // Reason why we put this here instead of babelrc
+    // https://github.com/gaearon/react-transform-hmr/issues/5#issuecomment-142313637
+    query: {
+      "presets": ["react-hmre", "es2015", "react", "stage-0"]
+    },
+    include: path.join(__dirname, '..', 'app'),
+    exclude: path.join(__dirname, '/node_modules/')
   },
-  { test: /\.png$/, loader: 'url-loader' },
-  { test: /\.jpg$/, loader: 'file-loader' },
+  {
+    test: /\.(png|jpg|svg)$/,
+    loader: 'url?limit=10000'
+  },
   { test: /\.html$/, loader: 'html-loader' }
 ];
 
@@ -60,7 +68,7 @@ module.exports = {
       loaders: commonLoaders.concat([
         { test: /\.scss$/,
           loader: 'style!css?module&localIdentName=[local]__[hash:base64:5]' +
-            '&sourceMap!autoprefixer-loader!sass?sourceMap&outputStyle=expanded' +
+            '&sourceMap!postcss-loader!sass?sourceMap&outputStyle=expanded' +
             '&includePaths[]=' + encodeURIComponent(path.resolve(__dirname, '..', 'app', 'scss'))
         }
       ])
@@ -75,7 +83,6 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
-          __TEST__: JSON.stringify(JSON.parse(process.env.TEST_ENV || 'false')),
           __DEV__: true
         })
     ]

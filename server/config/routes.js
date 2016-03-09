@@ -8,7 +8,9 @@ var users = require('../controllers/users');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Post = mongoose.model('Post');
-var App = require('../../public/assets/app.server');
+var path = require('path');
+var compiled_app_module_path = path.resolve(__dirname, '../../', 'public', 'assets', 'server.js');
+var App = require(compiled_app_module_path);
 
 
 module.exports = function(app, passport) {
@@ -34,7 +36,7 @@ module.exports = function(app, passport) {
         }
         console.log('passport iz happi');
         console.log(user.name);
-        return res.status(200).send({
+        return res.status(200).json({
           username: user.name
         });
       });
@@ -43,12 +45,15 @@ module.exports = function(app, passport) {
 
   app.get('/users/:userId', users.show);
   //app.param('userId', users.load);
-
+  app.param(['subport', 'id','title'], function (req, res, next, value) {
+    console.log("APP.PARAM CAN SEE: " + value);
+  next();
+    });
+  
 
   // post routes
 
   app.get('/hot', posts.hot);
-  //app.get('/post', posts.all);
   
 
   app.put('/p/:subport/:id/:title', function(req, res, next) {
@@ -65,29 +70,9 @@ module.exports = function(app, passport) {
     posts.remove(req, res);
   });
 
-
-  // This is where the magic happens. We take the locals data we have already
-  // fetched and seed our stores with data.
-  // App is a function that requires store data and url to initialize and return the React-rendered html string
-  /*
-  app.get('*', function (req, res, next) {
-    App(req, res);
+  app.get('/*', function (req, res, next) {
+    App.default(req, res);
   });
-  */
-  //Catch all and user agent for css styling
-  //more info at https://github.com/callemall/material-ui/pull/2172#issuecomment-157404901
-  /*
-  app.use(function(req, res, next) {
-    GLOBAL.navigator = {
-      userAgent: req.headers['user-agent']
-    };
-    next();
-  });
-*/
-  app.get('*', function(req, res, next) {
-    App(req, res);
-  });
-
 
 
   /**

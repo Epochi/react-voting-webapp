@@ -35,10 +35,10 @@
 .liked{
     color: green;
 }
-.hiddenspan{
-       margin-top: -16px !important;
-       opacity: 0;
-}
+
 .likedspan{
-    
+       margin-top: -16px !important;
+}
+.hidden{
+    opacity:0;
 }

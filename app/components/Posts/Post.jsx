@@ -11,14 +11,16 @@ const Post = ({post, onClick, liked=false}) => {
     "liked": liked
   });
   let likedspan = cx({
-    "hiddenspan": true,
-    "likedspan": liked
+    "hidden": !liked,
+    "likedspan": true
   });
-  
+  let neutralspan = cx({
+    "hidden": liked
+  });
     return(
              <div className={cx("mdl-card","post")}>
               <div className={cx("mdl-card__title")}>
-                <a onClick={onClick} className={voted}><i className={"material-icons"}>arrow_drop_up</i><span>{post.score}</span><span className={likedspan}>{post.score+1}</span></a>
+                <a onClick={onClick} className={voted}><i className={"material-icons"}>arrow_drop_up</i><span className={neutralspan}>{post.score}</span><span className={likedspan}>{post.score+1}</span></a>
                 <h2 className={cx("mdl-card__title-text")}>{post.data.title}</h2>
               </div>
               <div className={cx("mdl-card__supporting-text")}>

@@ -1,5 +1,4 @@
 export function fetchComponentDataBeforeRender(dispatch, components, params) {
-  console.log('fetch compntns');
   const needs = components.reduce( (prev, current) => {
     return (current.need || [])
       .concat((current.WrappedComponent ? current.WrappedComponent.need : []) || [])

@@ -1,5 +1,6 @@
 var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var InlineEnviromentVariablesPlugin = require('inline-environment-variables-webpack-plugin');
 var webpack = require("webpack");
 
 var assetsPath = path.join(__dirname, "..", "public", "assets");
@@ -12,14 +13,27 @@ var commonLoaders = [
      * Read more http://babeljs.io/docs/usage/experimental/
      */
     test: /\.js$|\.jsx$/,
-    loaders: ['babel'],
-    include: path.join(__dirname, "..",  "app")
+    loader: 'babel',
+    // Reason why we put this here instead of babelrc
+    // https://github.com/gaearon/react-transform-hmr/issues/5#issuecomment-142313637
+    query: {
+      "presets": ["es2015", "react", "stage-0"],
+      "plugins": [
+        "transform-react-remove-prop-types",
+        "transform-react-constant-elements",
+        "transform-react-inline-elements"
+      ]
+    },
+    include: path.join(__dirname, '..', 'app'),
+    exclude: path.join(__dirname, '/node_modules/')
   },
   { test: /\.json$/, loader: "json-loader" },
-  { test: /\.png$/, loader: "url-loader" },
-  { test: /\.jpg$/, loader: "file-loader" },
+  {
+    test: /\.(png|jpg|svg)$/,
+    loader: 'url?limit=10000'
+  },
   { test: /\.scss$/,
-    loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[local]__[hash:base64:5]!autoprefixer-loader!sass?includePaths[]=' 
+    loader: ExtractTextPlugin.extract('style-loader', 'css-loader?module&localIdentName=[local]__[hash:base64:5]!postcss-loader!sass?includePaths[]='
       + encodeURIComponent(path.resolve(__dirname, '..', 'app', 'scss')))
   }
 ];
@@ -62,13 +76,8 @@ module.exports = [
       publicPath: publicPath
 
     },
-    
+
     module: {
-      preLoaders: [{
-        test: /\.js$|\.jsx$/,
-        exclude: /node_modules/,
-        loaders: ["eslint"]
-      }],
       loaders: commonLoaders
     },
     resolve: {
@@ -90,33 +99,23 @@ module.exports = [
           }
         }),
         new webpack.DefinePlugin({
-          __TEST__: JSON.stringify(JSON.parse(process.env.TEST_ENV || 'false')),
           __DEV__: false
-        })
-        
-        /*
-        ,
-        var TransferWebpackPlugin = require('transfer-webpack-plugin');
-        new TransferWebpackPlugin([
-          {from: '/scss/font-icons', to: 'css/font-icons'}
-        ], path.resolve(__dirname,"src"))
-      ],
-    */
-        
+        }),
+        new InlineEnviromentVariablesPlugin({ NODE_ENV: 'production' })
     ]
   }, {
     // The configuration for the server-side rendering
     name: "server-side rendering",
     context: path.join(__dirname, "..", "app"),
     entry: {
-      app: "./server"
+      server: "./server"
     },
     target: "node",
     output: {
       // The output directory as absolute path
       path: assetsPath,
       // The filename of the entry chunk as relative path inside the output.path directory
-      filename: "[name].server.js",
+      filename: "server.js",
       // The output path from the view of the Javascript
       publicPath: publicPath,
       libraryTarget: "commonjs2"
@@ -143,9 +142,9 @@ module.exports = [
           }
         }),
         new webpack.DefinePlugin({
-          __TEST__: JSON.stringify(JSON.parse(process.env.TEST_ENV || 'false')),
           __DEV__: false
-        })
+        }),
+        new InlineEnviromentVariablesPlugin({ NODE_ENV: 'production' })
     ]
   }
 ];

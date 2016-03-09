@@ -6,6 +6,9 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
 
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 // Grab the state from a global injected into
 // server-generated HTML
 const initialState = window.__INITIAL_STATE__;

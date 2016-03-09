@@ -1,6 +1,6 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { RouterContext, match, createMemoryHistory } from 'react-router';
+import { RouterContext, match, createMemoryHistory } from 'react-router'
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import createRoutes from 'routes.jsx';
@@ -8,24 +8,21 @@ import configureStore from 'store/configureStore';
 import headconfig from 'components/Meta';
 import { fetchComponentDataBeforeRender } from 'api/fetchComponentDataBeforeRender';
 
-global.navigator = {
-  navigator: 'all'
-};
-// not sure if this is supposed to be here
-
 const clientConfig = {
   host: process.env.HOSTNAME || 'localhost',
   port: process.env.PORT || '3000'
 };
 
+// configure baseURL for axios requests (for serverside API calls)
 axios.defaults.baseURL = `http://${clientConfig.host}:${clientConfig.port}`;
+
 /*
  * Our html template file
  * @param {String} renderedContent
  * @param initial state of the store, so that the client can be hydrated with the same state as the server
  * @param head - optional arguments to be placed into the head
  */
-function renderFullPage(renderedContent, initialState, head = {
+function renderFullPage(renderedContent, initialState, head={
   title: 'React Webpack Node',
   meta: '<meta name="viewport" content="width=device-width, initial-scale=1" />',
   link: '<link rel="stylesheet" href="/assets/styles/main.css"/>'
@@ -33,49 +30,44 @@ function renderFullPage(renderedContent, initialState, head = {
   return `
   <!doctype html>
     <html lang="">
-
     <head>
         ${head.title}
-
         ${head.meta}
-
         ${head.link}
     </head>
     <body>
     <div id="app">${renderedContent}</div>
-
     <script>
       window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
     </script>
     <script type="text/javascript" charset="utf-8" src="/assets/app.js"></script>
     </body>
     </html>
-
   `;
 }
 
-/* 
+/*
  * Export render function to be used in server/config/routes.js
  * We grab the state passed in from the server and the req object from Express/Koa
  * and pass it into the Router.run function.
  */
 export default function render(req, res) {
-
-  const history = createMemoryHistory();
-  const authenticated = req.isAuthenticated();
-  const user = authenticated ? req.user.name : null;
-  const store = configureStore({
+    const history = createMemoryHistory();
+    const authenticated = req.isAuthenticated();
+    const user = authenticated ? req.user.name : null;
+    const store = configureStore({
     user: {
       username: user,
       authenticated: authenticated,
       isWaiting: false
     }
-  }, history);
-  const routes = createRoutes(store);
+    }, history);
+
+    const routes = createRoutes(store);
 
   /*
    * From the react-router docs:
-   * 
+   *
    * This function is to be used for server-side rendering. It matches a set of routes to
    * a location, without rendering, and calls a callback(error, redirectLocation, renderProps)
    * when it's done.
@@ -83,7 +75,7 @@ export default function render(req, res) {
    * The function will create a `history` for you, passing additional `options` to create it.
    * These options can include `basename` to control the base name for URLs, as well as the pair
    * of `parseQueryString` and `stringifyQuery` to control query string parsing and serializing.
-   * You can also pass in an already instantiated `history` object, which can be constructured 
+   * You can also pass in an already instantiated `history` object, which can be constructured
    * however you like.
    *
    * The three arguments to the callback function you pass to `match` are:

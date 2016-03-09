@@ -27,10 +27,14 @@ function makeUserRequest(method, data, api='/auth/login') {
   });
 }*/
 
-function makeUserRequest(method, data, api='/auth/login') {
-  return request[method](api, data);
+function makeUserRequest(method, data,  api='/auth/login') {
+  return request({
+    url: api,
+    method: method,
+    data: data,
+    withCredentials: true
+  });
 }
-
 
 
 
@@ -77,18 +81,19 @@ export function localLogin(data) {
     console.log(data);
     return makeUserRequest('post', data, '/auth/login')
          .then(response => {
-                let json = response.json();
+                console.log("1st respons");
                 console.dir(response);
-                console.dir(json);
-                if (response.status >= 400) {
-                    return json.then(err => Promise.reject(err));
+                //console.dir(json);
+                if (response.status === 200) {
+                   dispatch(localLoginSuccess(response.data.username));
                 } else {
-                  return json;
+                  dispatch(localLoginErrorDelegator('Oops! Something went wrong!'));
                 }
                 
             })
-            .then((json) => dispatch(localLoginSuccess(json.username)))
-            .catch(({errors}) => dispatch(localLoginErrorDelegator(errors)));
+            .catch(err => {
+                       dispatch(localLoginErrorDelegator(err));
+                    });
   };
 }
 
@@ -166,7 +171,6 @@ function emailSignUpErrorDelegator(error) {
 export function emailSignUp(data) {
   return dispatch => {
     dispatch(emailSignUpStart());
-    
     return makeUserRequest('post', data, '/auth/signup')
          .then(response => {
                 let json = response.json();
@@ -180,8 +184,5 @@ export function emailSignUp(data) {
             })
             .then(({data}) => dispatch(emailSignUpComplete(data)))
             .catch(({errors}) => dispatch(emailSignUpErrorDelegator(errors)));
-      
-      
-
   };
 }

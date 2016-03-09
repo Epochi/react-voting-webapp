@@ -1,3 +1,5 @@
+var update = require('react-addons-update');
+
 import {SELECT_PORT,
   INVALIDATE_PORT,
   POSTS_LIKE,
@@ -7,89 +9,46 @@ import {SELECT_PORT,
   POSTS_GET, POSTS_GET_REQUEST, POSTS_GET_SUCCESS, POSTS_GET_FAILURE
 } from 'actions/posts';
 
-function posts(state = {
-  error: {},
-  isFetching: false,
-  didInvalidate: false,
-  items: []
-}, action) {
+const initialState = {
+    posts: []
+};
+
+function posts(state = initialState.posts, action) {
   switch (action.type) {
-  case INVALIDATE_PORT:
-    return Object.assign({}, state, {
-      didInvalidate: true
-    }); 
-  case POSTS_GET_REQUEST:
-    return Object.assign({}, state, {
-      isFetching: true,
-      didInvalidate: false
-    });
   case POSTS_GET_SUCCESS:
-    return Object.assign({}, state, {
-      isFetching: false,
-      didInvalidate: false,
-      items: action.posts,
-      lastUpdated: action.receivedAt
-    });
-  case POSTS_GET_FAILURE:
-    return Object.assign({}, state, {
-      isFetching: false,
-      didInvalidate: false
-    });
+  return state = update(state, {$push: action.posts});
+  case POSTS_LIKE_SUCCESS:
+     return state = update(state, {[action.index]: {liked: {$set: true}}});
+  case POSTS_UNLIKE_SUCCESS:
+     return state = update(state, {[action.index]: {liked: {$set: false}}});
   default:
     return state;
   }
 }
 
-export function selectedPort(state='hot', action) {
-  switch (action.type) {
-  case SELECT_PORT:
-    return action.port;
-  default:
-    return state;
-  }
-}
 
-export function postsByPort(state = { }, action) {
+export function postsByPort(state = initialState, action) {
   switch (action.type) {
-  case INVALIDATE_PORT:
-  case POSTS_GET_REQUEST:
   case POSTS_GET_SUCCESS:
     let postsArray = [];
     if(action.req && action.req.data){
       let data = action.req.data;
-      postsArray = data.map(function(child){
-        return child;
-      });
+      postsArray = data.map(post => post);
     }
-    return Object.assign({}, state, {
-      [action.port]: posts(state[action.port], {
-        type: action.type,
-        port: action.port,
-        posts: postsArray,
-        receivedAt: Date.now()
-      })
-    });
-    
-    
-  case POSTS_GET_FAILURE:
-    return Object.assign({}, state, {
-      [action.port]: posts(state[action.port], {
-        type: action.type,
-        port: action.port,
-        posts: [],
-        receivedAt: Date.now(),
-        error : {
-          status: action.error.status,
-          statusText : action.error.statusText
-        }
-      })
-    });
-    
-    
+    return {
+        posts: posts(state.posts, {posts: postsArray, type: action.type})
+      } ;
+    case POSTS_LIKE_SUCCESS:
+       return {
+         posts: posts(state.posts, {index: action.index, type: action.type})
+       };
+        case POSTS_UNLIKE_SUCCESS:
+       return {
+         posts: posts(state.posts, {index: action.index, type: action.type})
+       };   
   default:
     return state;
   }
 }
 
-
-
+//  case POSTS_LIKE_SUCCESS:

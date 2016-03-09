@@ -9,9 +9,13 @@ PostsView.need = [
 ];
 
 function mapStateToProps(state) {
+  const {postsByPort, user, ui } = state;
+  const selectedPort = ui.selectedPort;
+  const posts = postsByPort.posts
+  const authenticated = user.authenticated;
   return {
-    posts: state.postsByPort.posts,
-    authenticated: state.user.authenticated
+    posts,
+    authenticated
   };
 }
 
