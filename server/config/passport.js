@@ -22,20 +22,14 @@ module.exports = function (app, passport, config) {
   // serialize sessions
   passport.serializeUser(function(user, done) {
     console.log('serializing user')
-    var sessionUser = { _id: user._id, name: user.name, votes: user.votes }
+    var sessionUser = { _id: user._id, name: user.name}
     done(null, sessionUser)
   })
 
   passport.deserializeUser(function(id, done) {
     User.load({ criteria: { _id: id }, select: 'name' }, function (err, user) {
       console.log('desiarizing user: '+user);
-      var username = user.name.toLowerCase();
-      UserThing.load({criteria: {username: username}, select: 'postVotes'}, function(err,userThing){
-        console.log(userThing.postVotes);
-        var sessionUser = {_id: user._id, name: user.name, votes: userThing.postVotes};
-        console.log(sessionUser);
-        done(err,sessionUser);
-      });
+      done(err,user);
     });
   });
 

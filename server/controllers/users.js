@@ -38,7 +38,7 @@ exports.create = wrap(function* (req, res, next) {
   yield user.save(function(err){
     if(err){return next(err)}
       var userThing = new UserThing({
-        username: user.username
+        _id: user._id
       });
       userThing.save(function(err){
         if(err){return next(err);}

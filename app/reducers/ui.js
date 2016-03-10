@@ -7,12 +7,11 @@ import {
   LOGOUT_SUCCESS_USER,
   LOGOUT_ERROR_USER,
   EMAIL_SIGNUP_COMPLETE,
-  CREATE_POST_REQUEST,
-  CREATE_POST_SUCCESS,
-  CREATE_POST_ERROR,
   POST_CLEAR_STATE
-} from 'constants';
-
+} from 'constants/index';
+import {
+  CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_ERROR,CREATE_POST_SUCCESS
+} from 'actions/posts';
 
 
 export default function ui(state={
@@ -22,7 +21,7 @@ export default function ui(state={
   newPost: {
       open: false
   },
-  selectedPort: 'hot'
+  selectedPort: 'top'
   }, action={}) {
   switch (action.type) {
     case CREATE_POST_REQUEST:

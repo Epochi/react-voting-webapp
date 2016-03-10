@@ -8,8 +8,6 @@ import Post from 'components/Posts/Post';
 
 const cx = classNames.bind(Object.assign(styles, layout, grid));
 
-//<i class="material-icons">thumb_up</i>
-
 class PostsView extends Component {
   constructor(props) {
     super(props);
@@ -44,7 +42,6 @@ class PostsView extends Component {
             );
   }
 }
-
 
 PostsView.propTypes = {
   posts: PropTypes.array.isRequired,

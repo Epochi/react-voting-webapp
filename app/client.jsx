@@ -5,8 +5,8 @@ import { Router, browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
-
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import createDevToolsWindow from 'createDevToolsWindow';
 injectTapEventPlugin();
 
 // Grab the state from a global injected into
@@ -25,3 +25,9 @@ render(
       {routes}
     </Router>
   </Provider>, document.getElementById('app'));
+  
+  /*
+  if (process.env.NODE_ENV !== 'production') {
+  createDevToolsWindow(store);
+}
+*/

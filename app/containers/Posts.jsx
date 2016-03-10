@@ -4,9 +4,6 @@ import { connect } from 'react-redux';
 import PostsView from 'components/Posts/PostsView';
 import * as PostActions from 'actions/posts';
 
-PostsView.need = [
-  PostActions.fetchPosts
-];
 
 function mapStateToProps(state) {
   const {postsByPort, user, ui } = state;
@@ -24,6 +21,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 const Posts = connect(mapStateToProps,mapDispatchToProps)(PostsView);
+Posts.need = [
+  PostActions.fetchPosts
+];
 export default Posts;
 
 

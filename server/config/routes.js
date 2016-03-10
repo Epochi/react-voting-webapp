@@ -2,6 +2,7 @@
  * Routes for express app
  */
 var posts = require('../controllers/posts');
+var poster = require('../controllers/poster');
 var votes = require('../controllers/votes')
 var express = require('express');
 var users = require('../controllers/users');
@@ -50,13 +51,15 @@ module.exports = function(app, passport) {
   next();
     });
   
-
+  
   // post routes
+  app.get('/poster', poster.fetchReddit);
+  app.post('/poster', poster.fetchReddit);
 
-  app.get('/hot', posts.hot);
+  app.get('/top', posts.top);
   
 
-  app.put('/p/:subport/:id/:title', function(req, res, next) {
+  app.put('/p/:subport/:id/:title',users.userAuthenticated, function(req, res, next) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
   });
@@ -70,7 +73,7 @@ module.exports = function(app, passport) {
     posts.remove(req, res);
   });
 
-  app.get('/*', function (req, res, next) {
+  app.get('*', function (req, res, next) {
     App.default(req, res);
   });
 

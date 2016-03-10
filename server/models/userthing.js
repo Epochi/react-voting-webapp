@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 
 var userThingSchema = new mongoose.Schema({
-    username: {type: String, unique: true, lowercase: true },
+    _id: {type: mongoose.Schema.Types.ObjectId, unique: true },
     postVotes: [String]
 },{autoIndex: false});
 

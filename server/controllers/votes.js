@@ -1,46 +1,64 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
-var UserThing = mongoose.model('UserThing');
+var PostThing = mongoose.model('PostThing');
 var Post = mongoose.model('Post');
-
+var UserThing = mongoose.model('UserThing');
 
 // Try to add a vote, if vote was already found, delete the vote
 exports.votedPost = function(req, res, next) {
-    var username = req.user.name.toLowerCase();
-    console.log('req.body DID HE LIKE BLIOT I NEEED DIS');
-    console.log(req.body.liked);
     
-    //if user has not liked the post, add like   , else if user has liked the post, delete the like
+
+    
+    //if user has not liked the post, add like, else if user has liked the post, delete the like
     if(!req.body.liked){
-    UserThing.update({ username: username }, { $addToSet: { postVotes: req.params.id } },  function (err, result) {
-                if (err) return next(err);
-                console.log(result);
-                //if update added a new value
-                if((result.n <= result.nModified)){
-                     req.user.votes.push(req.params.id);
-                     Post.update({id: req.params.id}, {$inc: {score: 1}},function(err,result){
-                             if (err) return next(err);
-                             return res.status(200).send({message: "Vote Added"});
-                            });
-                } else  {
-                    UserThing.update({username: username}, {$pull: {postVotes: req.params.id} }, function (err, result){
-                         if (err) return next(err);
-                         _.pull(req.user.votes, req.params.id);
-                         Post.update({id: req.params.id}, {$inc: {score: -1}},function(err,result){
-                             if (err) return next(err);
-                             return res.status(200).send({message: "Vote Deleted"});
-                                 });
-                         });
-                     }
-                });
+        postAddVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
     } else {
-    UserThing.update({username: username}, {$pull: {postVotes: req.params.id} }, function (err, result){
-            if (err) return next(err);
-             _.pull(req.user.votes, req.params.id);
-             Post.update({id: req.params.id}, {$inc: {score: -1}},function(err,result){
-            if (err) return next(err);
-            return res.status(200).send({message: "Vote Deleted"});
-                   });
-             });
+    //delete the like if post is already liked
+        postDeleteVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
     }
 };
+
+
+//addvote into postthing and if successful add to userthing
+function postAddVote(id, user, next){
+   PostThing.update({_id: id}, { $addToSet: { votes: user}}, function(err, result){
+       if (err) return next(err);
+       if(result.n <= result.nModified){
+            console.log("Adding Vote Results");
+            console.log(result);
+            UserThing.update({_id: user}, { $addToSet: { postVotes: id}}, function(err, result){
+            if (err) return next(err);
+            if(postScoreControl(id, 1, next)){
+                return true;
+            }
+            });
+       } else {
+           postDeleteVote(id,user,next);
+       }
+       
+   }) 
+}
+
+function postDeleteVote(id,user, next){
+        PostThing.update({_id: id}, {$pull: {votes: id} }, function (err, result){
+            if (err) return next(err);
+            if(result.n <= result.nModified){
+                console.log("Deleting Vote Results");
+                console.log(result);
+                UserThing.update({_id: user}, { $pull: { postVotes: id}}, function(err, result){
+                    if (err) return next(err);
+                    if(postScoreControl(id, -1, next)){
+                        return true;
+                    }
+            });
+            }
+      });
+}
+
+function postScoreControl(id, score, next){
+    Post.update({_id: id}, {$inc: {score: score}},function(err,result){
+    if (err) return next(err);
+    return true;
+   });
+}
+

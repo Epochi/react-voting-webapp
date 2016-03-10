@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var utils = require('../config/utils');
 
+
 var PostCounterSchema = new mongoose.Schema({
     _id: {type: String, required: true},
     seq: { type: Number, default: 0 }
@@ -22,6 +23,7 @@ var postSchema = new mongoose.Schema({
         hidden: {type: Boolean, default: false},
         approved_by: String,
         user_reports: Array,
+        postThing: {type: String, ref: 'PostThing'},
         report_reasons: {
             censor: Number,
             funny: Number,
@@ -55,4 +57,15 @@ postSchema.pre('save', function (next) {
         post._id = n.toString(36);
         next();
     });
+ });
+
+//save postThing with the same id as postid
+postSchema.pre('save', function (next) {
+  var post = this;
+  var PostThing = mongoose.model('PostThing');
+  var postThing = new PostThing({
+      _id: post._id
+  });
+  postThing.save();
+  next();
  });

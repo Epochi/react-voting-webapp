@@ -1,16 +1,19 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Post = mongoose.model('Post');
+var PostThing = mongoose.model('PostThing');
 
 
 /**
  * List
  */
-exports.hot = function(req,res) {
-  Post.find({}).sort({score:1}).limit(20).exec(function(err, posts){
+exports.top = function(req,res) {
+  Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){
     if(err){return console.log('Error in first query')}
     console.log('responding with posts');
-    console.log(posts);
+    //console.log(posts);
+
+    
     res.json(posts);
   });
   
@@ -41,7 +44,8 @@ exports.create = function(req, res, next) {
           subport: subport,
           title: req.body.title,
           bodytext: req.body.text,
-          author: req.user.name
+          author: req.user.name,
+          url: req.body.url
       }
   });
   console.dir(post);
@@ -52,7 +56,7 @@ exports.create = function(req, res, next) {
       }
       
       console.log("success");
-      return res.status(200).send({message: "Post is saved"});
+      return res.status(200).json(post);
   });
 };
 
