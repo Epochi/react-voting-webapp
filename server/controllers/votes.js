@@ -6,9 +6,6 @@ var UserThing = mongoose.model('UserThing');
 
 // Try to add a vote, if vote was already found, delete the vote
 exports.votedPost = function(req, res, next) {
-    
-
-    
     //if user has not liked the post, add like, else if user has liked the post, delete the like
     if(!req.body.liked){
         postAddVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
@@ -17,6 +14,9 @@ exports.votedPost = function(req, res, next) {
         postDeleteVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
     }
 };
+exports.voteOnCreation =function(postid,userid,next){
+    postAddVote(postid,userid,next);
+}
 
 
 //addvote into postthing and if successful add to userthing

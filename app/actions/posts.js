@@ -58,11 +58,11 @@ export function invalidatePort(port) {
   };
 }
 
-export function fetchPosts(data,id,api='top') {
+export function fetchPosts(data,id,api='/top') {
   return {
     type: POSTS_GET,
     subport: api,
-    promise: makePostRequest('get',id, undefined, api)
+    promise: makePostRequest('get',id, data, api)
   };
 }
 

@@ -1,11 +1,11 @@
 /**
  * Routes for express app
  */
-var posts = require('../controllers/posts');
-var poster = require('../controllers/poster');
-var votes = require('../controllers/votes')
 var express = require('express');
 var users = require('../controllers/users');
+var posts = require('../controllers/posts');
+var poster = require('../controllers/poster');
+var votes = require('../controllers/votes');
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Post = mongoose.model('Post');
@@ -17,7 +17,7 @@ var App = require(compiled_app_module_path);
 module.exports = function(app, passport) {
   // user routes
 
-  app.get('/auth/logout', users.logout);
+  app.post('/auth/logout', users.logout);
   app.post('/auth/signup', users.create);
   app.post('/auth/login', function(req, res, next) {
     passport.authenticate('local', function(err, user, info) {
@@ -56,7 +56,11 @@ module.exports = function(app, passport) {
   app.get('/poster', poster.fetchReddit);
   app.post('/poster', poster.fetchReddit);
 
-  app.get('/top', posts.top);
+  app.get('/top', function(req,res,next){
+    console.log("originam url");
+    console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
+    posts.top(req,res,next);
+  });
   
 
   app.put('/p/:subport/:id/:title',users.userAuthenticated, function(req, res, next) {
@@ -74,6 +78,10 @@ module.exports = function(app, passport) {
   });
 
   app.get('*', function (req, res, next) {
+    console.log('CATCH ALL SESS');
+    console.log(req.session);
+        console.log("originam url");
+    console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
     App.default(req, res);
   });
 

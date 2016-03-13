@@ -1,22 +1,35 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Post = mongoose.model('Post');
-var PostThing = mongoose.model('PostThing');
+var votes = require('../controllers/votes');
 
 
 /**
  * List
  */
-exports.top = function(req,res) {
+exports.top = function(req,res,next) {
+  var user = req.user ? req.user._id : false;
+  //console.log(req.user);
+  console.log('CLUser');
+  console.log(req.session)
+  console.log(user);
+  Post.top(user,0, function(err, posts){
+    if(err){return next(err)}
+    console.log('responding with posts');
+    /*console.dir(posts[0])
+    console.dir(posts[1])
+    console.dir(posts[2])*/
+    res.json(posts);
+    
+  });
+  /*
   Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){
     if(err){return console.log('Error in first query')}
     console.log('responding with posts');
     //console.log(posts);
-
-    
     res.json(posts);
   });
-  
+  */
 }; 
 
 
@@ -54,7 +67,7 @@ exports.create = function(req, res, next) {
       if(err){
           return next(err);
       }
-      
+      votes.voteOnCreation(post._id, req.user._id,next);
       console.log("success");
       return res.status(200).json(post);
   });

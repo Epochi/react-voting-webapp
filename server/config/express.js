@@ -8,7 +8,7 @@ var flash = require('express-flash');
 var methodOverride = require('method-override');
 
 module.exports = function (app, passport) {
-  app.set('port', (process.env.PORT || 3000));
+  app.set('port', (process.env.PORT || 8080));
 
   // X-Powered-By header has no functional value.
   // Keeping it makes it easier for an attacker to build the site's profile
@@ -61,7 +61,7 @@ module.exports = function (app, passport) {
     // Add HTTPOnly, Secure attributes on Session Cookie
     // If secure is set, and you access your site over HTTP, the cookie will not be set
     cookie: {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
     },
     store: new MongoStore(

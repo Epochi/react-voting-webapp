@@ -3,14 +3,7 @@ import { Link } from 'react-router';
 import Toolbar from 'components/UI/Toolbar';
 import AuthenticationDialogs from 'components/UI/SignIn';
 import UserUI from 'components/UI/LoggedIn';
-import Snackbar from 'components/utils/Snackbar';
-/*
-const getUINavigation = (authenticated, username) => {
-  console.log("authenticated check: " + authenticated);
-  return !authenticated ? (<AuthenticationDialogs/>) :  (<UserUI username={username}/>);
-  let children =  !authenticated ? (<AuthenticationDialogs handleClear={handleClear} />) :  (<UserUI username={username} handleLogOut={handleLogOut}/>);
-}
-*/
+
 
 const Header = ({ authenticated, username, handleClear, handleLogOut}) => {  {
     

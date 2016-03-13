@@ -22,7 +22,11 @@ class NewPostModal extends React.Component {
 
   componentWillUpdate = (p,s) => {
     if(this.state.sent === true){
-       if(this.state.open != p.open){
+      console.log('this is p');
+      console.dir(p);
+      console.log('this is s');
+      console.dir(s);
+       if(this.state.open && !p.isWaiting){
          this.handleRequestClose();
           console.log('chaging it to prev state');
         this.setState({sent:false});
@@ -124,14 +128,15 @@ class NewPostModal extends React.Component {
 
 NewPostModal.propTypes = {
    children: PropTypes.node,
-   handleNewPost: PropTypes.func
+   handleNewPost: PropTypes.func,
+   isWaiting: PropTypes.bool
 };
 const mapStateToProps = (state) => {
   return {
-    open: state.ui.newPost.open
-  }
-}
+    isWaiting: state.ui.isWaiting
+  };
+};
 
-const NewPost = connect(mapStateToProps)(NewPostModal)
+const NewPost = connect(mapStateToProps)(NewPostModal);
 
 export default NewPost;

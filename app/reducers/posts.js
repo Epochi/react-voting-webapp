@@ -48,8 +48,11 @@ export function postsByPort(state = initialState, action) {
          posts: posts(state.posts, {index: action.index, type: action.type})
        };   
     case CREATE_POST_SUCCESS:
+      let post = {...action.req.data,
+        liked: true
+      }
        return {
-         posts: posts(state.posts, {post: action.req.data, type: action.type})
+         posts: posts(state.posts, {post: post, type: action.type})
        };   
   default:
     return state;

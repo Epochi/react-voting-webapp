@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import Button from 'components/utils/Button'
+//import PostButton from 
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_post';
 import card from 'material-design-lite/src/card/_card';

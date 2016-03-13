@@ -3,9 +3,9 @@ import {
   LOCAL_LOGIN_SUCCESS_USER,
   LOGIN_SUCCESS_USER,
   LOGIN_ERROR_USER,
-  LOGOUT_USER,
-  LOGOUT_SUCCESS_USER,
-  LOGOUT_ERROR_USER,
+  LOGOUT_USER_REQUEST,
+  LOGOUT_USER_SUCCESS,
+  LOGOUT_USER_ERROR,
   EMAIL_SIGNUP_COMPLETE,
   POST_CLEAR_STATE
 } from 'constants/index';
@@ -18,25 +18,20 @@ export default function ui(state={
   isWaiting: false,
   messageOpen: false,
   message: null,
-  newPost: {
-      open: false
-  },
   selectedPort: 'top'
   }, action={}) {
   switch (action.type) {
+    case LOGOUT_USER_REQUEST:
     case CREATE_POST_REQUEST:
       return Object.assign({}, state, {
-        isWaiting: true,
-        newPost: {
-            open: true
-            }
-      });        
-    case CREATE_POST_SUCCESS:
+        isWaiting: true
+      });
+     case LOGOUT_USER_SUCCESS:
+     case LOGOUT_USER_ERROR:
+     case CREATE_POST_SUCCESS:
+     case CREATE_POST_ERROR:
       return Object.assign({}, state, {
-        isWaiting: false,
-        newPost: {
-            open: false
-            }
+        isWaiting: false
       });
     default:
       return state;

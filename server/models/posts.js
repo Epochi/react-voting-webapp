@@ -37,7 +37,7 @@ var postSchema = new mongoose.Schema({
     } 
 }, {  toObject: {getters: true, virtuals: true}, toJSON: {getters: true, virtuals: true }});
 
-Post = mongoose.model('Post', postSchema);
+
 postSchema.index({ _id: -1});
 postSchema.index({ score: -1});
 
@@ -69,3 +69,22 @@ postSchema.pre('save', function (next) {
   postThing.save();
   next();
  });
+ 
+ 
+
+postSchema.statics = {
+    
+     top: function(user,page,cb) {
+         if(!user){
+         Post.find().sort({score:-1}).skip(page * 20).limit(20).exec(cb)
+         }else {
+         Post.find().sort({score:-1}).skip(page * 20).limit(20)
+         .populate({
+             path: 'postThing'
+         }).exec(cb);
+        }
+     }
+     
+};
+ 
+Post = mongoose.model('Post', postSchema);

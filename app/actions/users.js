@@ -4,28 +4,6 @@ import fetch from 'isomorphic-fetch';
 import request from 'axios';
 import * as types from 'constants';
 
-// Note this can be extracted out later
-/*
- * Utility function to make AJAX requests using isomorphic fetch.
- * You can also use jquery's $.ajax({}) if you do not want to use the
- * /fetch API.
- * @param Object Data you wish to pass to the server
- * @param String HTTP method, e.g. post, get, put, delete
- * @param String endpoint - defaults to /login
- * @return Promise
- */
- /*
-function makeUserRequest(method, data, api='/auth/login') {
-  return fetch(api, {
-    method: method,
-    credentials: 'same-origin',
-    headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  });
-}*/
 
 function makeUserRequest(method, data,  api='/auth/login') {
   return request({
@@ -102,6 +80,7 @@ export function localLoginFormUpdate(key, value) {
 }
 
 // Log Out Action Creators
+/*
 export function logOut() {
   return dispatch => {
     dispatch(beginLogout());
@@ -123,19 +102,36 @@ export function logOut() {
       });
   };
 }
+*/
+export function logOut() {
+  return dispatch => {
+    dispatch(beginLogout());
+    return makeUserRequest('post', null, '/auth/logout')
+      .then( response => {
+        if (response.status === 200) {
+          dispatch(logoutSuccess());
+        } else {
+          dispatch(logoutError());
+        }
+      });
+  };
+}
+
+
+
 
 function beginLogout() {
   console.log('logOut dispatched');
-  return { type: types.LOGOUT_USER};
+  return { type: types.LOGOUT_USER_REQUEST};
 }
 
 function logoutSuccess() {
   console.log('logOut sucess');
-  return { type: types.LOGOUT_SUCCESS_USER};
+  return { type: types.LOGOUT_USER_SUCCESS};
 }
 
 function logoutError() {
-  return { type: types.LOGOUT_ERROR_USER};
+  return { type: types.LOGOUT_USER_ERROR};
 }
 
 
