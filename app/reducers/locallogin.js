@@ -3,7 +3,7 @@ import {
   LOCAL_LOGIN_FORM_UPDATE,
   LOCAL_LOGIN_SUCCESS_USER,
   LOCAL_LOGIN_ERROR_USER,
-  CLEAR_LOGIN_DIALOGS } from 'constants';
+  CLEAR_LOGIN_DIALOGS } from 'constants/index';
 
 
 export default function locallogin(state={

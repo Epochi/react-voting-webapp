@@ -11,7 +11,7 @@ import {
   CREATE_POST_SUCCESS,
   CREATE_POST_ERROR,
   POST_CLEAR_STATE
-} from 'constants';
+} from 'constants/index';
 
 export default function user(state={
   authenticated: false,

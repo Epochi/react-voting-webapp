@@ -3,6 +3,7 @@ import { Route, IndexRoute } from 'react-router';
 import App from 'containers/App';
 import Profile from 'containers/Profile';
 import Posts from 'containers/Posts';
+import login from 'components/UI/LoginModal'
 
 
 /*
@@ -18,6 +19,7 @@ export default (store) => {
   };
   return (
     <Route path="/" component={App}>
+      <Route path="login" component={login}/ >
       <IndexRoute component={Posts} />
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
 
@@ -25,4 +27,3 @@ export default (store) => {
   );
 };
 
-//<Route path="/user/profile" component={Profile} onEnter={requireAuth} />

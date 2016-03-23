@@ -3,7 +3,7 @@ import {
   EMAIL_SIGNUP_COMPLETE,
   EMAIL_SIGNUP_ERROR,
   EMAIL_SIGNUP_FORM_UPDATE,
-  CLEAR_LOGIN_DIALOGS} from 'constants';
+  CLEAR_LOGIN_DIALOGS} from 'constants/index';
 
   export default function emailsignup(state={
   loading: false,

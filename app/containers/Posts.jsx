@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PostsView from 'components/Posts/PostsView';
 import * as PostActions from 'actions/posts';
+import {fetchPosts} from 'actions/posts';
+
 
 
 function mapStateToProps(state) {
@@ -22,50 +24,7 @@ function mapDispatchToProps(dispatch) {
 
 const Posts = connect(mapStateToProps,mapDispatchToProps)(PostsView);
 Posts.need = [
-  PostActions.fetchPosts
-];
+  fetchPosts
+  ];
 export default Posts;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-const mapStateToProps = (state) => {
-  return {
-      postsByPort: state.posts.post
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    postVote: (data) => {
-      dispatch(postVoteRequest(data));
-    }
-  }
-}
-
-const Posts = connect(mapStateToProps, mapDispatchToProps)(PostsView)
-
-
-export default Posts
-*/

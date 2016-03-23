@@ -9,9 +9,9 @@ var votes = require('../controllers/votes');
  */
 exports.top = function(req,res,next) {
   var user = req.user ? req.user._id : false;
-  //console.log(req.user);
+  console.log(req.user);
   console.log('CLUser');
-  console.log(req.session)
+  console.log(req.body);
   console.log(user);
   Post.top(user,0, function(err, posts){
     if(err){return next(err)}
@@ -20,7 +20,32 @@ exports.top = function(req,res,next) {
     console.dir(posts[1])
     console.dir(posts[2])*/
     res.json(posts);
-    
+  });
+  /*
+  Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){
+    if(err){return console.log('Error in first query')}
+    console.log('responding with posts');
+    //console.log(posts);
+    res.json(posts);
+  });
+  */
+}; 
+
+exports.home = function(req,res,next) {
+  var user = req.user ? req.user._id : false;
+  console.log(req.user);
+  console.log('CLUser');
+  console.log(req.body);
+  console.log(user);
+  Post.top(user,0, function(err, posts){
+    if(err){return next(err)}
+    console.log('responding with posts');
+    /*console.dir(posts[0])
+    console.dir(posts[1])
+    console.dir(posts[2])*/
+    console.log('das ist locals');
+    console.log(res.locals);
+    next();
   });
   /*
   Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){

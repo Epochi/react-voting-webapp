@@ -7,11 +7,9 @@ import {
   LOGOUT_USER_SUCCESS,
   LOGOUT_USER_ERROR,
   EMAIL_SIGNUP_COMPLETE,
-  POST_CLEAR_STATE
+  POST_CLEAR_STATE,
+    CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS
 } from 'constants/index';
-import {
-  CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_ERROR,CREATE_POST_SUCCESS
-} from 'actions/posts';
 
 
 export default function ui(state={
@@ -29,7 +27,7 @@ export default function ui(state={
      case LOGOUT_USER_SUCCESS:
      case LOGOUT_USER_ERROR:
      case CREATE_POST_SUCCESS:
-     case CREATE_POST_ERROR:
+     case CREATE_POST_FAILURE:
       return Object.assign({}, state, {
         isWaiting: false
       });

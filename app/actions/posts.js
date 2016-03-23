@@ -1,27 +1,8 @@
 import { polyfill } from 'es6-promise';
 import request from 'axios';
 import md5 from 'spark-md5';
-import * as types from 'constants';
+import * as types from 'constants/index';
 
-export const CREATE_POST = 'CREATE_POST';
-export const CREATE_POST_REQUEST = 'CREATE_POST_REQUEST';
-export const CREATE_POST_ERROR = 'CREATE_POST_ERROR';
-export const CREATE_POST_SUCCESS = 'CREATE_POST_SUCCESS';
-
-export const POSTS_GET = 'POSTS_GET';
-export const POSTS_GET_SUCCESS = 'POSTS_GET_SUCCESS';
-export const POSTS_GET_FAILURE = 'POSTS_GET_FAILURE';
-export const POSTS_GET_REQUEST = 'POSTS_GET_REQUEST';
-
-export const SELECT_PORT = 'SELECT_PORT';
-export const INVALIDATE_PORT = 'INVALIDATE_PORT';
-  
-export const POSTS_LIKE = 'POSTS_LIKE';
-export const POSTS_UNLIKE = 'POSTS_UNLIKE';
-export const POSTS_LIKE_REQUEST = 'POSTS_LIKE_REQUEST';
-export const POSTS_UNLIKE_REQUEST = 'POSTS_UNLIKE_REQUEST';
-export const POSTS_LIKE_SUCCESS = 'POSTS_LIKE_SUCCESS';
-export const POSTS_UNLIKE_SUCCESS = 'POSTS_UNLIKE_SUCCESS';
 
 polyfill();
 
@@ -33,52 +14,84 @@ function makePostRequest(method, id, data, api='/p') {
 
 //Post creation
 function clearPostState() {
-  return {type: types.POST_CLEAR_STATE};
+  return {type: types.types.POST_CLEAR_STATE};
 }
 
 export function createNewPost(data){
+  return (dispatch, getState) => {
+    dispatch(createNewPostRequest(data));
+    
+    return makePostRequest('post',undefined ,data,'/p/post')
+        .then(res => {
+          if(res.status === 200) {
+            return dispatch(createPostSuccess());
+          }
+        })
+        .catch(error => {
+          return dispatch(createPostFailure({ error: 'Oops! What a poop, Something went wrong and we couldn\'t create your post'}));
+        });
+  };
+}
+
+function createNewPostRequest(data){
     return {
-      type: CREATE_POST,
-      data,
-      promise: makePostRequest('post',undefined,data,'/post')
-    };
+    type: types.CREATE_POST_REQUEST
+  };
+}
+function createPostSuccess(data) {
+  return {
+    type: types.CREATE_POST_SUCCESS,
+    data: data
+  };
+}
+
+function createPostFailure(data) {
+  return {
+    type: types.CREATE_POST_FAILURE,
+    error: data.error
+  };
 }
 
 export function selectPort(port) {
   return {
-    type: SELECT_PORT,
+    type: types.SELECT_PORT,
     port
   };
 }
 
 export function invalidatePort(port) {
   return {
-    type: INVALIDATE_PORT,
+    type: types.INVALIDATE_PORT,
     port
   };
 }
 
-export function fetchPosts(data,id,api='/top') {
-  return {
-    type: POSTS_GET,
-    subport: api,
-    promise: makePostRequest('get',id, data, api)
-  };
+export function likePost(index,permalink,liked){
+  if(!liked){
+    return dispatch => {
+      dispatch(dislikedPost(index));
+      return makePostRequest('put', undefined,{liked: false},permalink)
+    }
+  }else{
+    return dispatch => {
+      dispatch(likedPost(index));
+      return makePostRequest('put', undefined,{liked: true},permalink)
+    }
+  }
+}
+
+function likedPost(index) {
+  return { type: types.POSTS_LIKE, index };
+}
+
+function dislikedPost(index) {
+  return { type: types.POSTS_UNLIKE, index };
 }
 
 
-export function likePost(index,permalink,liked){
-  if(!liked){
-    return{
-      type: POSTS_LIKE,
-      index,
-      promise: makePostRequest('put',undefined, {liked: liked}, permalink)
+export function fetchPosts(api='top') {
+    return {
+        type: types.POSTS_GET,
+        promise: (client) => client.get('/top/.json')
     };
-  }else{
-   return{
-      type: POSTS_UNLIKE,
-      index,
-      promise: makePostRequest('put',undefined, {liked: liked}, permalink)
-    };
-  }
 }

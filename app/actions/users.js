@@ -2,7 +2,7 @@
 import 'es6-promise';
 import fetch from 'isomorphic-fetch';
 import request from 'axios';
-import * as types from 'constants';
+import * as types from 'constants/index';
 
 
 function makeUserRequest(method, data,  api='/auth/login') {

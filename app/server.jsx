@@ -7,6 +7,7 @@ import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
 import headconfig from 'components/Meta';
 import { fetchComponentDataBeforeRender } from 'api/fetchComponentDataBeforeRender';
+import ApiServer from 'api/ApiServer';
 
 const clientConfig = {
   host: process.env.HOSTNAME || 'localhost',
@@ -14,6 +15,7 @@ const clientConfig = {
 };
 
 // configure baseURL for axios requests (for serverside API calls)
+//axios.defaults.baseURL =  'https://yp-dev-2-miauwi.c9users.io/';
 axios.defaults.baseURL = `http://${clientConfig.host}:${clientConfig.port}`;
 
 /*
@@ -53,18 +55,19 @@ function renderFullPage(renderedContent, initialState, head={
  */
 export default function render(req, res) {
     const history = createMemoryHistory();
-    const authenticated = req.isAuthenticated();
-    const user = authenticated ? req.user.name : null;
+    const authenticated =  res.locals.authenticated;
+    const client = ApiServer(req, authenticated);
+    const user = authenticated ? res.locals.user.name : null;
     const store = configureStore({
     user: {
       username: user,
       authenticated: authenticated,
       isWaiting: false
     }
-    }, history);
-
+    }, history,client);
+    console.log('This is render uzr: ' + user);
     const routes = createRoutes(store);
-
+    
   /*
    * From the react-router docs:
    *
@@ -98,7 +101,6 @@ export default function render(req, res) {
             <RouterContext {...renderProps} />
         </Provider>
       );
-
       //This method waits for all render component promises to resolve before returning to browser
       fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params)
       .then(html => {

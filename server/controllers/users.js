@@ -81,33 +81,6 @@ exports.signin = function () {};
 
 exports.authCallback = login;
 
-/**
- * Show login form
- 
-
-exports.login = function (req, res) {
-  res.render('/auth/users/login', {
-    title: 'Login'
-  });
-};
-
-*/
-
-/**
- * Show sign up form
-
-
-exports.signup = function (req, res) {
-  res.render('/auth/users/signup', {
-    title: 'Sign up',
-    user: new User()
-  });
-};
-*/
-/**
- * Logout
- */
-
 exports.logout = function (req, res) {
   req.logOut();
   return res.status(302).redirect('/');

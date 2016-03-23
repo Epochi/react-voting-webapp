@@ -55,10 +55,7 @@ module.exports = function(app, passport) {
   // post routes
   app.get('/poster', poster.fetchReddit);
   app.post('/poster', poster.fetchReddit);
-
-  app.get('/top', function(req,res,next){
-    console.log("originam url");
-    console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
+  app.get('/top/.json', function(req,res,next){
     posts.top(req,res,next);
   });
   
@@ -67,21 +64,29 @@ module.exports = function(app, passport) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
   });
-  app.post('/post', users.userAuthenticated, posts.create);
+  app.post('/p/post', users.userAuthenticated, posts.create);
 
-  app.put('/post', function(req, res) {
+  app.put('/p/post', function(req, res) {
     posts.update(req, res);
   });
 
-  app.delete('/post', function(req, res) {
+  app.delete('/p/post', function(req, res) {
     posts.remove(req, res);
   });
-
+  
+  app.use(function(req,res,next){
+    res.locals.authenticated = req.isAuthenticated();
+    res.locals.user = res.locals.authenticated ? req.user : null;
+    next();
+  });
+  
+  app.get('/', function(req,res,next){
+    console.log(req.session.cookie);
+    console.log(req.cookie);
+    console.log('im still her ebiatch');
+    posts.home(req,res,next);
+  });
   app.get('*', function (req, res, next) {
-    console.log('CATCH ALL SESS');
-    console.log(req.session);
-        console.log("originam url");
-    console.log(req.protocol + '://' + req.get('host') + req.originalUrl);
     App.default(req, res);
   });
 

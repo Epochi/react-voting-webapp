@@ -5,8 +5,11 @@ import styles from 'scss/components/_postsview';
 import layout from 'material-design-lite/src/layout/_layout';
 import grid from 'material-design-lite/src/grid/_grid';
 import Post from 'components/Posts/Post';
+import {fetchPosts} from 'actions/posts';
 
 const cx = classNames.bind(Object.assign(styles, layout, grid));
+
+
 
 class PostsView extends Component {
   constructor(props) {
@@ -42,6 +45,7 @@ class PostsView extends Component {
             );
   }
 }
+
 
 PostsView.propTypes = {
   posts: PropTypes.array.isRequired,
