@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var _ = require('lodash');
 var Post = mongoose.model('Post');
+var PostThing = mongoose.model('PostThing');
 var votes = require('../controllers/votes');
 
 
@@ -8,54 +9,16 @@ var votes = require('../controllers/votes');
  * List
  */
 exports.top = function(req,res,next) {
-  var user = req.user ? req.user._id : false;
-  console.log(req.user);
-  console.log('CLUser');
-  console.log(req.body);
-  console.log(user);
-  Post.top(user,0, function(err, posts){
+  console.log('CLUser exports.top');
+  Post.top(0, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
-    /*console.dir(posts[0])
-    console.dir(posts[1])
-    console.dir(posts[2])*/
-    res.json(posts);
-  });
-  /*
-  Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){
-    if(err){return console.log('Error in first query')}
-    console.log('responding with posts');
-    //console.log(posts);
-    res.json(posts);
-  });
-  */
-}; 
-
-exports.home = function(req,res,next) {
-  var user = req.user ? req.user._id : false;
-  console.log(req.user);
-  console.log('CLUser');
-  console.log(req.body);
-  console.log(user);
-  Post.top(user,0, function(err, posts){
-    if(err){return next(err)}
-    console.log('responding with posts');
-    /*console.dir(posts[0])
-    console.dir(posts[1])
-    console.dir(posts[2])*/
-    console.log('das ist locals');
-    console.log(res.locals);
+    res.locals.posts = posts;
     next();
   });
-  /*
-  Post.find({}).sort({score:-1}).limit(20).exec(function(err, posts){
-    if(err){return console.log('Error in first query')}
-    console.log('responding with posts');
-    //console.log(posts);
-    res.json(posts);
-  });
-  */
 }; 
+
+
 
 
 exports.all = function(req, res) {
@@ -143,4 +106,14 @@ exports.remove = function(req, res) {
     if(err) console.log('Error on delete');
     res.status(200).send('Removed Successfully');
   });
+};
+
+
+exports.match = function (req,res,next){
+   PostThing.match(res.locals.posts, req.user._id, function(posts){
+     var respons = posts;
+            res.json(respons);
+       
+    });
+
 };

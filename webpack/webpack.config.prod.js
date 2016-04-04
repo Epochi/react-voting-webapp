@@ -90,7 +90,7 @@ module.exports = [
         // Order the modules and chunks by occurrence.
         // This saves space, because often referenced modules
         // and chunks get smaller ids.
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new webpack.optimize.OccurrenceOrderPlugin(),
         // extract inline css from modules into separate files
         new ExtractTextPlugin("styles/main.css"),
         new webpack.optimize.UglifyJsPlugin({

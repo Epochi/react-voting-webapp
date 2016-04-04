@@ -6,7 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import createDevToolsWindow from 'createDevToolsWindow';
+//import createDevToolsWindow from 'createDevToolsWindow';
 import ApiClient from 'api/ApiClient.js';
 injectTapEventPlugin();
 

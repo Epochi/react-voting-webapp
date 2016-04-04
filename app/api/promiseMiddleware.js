@@ -21,8 +21,6 @@ export default function promiseMiddleware(client) {
       const REQUEST = type + '_REQUEST';
       const FAILURE = type + '_FAILURE';
       next({...rest, type: REQUEST});
-      console.log('Client object');
-      console.dir(client);
       const actionPromise = promise(client);
       actionPromise.then(req => {
         next({...rest, req, type: SUCCESS});

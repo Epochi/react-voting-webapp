@@ -10,6 +10,7 @@ export function fetchComponentDataBeforeRender(dispatch, components, params) {
       .concat((current.WrappedComponent ? current.WrappedComponent.need : []) || [])
       .concat(prev);
     }, []);
+    if(Object.keys(params).length === 0){params = undefined}
     const promises = needs.map(need => dispatch(need(params)));
     return Promise.all(promises);
 }

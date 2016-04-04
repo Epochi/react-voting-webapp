@@ -14,6 +14,26 @@ postThingSchema.statics = {
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);
+  },
+  match: function(posts, id, cb){
+      var hm = {};
+      posts.forEach(function(elm,index){
+                hm[elm._id] = index;
+      });
+      
+     //console.log("match uID "+id);
+     this.find({_id: {$in: Object.keys(hm) },votes: {$elemMatch : {$eq: id}} },{_id:1})
+     .lean(true)
+     .exec(
+        function(err,upvoted){
+            if(err){return console.log('posts voter error')}
+                 upvoted.forEach((elm) => {
+                  posts[hm[elm._id]].voted = true;
+                });
+            cb(posts);
+       
+        });
+  
   }
 };
 

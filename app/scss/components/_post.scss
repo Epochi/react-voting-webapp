@@ -1,30 +1,43 @@
+@import 'settings.scss';
+
 .post{
     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
     margin: 20px auto;
     flex-grow: 1;
 }
-.vote__button{
-    width: 32px;
-    height: 24px;
-    position:relative;
-    display:block;
-    color:#8899a6;
-        
-    & > i{
-        margin: -9px 0px 4px 4px;
-        display:block;
-        width:32px;
-        height:14px;
+.post__buttonNav{
+    font-size:14px; 
+    margin: 8px 8px;
+    & span{
+         color:$color-black-fade;
     }
-    & > span{
-        display:block;
-        text-align: center;
-        font-size:13px;
-        margin-top: -3px;;
+    > div{
+        display:inline-block;
+        margin:0 8px;
     }
-    &.voted{
-        color:#4CAF50;
+    & i{
+        font-size:16px;
+        height:19px;
+        vertical-align:middle;
+        margin-right:2px;
+        color:$color-black-fade;
     }
+    & .vote__button{
+        max-width:51px;
+        min-widtH:25px;
+        position:relative;
+        display:inline-block;
+        color:$color-black-fade;
+        text-align: left;
+        &.voted i,&.voted span{
+            color:#4CAF50;
+        } 
+    }
+    & .more-icon>i{
+    font-size: 26px;
+    line-height: 16px;
+    }
+    
 }
 .title{
     
@@ -32,13 +45,41 @@
         padding: 16px 4px !important;
     }
 }
-.liked{
-    color: green;
+.post__author {
+    margin-left: 16px;
+    & a{
+        font-size:14px;
+        font-weight:500;
+    }
+    & span{
+        font-size:14px;
+        color:$color-black-fade;
+    }
+    & i{
+        font-size:16px;
+        height:20px;
+        vertical-align:middle;
+    }
 }
-
-.likedspan{
-       margin-top: -15px !important;
-}
-.hidden{
-    opacity:0;
+.tooltip{
+    position:relative;
+    &>.tooltip-text{
+    visibility: hidden;
+    //width: 120px;
+    background-color: rgba(0,0,0,0.8);
+    color: #fff !important;
+    text-align: center;
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    bottom: 100%;
+    left: 50%; 
+    transform: translate(-50%, 0%);;
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;    
+    }
+    &:hover > .tooltip-text{
+        visibility: visible;
+    }
 }

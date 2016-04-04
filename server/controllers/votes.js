@@ -6,22 +6,31 @@ var UserThing = mongoose.model('UserThing');
 
 // Try to add a vote, if vote was already found, delete the vote
 exports.votedPost = function(req, res, next) {
-    console.log('did i lik? ' + req.body.liked);
-    //if user has not liked the post, add like, else if user has liked the post, delete the like
-    if(!req.body.liked){
-        postAddVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
+    console.log('did i lik? ' + req.body.voted);
+    //if user has not voted the post, add like, else if user has voted the post, delete the like
+    //pass callback along the vote flow
+    //endpoints are deletevote else and scorecontrol
+    if(!req.body.voted){
+        postAddVote(req.params.id,req.user._id,next,function(response){
+            console.log('server response to vote:' + response);
+            response ? res.sendStatus(200) : res.sendStatus(500);
+        });
     } else {
-    //delete the like if post is already liked
-        postDeleteVote(req.params.id,req.user._id,next) ? res.status(200) : res.status(500);
+    //delete the like if post is already voted
+        postDeleteVote(req.params.id,req.user._id,next,
+        function(response){
+            console.log('server response to vote:' + response);
+            response ? res.sendStatus(200) : res.sendStatus(500);
+        });
     }
 };
-exports.voteOnCreation =function(postid,userid,next){
-    postAddVote(postid,userid,next);
+exports.voteOnCreation =function(postid,userid,next,cb){
+    postAddVote(postid,userid,next,cb);
 }
 
 
 //addvote into postthing and if successful add to userthing
-function postAddVote(id, user, next){
+function postAddVote(id, user, next,cb){
    PostThing.update({_id: id}, { $addToSet: { votes: user}}, function(err, result){
        if (err) return next(err);
        if(result.n <= result.nModified){
@@ -29,37 +38,36 @@ function postAddVote(id, user, next){
             console.log(result);
             UserThing.update({_id: user}, { $addToSet: { postVotes: id}}, function(err, result){
             if (err) return next(err);
-            if(postScoreControl(id, 1, next)){
-                return true;
-            }
+            postScoreControl(id, 1, next,cb);
             });
        } else {
-           postDeleteVote(id,user,next);
+           postDeleteVote(id,user,next,cb);
        }
-       
-   }) 
+   });
 }
 
-function postDeleteVote(id,user, next){
-        PostThing.update({_id: id}, {$pull: {votes: id} }, function (err, result){
+function postDeleteVote(id,user, next,cb){
+        PostThing.update({_id: id}, {$pull: {votes: user} }, function (err, result){
             if (err) return next(err);
+             console.log("Deleting Vote Try");
+                console.log(result);
             if(result.n <= result.nModified){
-                console.log("Deleting Vote Results");
+                console.log("Deleting Vote Success");
                 console.log(result);
                 UserThing.update({_id: user}, { $pull: { postVotes: id}}, function(err, result){
                     if (err) return next(err);
-                    if(postScoreControl(id, -1, next)){
-                        return true;
-                    }
-            });
+                    postScoreControl(id, -1, next,cb)
+                });
+            } else{
+                cb(false);
             }
       });
 }
 
-function postScoreControl(id, score, next){
+function postScoreControl(id, score, next,cb){
     Post.update({_id: id}, {$inc: {score: score}},function(err,result){
     if (err) return next(err);
-    return true;
+      cb(true);
    });
 }
 

@@ -53,7 +53,7 @@ module.exports = function (app, passport) {
   //                  However, it requires an https-enabled website, i.e., HTTPS is necessary for secure cookies.
   //                  If secure is set, and you access your site over HTTP, the cookie will not be set.
   var sess = {
-    resave: true,
+    resave: false,
     saveUninitialized: false,
     secret: secrets.sessionSecret,
     proxy: false, // The "X-Forwarded-Proto" header will be used.
@@ -61,7 +61,7 @@ module.exports = function (app, passport) {
     // Add HTTPOnly, Secure attributes on Session Cookie
     // If secure is set, and you access your site over HTTP, the cookie will not be set
     cookie: {
-      httpOnly: false,
+      httpOnly: true,
       secure: false
     },
     store: new MongoStore(
@@ -79,7 +79,7 @@ module.exports = function (app, passport) {
   if(node_env === 'production') {
     console.log('===> 🚦  Note: In order for authentication to work in production');
     console.log('===>           you will need a secure HTTPS connection');
-    sess.cookie.secure = false; // Serve secure cookies
+    sess.cookie.secure = true; // Serve secure cookies
   }
 
   app.use(session(sess));

@@ -2,16 +2,12 @@
 import axios from 'axios';
 
 
-function api(){
+export default function ApiClient(){
   const client = axios.create({
     //Set baseURL to what the user will be accessing
-    baseURL: `https://react-webpack-node.c9users.io`
+    baseURL: `https://yp-dev-2-miauwi.c9users.io/`
   });
   
   
   return client;
 }
-
-const ApiClient = api;
-
-export default ApiClient;

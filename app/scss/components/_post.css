@@ -1,0 +1,56 @@
+/*
+Error: File to import not found or unreadable: settings.scss.
+        on line 1 of /home/ubuntu/workspace/react-voting-webapp/app/scss/components/_post.scss
+
+1: @import 'settings.scss';
+2: 
+3: .post{
+4:     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+5:     margin: 20px auto;
+6:     flex-grow: 1;
+
+Backtrace:
+/home/ubuntu/workspace/react-voting-webapp/app/scss/components/_post.scss:1
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/import_node.rb:67:in `rescue in import'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/import_node.rb:45:in `import'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/import_node.rb:28:in `imported_file'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/import_node.rb:37:in `css_import?'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:311:in `visit_import'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:36:in `visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:158:in `block in visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/stack.rb:79:in `block in with_base'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/stack.rb:115:in `with_frame'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/stack.rb:79:in `with_base'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:158:in `visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:52:in `block in visit_children'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:52:in `map'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:52:in `visit_children'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:167:in `block in visit_children'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:179:in `with_environment'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:166:in `visit_children'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:36:in `block in visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:186:in `visit_root'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/base.rb:36:in `visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:157:in `visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/visitors/perform.rb:8:in `visit'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/root_node.rb:36:in `css_tree'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/tree/root_node.rb:29:in `render_with_sourcemap'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/engine.rb:378:in `_render_with_sourcemap'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/engine.rb:295:in `render_with_sourcemap'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/plugin/compiler.rb:490:in `update_stylesheet'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/plugin/compiler.rb:215:in `block in update_stylesheets'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/plugin/compiler.rb:209:in `each'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/plugin/compiler.rb:209:in `update_stylesheets'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/plugin.rb:82:in `update_stylesheets'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/exec/sass_scss.rb:363:in `watch_or_update'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/exec/sass_scss.rb:51:in `process_result'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/exec/base.rb:52:in `parse'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/lib/sass/exec/base.rb:19:in `parse!'
+/mnt/shared/lib/ruby/2.2.0/gems/sass-3.4.21/bin/scss:13:in `<top (required)>'
+/nix/store/yrs58pvf72cn1mcax0s685yw2dqzzvqv-ruby-1.9.3-p484/bin/scss:23:in `load'
+/nix/store/yrs58pvf72cn1mcax0s685yw2dqzzvqv-ruby-1.9.3-p484/bin/scss:23:in `<main>'
+*/
+body:before {
+  white-space: pre;
+  font-family: monospace;
+  content: "Error: File to import not found or unreadable: settings.scss.\A         on line 1 of /home/ubuntu/workspace/react-voting-webapp/app/scss/components/_post.scss\A \A 1: @import 'settings.scss';\A 2: \A 3: .post{\A 4:     box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);\A 5:     margin: 20px auto;\A 6:     flex-grow: 1;"; }

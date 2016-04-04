@@ -66,32 +66,43 @@ export function invalidatePort(port) {
   };
 }
 
-export function likePost(index,permalink,liked){
-  if(!liked){
+export function votePost(index,id,subport,voted){
+  let link = /p/+subport+'/'+id;
+  if(voted === true){
     return dispatch => {
-      dispatch(dislikedPost(index));
-      return makePostRequest('put', undefined,{liked: false},permalink)
+      dispatch(disvotedPost(index));
+      return makePostRequest('put', undefined,{voted: true},link)
+      .then(function(response) {
+        console.log("UnVote Success!", response.status);
+      }, function(error) {
+        console.error("Vote Failed! ", error);
+      });
     }
   }else{
     return dispatch => {
-      dispatch(likedPost(index));
-      return makePostRequest('put', undefined,{liked: true},permalink)
+      dispatch(votedPost(index));
+      return makePostRequest('put', undefined,{voted: false},link)
+            .then(function(response) {
+        console.log("Vote Success!", response.status);
+      }, function(error) {
+        console.error("Vote Failed! ", error);
+      });
     }
   }
 }
 
-function likedPost(index) {
-  return { type: types.POSTS_LIKE, index };
+function votedPost(index) {
+  return { type: types.POSTS_VOTE, index };
 }
 
-function dislikedPost(index) {
-  return { type: types.POSTS_UNLIKE, index };
+function disvotedPost(index) {
+  return { type: types.POSTS_UNVOTE, index };
 }
 
 
 export function fetchPosts(api='top') {
     return {
         type: types.POSTS_GET,
-        promise: (client) => client.get('/top/.json')
+        promise: (client) => client.get(`/p/${api}/.json`)
     };
 }

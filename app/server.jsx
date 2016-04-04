@@ -16,7 +16,7 @@ const clientConfig = {
 
 // configure baseURL for axios requests (for serverside API calls)
 //axios.defaults.baseURL =  'https://yp-dev-2-miauwi.c9users.io/';
-axios.defaults.baseURL = `http://${clientConfig.host}:${clientConfig.port}`;
+axios.defaults.baseURL = `https://${clientConfig.host}:${clientConfig.port}`;
 
 /*
  * Our html template file
@@ -55,9 +55,11 @@ function renderFullPage(renderedContent, initialState, head={
  */
 export default function render(req, res) {
     const history = createMemoryHistory();
-    const authenticated =  res.locals.authenticated;
+    console.log('this is inside server.render');
+    const authenticated =  req.isAuthenticated();
+    console.log(authenticated);
     const client = ApiServer(req, authenticated);
-    const user = authenticated ? res.locals.user.name : null;
+    const user = authenticated ? req.user.name : null;
     const store = configureStore({
     user: {
       username: user,
@@ -95,7 +97,6 @@ export default function render(req, res) {
     } else if (redirectLocation) {
       res.redirect(302, redirectLocation.pathname + redirectLocation.search);
     } else if (renderProps) {
-
       const InitialView = (
         <Provider store={store}>
             <RouterContext {...renderProps} />

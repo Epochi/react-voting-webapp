@@ -11,6 +11,26 @@ $color-white: #fff;
 $color-dodger-blue: #2196F3;
 $color-salem: #0F9D58;
 $color-punch: #db4437;
+$color-black-fade: #8899a6;
 
 
 $global-radius: 4px;
+
+.no-p{
+    cursor: default;
+}
+.no-s{
+   -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none; 
+}
+.no-ps{
+    cursor: default;
+    -moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+   -ms-user-select: none;
+   user-select: none; 
+}

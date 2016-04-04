@@ -223,10 +223,8 @@ UserSchema.statics = {
 
   load: function (options, cb) {
     options.select = options.select || 'name username';
-    console.log("inside mongoose load function JA?????");
     console.dir(options.criteria);
     console.dir(options.select);
-    console.log('|||__________criteria_____________|||');
     return this.findOne(options.criteria)
       .select(options.select)
       .exec(cb);

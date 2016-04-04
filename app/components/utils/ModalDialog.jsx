@@ -1,12 +1,21 @@
-import React, { PropTypes } from 'react';
+import React, {
+    PropTypes
+}
+from 'react';
 import Button from 'components/utils/Button';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_modal';
+import {
+    Link
+}
+from 'react-router';
 const cx = classNames.bind(styles);
 
 
-const ModalDialog = ({children,actions,onRequestClose,title,tabs,handleTabClick}) => {
-let titleProp = title ? <h3 className={cx("modal-title")}>{title}</h3> : null;
+const ModalDialog = ({
+    children, actions, onRequestClose, title, tabs, handleTabClick
+}) => {
+    let titleProp = title ? <h3 className={cx("modal-title")}>{title}</h3> : null;
 
     return (
         <div>
@@ -15,43 +24,47 @@ let titleProp = title ? <h3 className={cx("modal-title")}>{title}</h3> : null;
             <div className={cx("modal-window")}>
                 <div className={cx("modal-header")}>
                     {titleProp}
-                    {tabs.map(tab =>
+                    {tabs ? (
+                    tabs.map(tab =>
                         <div onClick={handleTabClick.bind(this, tab)} key={tab.id}>{tab.label}</div>
-                        )}
+                        )
+                       ) : null }
                     <a onClick={onRequestClose} className={cx("exit-icon")}><i className={'material-icons'}>close</i></a>
                 </div>
                 <div className={cx("modal-content")}>
                     {children}
                 </div>
                 <div className={cx("modal-actions")}>
-                    {actions.map(action => 
+                    <Link
+                      to={this.props.returnTo}
+                      >
+                      <Button />
+                    </Link>
+                    {actions ?
+                    actions.map(action => 
                         <Button
                         key={action.id}
                         classes={action.style}
                         {...action}
                         onClick={action.click}
                         />
-                    )}
+                    ) : null }
                     
                 </div>
                 
             </div>
         </div>
-        );
-  
+    );
+
 };
-    
+
 ModalDialog.propTypes = {
-  children: PropTypes.node,
-  actions: PropTypes.array,
-  onRequestClose: PropTypes.func,
-  title: PropTypes.string,
-  tabs: PropTypes.array,
-  handleTabClick: PropTypes.func
+    children: PropTypes.node,
+    actions: PropTypes.array,
+    onRequestClose: PropTypes.func,
+    title: PropTypes.string,
+    tabs: PropTypes.array,
+    handleTabClick: PropTypes.func
 };
 
 export default ModalDialog;
-
-
-
-

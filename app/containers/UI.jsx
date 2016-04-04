@@ -4,10 +4,11 @@ import Header from 'components/UI/Header';
 import { logOut, clearLoginDialogs } from 'actions/users';
 
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state,ownProps) => {
   return {
     authenticated: state.user.authenticated,
-    username: state.user.username
+    username: state.user.username,
+    location: ownProps.location
   }
 }
 
@@ -26,3 +27,4 @@ const mapDispatchToProps = (dispatch) => {
 const UI = connect(mapStateToProps, mapDispatchToProps)(Header)
 
 export default UI
+

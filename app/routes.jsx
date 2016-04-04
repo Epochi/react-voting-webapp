@@ -3,8 +3,6 @@ import { Route, IndexRoute } from 'react-router';
 import App from 'containers/App';
 import Profile from 'containers/Profile';
 import Posts from 'containers/Posts';
-import login from 'components/UI/LoginModal'
-
 
 /*
  * @param {Redux Store}
@@ -15,11 +13,26 @@ import login from 'components/UI/LoginModal'
 export default (store) => {
   const requireAuth = (nextState, replace, callback) => {
     const { user: { authenticated }} = store.getState();
+    if (!authenticated) {
+      replace({
+        pathname: '/login',
+        state: { nextPathname: nextState.location.pathname }
+      });
+    }
+    callback();
+  };
+
+  const redirectAuth = (nextState, replace, callback) => {
+    const { user: { authenticated }} = store.getState();
+    if (authenticated) {
+      replace({
+        pathname: '/'
+      });
+    }
     callback();
   };
   return (
     <Route path="/" component={App}>
-      <Route path="login" component={login}/ >
       <IndexRoute component={Posts} />
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
 

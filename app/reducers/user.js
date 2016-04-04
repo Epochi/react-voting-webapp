@@ -38,7 +38,8 @@ export default function user(state={
       });
     case EMAIL_SIGNUP_COMPLETE:
       return Object.assign({}, state, {
-        authenticated: true
+        authenticated: true,
+        username: action.username
       });
     case LOCAL_LOGIN_SUCCESS_USER:
       return Object.assign({}, state, {

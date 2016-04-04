@@ -211,5 +211,4 @@ const AuthenticationDialogs = () => {
   return <div><LoginDialog /><SignUpDialog /></div>
 }
 
-
 export default AuthenticationDialogs;

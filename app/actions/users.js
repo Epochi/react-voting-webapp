@@ -1,7 +1,8 @@
 // Including es6-promise so isomorphic fetch will work
 import 'es6-promise';
-import fetch from 'isomorphic-fetch';
+//import fetch from 'isomorphic-fetch';
 import request from 'axios';
+import { push } from 'react-router-redux';
 import * as types from 'constants/index';
 
 
@@ -144,13 +145,13 @@ export function emailSignUpFormUpdate(key, value) {
 function emailSignUpStart() {
   return { type: types.EMAIL_SIGNUP_START };
 }
-function emailSignUpComplete(user) {
-  return { type: types.EMAIL_SIGNUP_COMPLETE, user };
+function emailSignUpComplete(username) {
+  return { type: types.EMAIL_SIGNUP_COMPLETE, username };
 }
 function emailSignUpError(errors) {
   return { type: types.EMAIL_SIGNUP_ERROR, errors};
 }
-
+/*
 function emailSignUpErrorDelegator(error) {
   console.log(arguments);
   var errors = {};
@@ -160,7 +161,13 @@ function emailSignUpErrorDelegator(error) {
   return dispatch => {
     dispatch(emailSignUpError(errors));
   };
-  
+}
+*/
+function emailSignUpErrorDelegator(error) {
+  return {
+    type: types.EMAIL_SIGNUP_ERROR,
+    message: error
+  };
 }
 
 
@@ -169,16 +176,14 @@ export function emailSignUp(data) {
     dispatch(emailSignUpStart());
     return makeUserRequest('post', data, '/auth/signup')
          .then(response => {
-                let json = response.json();
-                if (response.status >= 400) {
-                    console.dir(json);
-                    return json.then(err => Promise.reject(err));
+                if (response.status === 200) {
+                   dispatch(emailSignUpComplete(response.data.username));
+                   dispatch(push('/'));
                 } else {
-                  return json;
+                  dispatch(emailSignUpErrorDelegator('sign up went bad'));
                 }
                 
             })
-            .then(({data}) => dispatch(emailSignUpComplete(data)))
-            .catch(({errors}) => dispatch(emailSignUpErrorDelegator(errors)));
+            .catch(({err}) => dispatch(emailSignUpErrorDelegator(err.data.message)));
   };
 }

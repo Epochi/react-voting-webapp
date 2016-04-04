@@ -35,18 +35,20 @@ var postSchema = new mongoose.Schema({
         edited: {type: Boolean, default: false},
         mod_reports: Array
     } 
-}, {  toObject: {getters: true, virtuals: true}, toJSON: {getters: true, virtuals: true }});
-
+});
+/*, {  toObject: {getters: true, virtuals: true}, toJSON: {getters: true, virtuals: true }}*/
 
 postSchema.index({ _id: -1});
 postSchema.index({ score: -1});
-
+/* doesnt work with lean
+   I dont actually need the title to use votes, will only need it for traversing site
 postSchema
      .virtual('data.permalink')
       .get(function () {
+           console.log('virtual getter');
            return '/p/'+this.data.subport + '/' + this._id + '/' + utils.sanitizeTitle(this.data.title);
       });
-
+*/
 //custom unique ids
 postSchema.pre('save', function (next) {
   var post = this;
@@ -73,18 +75,9 @@ postSchema.pre('save', function (next) {
  
 
 postSchema.statics = {
-    
-     top: function(user,page,cb) {
-         if(!user){
-         Post.find().sort({score:-1}).skip(page * 20).limit(20).exec(cb)
-         }else {
-         Post.find().sort({score:-1}).skip(page * 20).limit(20)
-         .populate({
-             path: 'postThing'
-         }).exec(cb);
-        }
+     top: function(page,cb) {
+         Post.find().sort({score:-1}).skip(page * 20).limit(20).lean(true).exec(cb)
      }
-     
 };
  
 Post = mongoose.model('Post', postSchema);

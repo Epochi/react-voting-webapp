@@ -2,90 +2,24 @@
  * Routes for express app
  */
 var express = require('express');
+var auth = require('../routes/auth');
+var posts = require('../routes/posts');
 var users = require('../controllers/users');
-var posts = require('../controllers/posts');
 var poster = require('../controllers/poster');
-var votes = require('../controllers/votes');
 var mongoose = require('mongoose');
-var _ = require('lodash');
-var Post = mongoose.model('Post');
 var path = require('path');
 var compiled_app_module_path = path.resolve(__dirname, '../../', 'public', 'assets', 'server.js');
 var App = require(compiled_app_module_path);
 
 
 module.exports = function(app, passport) {
-  // user routes
 
-  app.post('/auth/logout', users.logout);
-  app.post('/auth/signup', users.create);
-  app.post('/auth/login', function(req, res, next) {
-    passport.authenticate('local', function(err, user, info) {
-      if (err) {
-        console.log('passport calling error');
-        return next(err);
-      }
-      if (!user) {
-        console.log(arguments);
-        console.log('passport calling no user error');
-        return next(info);
-      }
-      req.logIn(user, function(err) {
-        if (err) {
-          console.log('passport calling login error');
-          return next(err);
-        }
-        console.log('passport iz happi');
-        console.log(user.name);
-        return res.status(200).json({
-          username: user.name
-        });
-      });
-    })(req, res, next);
-  });
-
-  app.get('/users/:userId', users.show);
-  //app.param('userId', users.load);
-  app.param(['subport', 'id','title'], function (req, res, next, value) {
-    console.log("APP.PARAM CAN SEE: " + value);
-  next();
-    });
+  app.use('/auth', auth(passport));
+  app.use('/p', posts);
   
-  
-  // post routes
   app.get('/poster', poster.fetchReddit);
-  app.post('/poster', poster.fetchReddit);
-  app.get('/top/.json', function(req,res,next){
-    posts.top(req,res,next);
-  });
+  app.get('/users/:userId', users.show);
   
-
-  app.put('/p/:subport/:id/:title',users.userAuthenticated, function(req, res, next) {
-    console.log('votedPost running');
-    votes.votedPost(req, res, next);
-  });
-  app.post('/p/post', users.userAuthenticated, posts.create);
-
-  app.put('/p/post', function(req, res) {
-    posts.update(req, res);
-  });
-
-  app.delete('/p/post', function(req, res) {
-    posts.remove(req, res);
-  });
-  
-  app.use(function(req,res,next){
-    res.locals.authenticated = req.isAuthenticated();
-    res.locals.user = res.locals.authenticated ? req.user : null;
-    next();
-  });
-  
-  app.get('/', function(req,res,next){
-    console.log(req.session.cookie);
-    console.log(req.cookie);
-    console.log('im still her ebiatch');
-    posts.home(req,res,next);
-  });
   app.get('*', function (req, res, next) {
     App.default(req, res);
   });

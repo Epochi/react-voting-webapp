@@ -49,7 +49,8 @@ exports.create = wrap(function* (req, res, next) {
         console.log ('passport SignUp > login error');
         return next(err); }
         console.log ('passport iz happi inside login creator');
-      return res.status(200).send({message: "Successful authentication"});
+        console.log(user);
+      return res.status(200).send({username: user.name});
     });
 });
 

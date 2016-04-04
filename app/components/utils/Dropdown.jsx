@@ -7,6 +7,7 @@ import { Link } from 'react-router';
 const cx = classNames.bind(Object.assign(styles,stylesCustom));
 
 
+
 const Dropdown = ({open,label,icon,menuItems,onButtonClick,onRequestClose,onMouseDown}) => {
 
     return (
@@ -21,7 +22,11 @@ const Dropdown = ({open,label,icon,menuItems,onButtonClick,onRequestClose,onMous
             {open ? (
                 <ul className={cx("menu")}>
                    {menuItems.map(item => 
-                <li   onClick={onRequestClose} key={item.text} className={cx('menu__item', { "menu__item--full-bleed-divider": item.divider })}><Link  {...item} to={item.link}>{item.text}</Link></li>
+                    <Link  {...item} to={item.link}>
+                        <li   onClick={onRequestClose} key={item.text} className={cx('menu__item', { "menu__item--full-bleed-divider": item.divider })}>
+                         {item.text}
+                        </li>
+                    </Link>    
                     )}
                 </ul>
             ) :

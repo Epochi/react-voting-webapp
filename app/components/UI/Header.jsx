@@ -5,9 +5,11 @@ import AuthenticationDialogs from 'components/UI/SignIn';
 import UserUI from 'components/UI/LoggedIn';
 
 
-const Header = ({ authenticated, username, handleClear, handleLogOut}) => {  {
+const Header = ({ authenticated, username, handleClear, handleLogOut, location}) => {  {
     
     let children =  !authenticated ? (<AuthenticationDialogs handleClear={handleClear} />) :  (<UserUI  username={username} handleLogOut={handleLogOut}/>);
+    console.log("header see  "+location);
+    console.dir(location);
     let logo = <Link to="/">YouLogo</Link>;
     return (
         <Toolbar
@@ -29,4 +31,4 @@ Header.propTypes = {
 export default Header;
 
 
-//{isWaiting ? (<Snackbar/>) : (null)}
+
