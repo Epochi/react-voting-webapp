@@ -4,12 +4,13 @@
 .menu{
   position: absolute;
   list-style: none;
-  top: 0;
-  right: 0;
+  //top: 0;
+  //right: 0;
   height: auto;
   width: auto;
   min-width: 124px;
   padding: 8px 0;
+  max-width:200px;
   margin: 0;
   transform-origin: top right;
   background: $default-dropdown-bg-color;
@@ -21,7 +22,7 @@
     position:relative;
 }
 
-.menu__item{
+.menu__item,.menu>a>li{
   display: block;
   border: none;
   color: $default-item-text-color;

@@ -54,3 +54,17 @@ export default Dropdown;
 
 
 
+export const Menu = (props) => {
+    console.log('propsys'); 
+     props.children.map((item, i) =>
+                            console.dir(props.children)
+                        )
+    console.dir(props.children);
+    return (
+            <ul style={props.style} className={cx("menu")}>
+                       {props.children.map((item, i) =>
+                            <li key={i} className={cx('menu__item')}>{item}</li>
+                        )}
+            </ul>
+        )
+}

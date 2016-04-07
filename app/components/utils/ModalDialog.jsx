@@ -1,14 +1,8 @@
-import React, {
-    PropTypes
-}
-from 'react';
+import React, { PropTypes }from 'react';
 import Button from 'components/utils/Button';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_modal';
-import {
-    Link
-}
-from 'react-router';
+import { Link } from 'react-router';
 const cx = classNames.bind(styles);
 
 
@@ -68,3 +62,26 @@ ModalDialog.propTypes = {
 };
 
 export default ModalDialog;
+
+
+export const Modal = ({children,onRequestClose,style}) => {
+  
+  
+  return (
+    <div>
+            <div onClick={onRequestClose} className={cx("modal-backdrop")}>
+            </div>
+            <div className={cx("modal-window")}>
+                <a onClick={onRequestClose} className={cx("exit-icon")}><i className={'material-icons'}>close</i></a>
+                {this.props.children}
+                
+            </div>
+        </div>
+    )
+  
+}
+
+ModalDialog.propTypes = {
+    children: PropTypes.node,
+    onRequestClose: PropTypes.func
+};

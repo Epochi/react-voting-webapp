@@ -10,7 +10,7 @@ var votes = require('../controllers/votes');
  */
 exports.top = function(req,res,next) {
   console.log('CLUser exports.top');
-  Post.top(0, function(err, posts){
+  Post.top(req.params.page, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
     res.locals.posts = posts;

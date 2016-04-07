@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import UI from 'containers/UI';
-import Snackbar from 'containers/Snackbar'
+import Footer from 'containers/Footer'
 import 'scss/main';
 import classNames from 'classnames/bind';
 import layout from 'material-design-lite/src/layout/_layout';
@@ -44,7 +44,7 @@ return (
               {this.props.children}
             </Modal>
           )}
-      <Snackbar />  
+      <Footer />  
       </div>
     </div>  
 )

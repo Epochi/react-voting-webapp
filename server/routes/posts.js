@@ -6,13 +6,13 @@ var votes = require('../controllers/votes');
 
 module.exports = router;
 
-    router.param(['subport', 'id','title'], function (req, res, next, value) {
+    router.param(['subport','page', 'id','title'], function (req, res, next, value) {
         console.log("ROUter.PARAM CAN SEE: " + value);
     next();
     });
     
 
-  router.put('/:subport/:id',users.userAuthenticated, function(req, res, next) {
+  router.put('/:id',users.userAuthenticated, function(req, res, next) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
   });
@@ -26,7 +26,7 @@ module.exports = router;
     posts.remove(req, res);
   });
   
-  router.get('/top/.json', function(req,res,next){
+  router.get('/top/:page/.json', function(req,res,next){
     posts.top(req,res,next);
   });
   //get routes above this

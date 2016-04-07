@@ -6,7 +6,8 @@ const mapStateToProps = (state) => {
   return {
     isWaiting: state.ui.isWaiting,
     messageOpen: state.ui.messageOpen,
-    message: state.ui.message
+    message: state.ui.message,
+    postsLoad: state.ui.postsLoad
   }
 }
 
@@ -15,6 +16,6 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-const Snackbar = connect(mapStateToProps, mapDispatchToProps)(SnackbarControl)
+const Footer = connect(mapStateToProps, mapDispatchToProps)(SnackbarControl)
 
-export default Snackbar
+export default Footer

@@ -2,17 +2,26 @@ import React, { PropTypes } from 'react';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_snackbar';
 import LoadingBar from 'components/utils/LoadingBar'
+import Spinner from 'components/utils/Spinner'
 const cx = classNames.bind(styles);
 
-const Snackbar = ({messageOpen, message, isWaiting}) => {
+const Snackbar = ({messageOpen, message, isWaiting,postsLoad}) => {
+    
+    
     return(
         <div>
-        {isWaiting ? (
-          <div className={cx("snackbar-wrapper")}>
-            <LoadingBar/>
-        </div> 
-        ) : (null)
-        }
+            {isWaiting ? (
+                  <div className={cx("snackbar-wrapper")}>
+                    <LoadingBar/>
+                </div> 
+                ) : (null)
+            }
+            {postsLoad ? (
+                <div className={cx('posts-footer')}>
+                    <Spinner />
+                </div>
+            ) : (null)
+            }
         </div>
         )
     

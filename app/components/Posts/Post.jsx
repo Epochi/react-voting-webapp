@@ -85,5 +85,6 @@ Post.PropTypes ={
 
 export default Post; 
 
+
     
 //<a onClick={onClick} className={vote}><i className={"material-icons"}>arrow_drop_up</i><span>{post.score}</span></a>

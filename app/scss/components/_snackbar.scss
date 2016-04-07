@@ -1,10 +1,21 @@
 .snackbar-wrapper {
     position: fixed;
     display: block;
-    bottom: 0;
-    right: 50%;
-    height: 25px;
-    width: 300px;
-    transform: translate(50%,0);
+    top: 0;
+    //right: 50%;
+    height: 2px;
+    //width: 300px;
+    width: 100vw;
+    //transform: translate(50%,0);
     z-index: 8000;
+    overflow: hidden;
+}
+
+.posts-footer{
+    position:absolute;
+    z-index:2;
+    bottom: 30px;
+    left:0;
+    right:0;
+    text-align:center;
 }

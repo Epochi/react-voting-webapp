@@ -13,7 +13,7 @@ export default function ApiServer(req, authenticated) {
   const client = axios.create({
     baseURL: `http://${clientConfig.host}:${clientConfig.port}`
   });
-  console.log('what s in the request?');
+  //console.log('what s in the request?');
   if (authenticated) {
     client.interceptors.request.use(function(config) {
       config.headers['cookie'] = req.headers.cookie;

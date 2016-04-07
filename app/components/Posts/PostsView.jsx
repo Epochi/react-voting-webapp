@@ -6,8 +6,10 @@ import styles from 'scss/components/_postsview';
 import layout from 'material-design-lite/src/layout/_layout';
 import grid from 'material-design-lite/src/grid/_grid';
 import Post from 'components/Posts/Post';
-import PostDropdown from 'components/Posts/PostDropdown';
-import Portal from 'components/utils/Portal';
+import PostDropdown, {PostMenu} from 'components/Posts/PostDropdown';
+import {MenuPortal} from 'components/utils/Portal';
+import {scrollThrottle} from 'components/utils.jsx';
+
 
 const cx = classNames.bind(Object.assign(styles, layout, grid));
 
@@ -16,21 +18,28 @@ const cx = classNames.bind(Object.assign(styles, layout, grid));
 class PostsView extends Component {
   constructor(props) {
     super(props);
-    this.state = {openMenu: false};
     this.handleVotePost = this.handleVotePost.bind(this);
     this.handleMenu = this.handleMenu.bind(this);
+    this.scrollListener = this.scrollListener.bind(this);
+    this.handleNewPosts = this.handleNewPosts.bind(this);
   }
   
+  //don't update if username changes
+  shouldComponentUpdate(nextProps,nextState){
+    console.log(arguments);
+      if(this.props.username !== nextProps.username){return false}
+    return true;
+  }
+  
+  
   handleMenu(e){
-    var rekt = e.currentTarget.getBoundingClientRect();
-    var evt = {y: window.pageYOffset + rekt.bottom, x: rekt.left,target: e.currentTarget}; 
     
-    Portal(evt,<PostDropdown/>,'postsmenu');
+  MenuPortal(PostMenu,{event:e,username:this.props.username});
   }  
 
   
   handleVotePost(post, i){
-   if(this.props.authenticated){
+   if(this.props.username){
       let voted = post.voted ? true : false;
       console.log('voted or nat');
       console.log(voted);
@@ -38,13 +47,45 @@ class PostsView extends Component {
     }
   }
   
+  handleNewPosts(page='0'){
+    this.props.fetchPosts(page);
+    
+  }
+  
+  scrollListener(){
+    var bot = document.body.scrollHeight - window.innerHeight *2;
+    var list = function list(e){
+      if(document.body.scrollTop > bot){
+        console.log('it iz lol,scrolly');
+        window.removeEventListener('scroll', throttle);
+        this.handleNewPosts();
+        return;
+      }
+      console.log('scrolls fine brop')
+    }.bind(this);
+    var throttle = scrollThrottle(list, 1000,{trailing: true});
+
+    return throttle;
+    //window.addEventListener('scroll', throttle);
+  }
   componentWillMount(){
     if(this.props.posts < 10)
     this.props.fetchPosts();
   }
-  
-  if
-
+  componentDidMount(){
+    window.addEventListener('scroll',this.scrollListener());
+  }
+  componentDidUpdate(prevProps){
+    console.log(prevProps);
+    if(prevProps.posts.length !== this.props.posts.length){
+    console.log('PostsView didupdate add scrollListener');
+    window.addEventListener('scroll',this.scrollListener());
+    return;
+    }
+  }
+  componentWillUnmount() {
+     window.removeEventListener('scroll',this.scrollListener());
+  }
 
   render () {
          const {posts} = this.props;
@@ -68,7 +109,7 @@ class PostsView extends Component {
 
 PostsView.propTypes = {
   posts: PropTypes.array.isRequired,
-  authenticated: PropTypes.bool.isRequired
+  username: PropTypes.string
 };
 
 export default PostsView;

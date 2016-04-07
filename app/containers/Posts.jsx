@@ -11,10 +11,10 @@ function mapStateToProps(state) {
   const {postsByPort, user, ui } = state;
   const selectedPort = ui.selectedPort;
   const posts = postsByPort.posts
-  const authenticated = user.authenticated;
+  const username = user.username;
   return {
     posts,
-    authenticated
+    username
   };
 }
 

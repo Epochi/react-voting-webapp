@@ -8,6 +8,9 @@ import {
   LOGOUT_USER_ERROR,
   EMAIL_SIGNUP_COMPLETE,
   POST_CLEAR_STATE,
+  POSTS_GET_REQUEST,
+  POSTS_GET_SUCCESS,
+  POSTS_GET_FAILURE,
     CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS
 } from 'constants/index';
 
@@ -16,7 +19,8 @@ export default function ui(state={
   isWaiting: false,
   messageOpen: false,
   message: null,
-  selectedPort: 'top'
+  selectedPort: 'top',
+  postsLoad: false
   }, action={}) {
   switch (action.type) {
     case LOGOUT_USER_REQUEST:
@@ -30,6 +34,15 @@ export default function ui(state={
      case CREATE_POST_FAILURE:
       return Object.assign({}, state, {
         isWaiting: false
+      });
+    case POSTS_GET_REQUEST:
+      return Object.assign({},state,{
+        postsLoad: true
+      });
+    case POSTS_GET_SUCCESS:
+    case POSTS_GET_FAILURE:
+      return Object.assign({},state,{
+        postsLoad: false
       });
     default:
       return state;

@@ -67,7 +67,7 @@ export function invalidatePort(port) {
 }
 
 export function votePost(index,id,subport,voted){
-  let link = /p/+subport+'/'+id;
+  let link = /p/+id;
   if(voted === true){
     return dispatch => {
       dispatch(disvotedPost(index));
@@ -100,9 +100,9 @@ function disvotedPost(index) {
 }
 
 
-export function fetchPosts(api='top') {
+export function fetchPosts(page='0',api='top') {
     return {
         type: types.POSTS_GET,
-        promise: (client) => client.get(`/p/${api}/.json`)
+        promise: (client) => client.get(`/p/${api}/${page}/.json`)
     };
 }
