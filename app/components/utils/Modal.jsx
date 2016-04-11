@@ -29,11 +29,6 @@ const ModalDialog = ({
                     {children}
                 </div>
                 <div className={cx("modal-actions")}>
-                    <Link
-                      to={this.props.returnTo}
-                      >
-                      <Button />
-                    </Link>
                     {actions ?
                     actions.map(action => 
                         <Button
@@ -64,16 +59,16 @@ ModalDialog.propTypes = {
 export default ModalDialog;
 
 
-export const Modal = ({children,onRequestClose,style}) => {
-  
+export const Modal = ({children,closeNow,zIndex}) => {
+ 
   
   return (
     <div>
-            <div onClick={onRequestClose} className={cx("modal-backdrop")}>
+            <div onTouchTap={closeNow} style={{zIndex: zIndex+2}} className={cx("modal-backdrop")}>
             </div>
-            <div className={cx("modal-window")}>
-                <a onClick={onRequestClose} className={cx("exit-icon")}><i className={'material-icons'}>close</i></a>
-                {this.props.children}
+            <div style={{zIndex: zIndex+3}} className={cx("modal-window")}>
+                <a onTouchTap={closeNow} className={cx("exit-icon")}><i className={'material-icons'}>close</i></a>
+                {children}
                 
             </div>
         </div>
@@ -81,7 +76,7 @@ export const Modal = ({children,onRequestClose,style}) => {
   
 }
 
-ModalDialog.propTypes = {
+Modal.propTypes = {
     children: PropTypes.node,
-    onRequestClose: PropTypes.func
+    closeNow: PropTypes.func
 };

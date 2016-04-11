@@ -11,6 +11,9 @@ import {
   POSTS_GET_REQUEST,
   POSTS_GET_SUCCESS,
   POSTS_GET_FAILURE,
+  POSTS_DELETE_REQUEST,
+  POSTS_DELETE_SUCCESS,
+  POSTS_DELETE_FAILURE,
     CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS
 } from 'constants/index';
 
@@ -25,6 +28,7 @@ export default function ui(state={
   switch (action.type) {
     case LOGOUT_USER_REQUEST:
     case CREATE_POST_REQUEST:
+    case POSTS_DELETE_REQUEST:
       return Object.assign({}, state, {
         isWaiting: true
       });
@@ -32,6 +36,8 @@ export default function ui(state={
      case LOGOUT_USER_ERROR:
      case CREATE_POST_SUCCESS:
      case CREATE_POST_FAILURE:
+     case POSTS_DELETE_SUCCESS:
+     case POSTS_DELETE_FAILURE:
       return Object.assign({}, state, {
         isWaiting: false
       });

@@ -5,7 +5,10 @@ import {SELECT_PORT,
   CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS,
   POSTS_VOTE,
   POSTS_UNVOTE,
-  POSTS_GET, POSTS_GET_SUCCESS, POSTS_GET_FAILURE
+  POSTS_GET, POSTS_GET_SUCCESS, POSTS_GET_FAILURE,
+  POSTS_DELETE_REQUEST,
+  POSTS_DELETE_SUCCESS,
+  POSTS_DELETE_FAILURE,
 } from 'constants/index';
 
 const initialState = {
@@ -22,6 +25,8 @@ function posts(state = initialState.posts, action) {
      return state = update(state, {[action.index]: {voted: {$set: false}, score:{$apply: (x) => {return x-1;}}}});
   case CREATE_POST_SUCCESS:
      return state = update(state, {$unshift: [action.post] });
+  case POSTS_DELETE_SUCCESS:
+     return state = update(state, {[action.index]: {data: {hidden: {$set: true}}}});
   default:
     return state;
   }
@@ -48,12 +53,16 @@ export function postsByPort(state = initialState, action) {
          posts: posts(state.posts, {index: action.index, type: action.type})
        };   
     case CREATE_POST_SUCCESS:
-      let post = {...action.req.data,
+      let post = {...action.data,
         voted: true
       };
        return {
          posts: posts(state.posts, {post: post, type: action.type})
-       };   
+       };  
+    case POSTS_DELETE_SUCCESS:
+       return {
+         posts: posts(state.posts, {index: action.index, type: action.type})
+       };  
   default:
     return state;
   }

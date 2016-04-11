@@ -1,70 +1,51 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
-import Button from 'components/utils/Button';
 import classNames from 'classnames/bind';
 import styles from 'material-design-lite/src/menu/_menu';
 import stylesCustom from 'scss/components/_dropdownmenu';
-import { Link } from 'react-router';
+import {Modal} from 'components/utils/Modal';
 const cx = classNames.bind(Object.assign(styles,stylesCustom));
 
-
-
-function portalListeners(){
-  //arguments.forEach(item)
-  
-}
-
-
-//portalListeners(port,button)
-
-function portalClose(port,button,closeListener,event){
-  console.log('close Listenr klik');
-  
-  event.stopPropagation();
-  port.removeEventListener('click',closeListener);
-  button.removeEventListener('click',closeListener);
-  unmountComponentAtNode(port);
-  port.parentElement.removeChild(port);
-  window.removeEventListener('click',closeListener);
-  
-}  
-
-function wClick(event,port,init,eList,pList,wList){
-  
- console.log('window klik');
- port.removeEventListener('click',pList);
- init.removeEventListener('click',eList);
- unmountComponentAtNode(port);
- port.parentElement.removeChild(port);
- window.removeEventListener('click',wList);
  
-}
-function cClick(port,init,eList,pList,wList,close){
- console.log(close);
- console.log('close klik');
- port.removeEventListener('click',pList);
- init.removeEventListener('click',eList);
- unmountComponentAtNode(port);
- port.parentElement.removeChild(port);
- window.removeEventListener('click',wList);
+function portalListeners(portal, button){
+        console.log('listeners init');
+        portal.listener = function(event){portalMute(event)};
+        var closeListener = function(event){portalClose(portal,closeListener,event)};
+         if(button){
+             closeListener.item = button;
+             button.addEventListener('click', closeListener);
+         }
+         
+        portal.addEventListener('click', portal.listener);
+        //prevents window.onclick firing on declaration 
+        
+        window.addEventListener('mousedown',function evt(event){
+           //event.stopPropagation(); 
+           window.addEventListener('click',closeListener);
+           window.removeEventListener('mousedown', evt);
+        });
+       var close = function(event){console.log('close butt');portalClose(portal,closeListener,event)}.bind(this);
+    return close; 
+         
+};
+
+    
+function portalClose(portal,close,event){
+      console.log('close Listenr klik');
  
-}
+      if(event){event.stopPropagation();}
+      portal.removeEventListener('click',close);
+      portal.removeEventListener('click',portal.listener);
+      if(close.item){close.item.removeEventListener('click',close);}
+      unmountComponentAtNode(portal);
+      //console.log(portal);
+      portal.parentElement.removeChild(portal);
+      window.removeEventListener('click',close);
+    }  
 
-function portMute(event){
-  console.log('portMute');
+function portalMute(event){
+  //console.log('portalMute');
   event.stopPropagation();
-}
-
-//portal caller
-function eClick(event,port,init,eList,pList,wList){
-  //console.log(port);
-  console.log('eklik');
-  event.stopPropagation();
-  port.removeEventListener('click',pList);
-  init.removeEventListener('click',eList);
-  unmountComponentAtNode(port);
-  port.parentElement.removeChild(port);
-  window.removeEventListener('click',wList);
 }
 
 function portalDiv(name){
@@ -83,45 +64,30 @@ function portalDOM(Element,port,props){
 }
 
 
-
-
-
 export const MenuPortal = (Element, props) => {
     var port = portalDiv(Element.name);
     
-    
     var { event, ...other } = props;
-    var stop = ()=>{event.stopPropagation()}
     var rekt = event.currentTarget.getBoundingClientRect();
     var target = event.currentTarget;
-    var evt = { 
-      style: "top:"+(window.pageYOffset+rekt.bottom)+"px;left:"+rekt.left+"px;z-index:"+event.currentTarget.style.zIndex+2+";",
-      target: event.currentTarget,stop: stop}; 
     var style = { 
       top: (window.pageYOffset+rekt.bottom)+"px",
       left: rekt.left+"px",
       zIndex: event.currentTarget.style.zIndex+2,
-    }
-      
-      
-      var closeListener = function(event){portalClose(port,target,closeListener,event)}
-      //var eList = function(event){eClick(event,port,target,eList,pList,wList)};
-      var portListener = function(event){portMute(event)};
-      //var wList = function(event){wClick(event,port,target,eList,pList,wList)};
-      //var close = function(close){cClick(port,target,eList,pList,wList,close)};
-  
-      //gets called if same element is pressed, so close the menu
-      target.addEventListener('click', closeListener);
-      //gets called if any of the children get clicked
-      port.addEventListener('click', portListener);
-      //prevents window.onclick firing on declaration 
-      window.addEventListener('click',function evt(event){
-           window.addEventListener('click',closeListener);
-           window.removeEventListener('click', evt);
-        });
-    
-    
+    };
+    var close = portalListeners(port,target);
     portalDOM(Element,port,{closeNow: close,style: style,...other});
-  
-}
 
+};
+
+
+export const ModalPortal = (Element, props) => {
+    var port = portalDiv(Element.name);
+    var { event, ...other } = props;
+    var zIndex = event.currentTarget.style.zIndex
+    var close = portalListeners(port);
+    
+      var element = <Modal zIndex={zIndex} closeNow={close}><Element closeNow={close} {...other}/></Modal>;
+      document.body.appendChild(port);
+      render(element, port);
+}

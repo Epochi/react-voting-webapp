@@ -5,43 +5,48 @@ import classNames from 'classnames/bind';
 import styles from 'material-design-lite/src/menu/_menu';
 import stylesCustom from 'scss/components/_dropdownmenu';
 import {Menu} from 'components/utils/Dropdown';
+import {ModalPortal} from 'components/utils/Portal';
+import {DeletePost} from 'components/utils/Modals';
 import { Link } from 'react-router';
+
 const cx = classNames.bind(Object.assign(styles,stylesCustom));
 
 
-export default class PostDropdown extends Component {
-    constructor(props) {
-    super(props);
-    this.state = {open:false};
-  }
+const PostDrowdown = ({style,closeNow,post,username,id,author,funcs}) => {
+   //let areYouSure = function(){closeNow();ModalPortal(ShareModal)};
     
-    
-    
-    render(){
+    if(!username){
         return(
-            <div>worki worki</div>
-            );
-    }
-    
-}
-
-
-export const PostMenu = ({style,username,closeNow,clickWaitClose}) => {
-    
+          <Menu style={style}>
+            <a>Ieškoti panašių</a>
+         </Menu>
+        )
+    }else if(author){
+            
     return(
          <Menu style={style}>
-            <SharePost closeNow={closeNow} />
-            <Link>Blokuoti</Link>
-            <Link to="/dashboard">Reportuoti</Link>
+            <a onTouchTap={closeNow}>Redaguoti</a>
+            <a onTouchTap={(event)=>{closeNow();ModalPortal(DeletePost,{event:event,callback:funcs.del})}}>Trinti</a>
          </Menu>
         );
-};
-
-const SharePost = ({closeNow}) => {
-    
+    } else {
     return(
-        <div onClick={closeNow}>
-            Dalintis
-        </div>
-        )
+         <Menu style={style}>
+            <a onTouchTap={closeNow}>Blokuoti</a>
+            <a onTouchTap={closeNow}>Reportuoti</a>
+         </Menu>
+        );
+        
+    }
+};
+export default PostDrowdown;
+
+PostDrowdown.propTypes = {
+    style: PropTypes.object,
+    username: PropTypes.string,
+    closeNow: PropTypes.func
 }
+
+
+//registered Block, Report
+//yourpost edit,delete

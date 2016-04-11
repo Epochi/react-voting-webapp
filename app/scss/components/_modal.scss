@@ -5,7 +5,6 @@
     top:0;
     left:0;
     background-color:rgba(0, 0, 0, 0.541176);
-    z-index:1000;
     overflow-y:scroll;
 }
 .modal-window{
@@ -14,9 +13,10 @@
     transform:translate(-50%, 0%);
     position:fixed;
     margin: auto;
-    z-index:1100;
+    
     max-width:720px;
-    width:75%;
+    //width:75%;
+    min-width:450px;
     background-color:#FFF;
     padding: 14px 20px;
     box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
@@ -24,7 +24,11 @@
 .exit-icon{
     display:inline-block;
     float: right;
+    &> i{
+        font-size: 16px;
+    }
 }
+
 .modal-title{
     display:inline-block;
     font-size: 24px;
@@ -96,4 +100,10 @@
 }
 .modal-content  span{
 
+}
+
+.modal-single-header{
+    width:100%;
+    //text-align:center;
+    font-size:18px;
 }

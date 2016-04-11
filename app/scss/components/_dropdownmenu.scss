@@ -9,7 +9,7 @@
   height: auto;
   width: auto;
   min-width: 124px;
-  padding: 8px 0;
+  padding: 0 0;
   max-width:200px;
   margin: 0;
   transform-origin: top right;
@@ -22,7 +22,7 @@
     position:relative;
 }
 
-.menu__item,.menu>a>li{
+.menu__item,.menu>*{
   display: block;
   border: none;
   color: $default-item-text-color;

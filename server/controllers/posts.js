@@ -101,10 +101,19 @@ exports.update = function(req, res) {
  * Remove a post
  */
 exports.remove = function(req, res) {
-  var query = { id: req.body.id };
+  console.log(`id: ${req.params.id} and username: ${req.user.name}`)
+  var query = { _id: req.params.id, 'data.author' :req.user.name };
   Post.findOneAndRemove(query, function(err, data) {
     if(err) console.log('Error on delete');
-    res.status(200).send('Removed Successfully');
+    if(data){
+      PostThing.remove({_id: req.params.id},function(err,post){
+      if(err) console.log('Error on delete');
+      if(post){return res.status(200).send('Removed Successfully');}  
+      return res.status(400).send('PostThing not found');
+      })}
+      else {return res.status(400).send('Nerasta');}
+    
+    
   });
 };
 

@@ -6,7 +6,6 @@ import classNames from 'classnames/bind';
 import layout from 'material-design-lite/src/layout/_layout';
 import customLayout from 'scss/components/_layout';
 import Modal from 'components/utils/simpleModal';
-//import Modal from 'components/utils/ModalDialog';
 const cx = classNames.bind(Object.assign(layout,customLayout));
 
 class App extends Component {

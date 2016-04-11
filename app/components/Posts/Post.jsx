@@ -8,7 +8,8 @@ import {dateCompare} from 'components/utils.jsx';
 const cx = classNames.bind(Object.assign(styles, card));
 
 const Post = ({post, onClick,onMenuClick}) => {
-  let voted = true ? post.voted : false;
+  let voted = post.voted ? true : false;
+  let hide = post.data.hidden ? 'n':false;
   let vote = cx({
     "vote__button": true,
     "voted": voted,
@@ -16,7 +17,7 @@ const Post = ({post, onClick,onMenuClick}) => {
   });
   let date = dateCompare(post.data.date);
     return(
-             <div className={cx("mdl-card","post")}>
+             <div className={cx("mdl-card","post",hide)}>
               <div className={cx("mdl-card__title")}>
                 <a><h2 className={cx("mdl-card__title-text")}>{post.data.title}</h2></a>
               </div>

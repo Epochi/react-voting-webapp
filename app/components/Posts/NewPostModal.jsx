@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames/bind';
 import Button from 'components/utils/Button';
-import ModalDialog from 'components/utils/ModalDialog';
+import ModalDialog from 'components/utils/Modal';
 import { createNewPost } from 'actions/posts';
 import { TagReader } from 'components/utils/TagReader.jsx';
 

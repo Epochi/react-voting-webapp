@@ -24,16 +24,17 @@ export function createNewPost(data){
     return makePostRequest('post',undefined ,data,'/p/post')
         .then(res => {
           if(res.status === 200) {
-            return dispatch(createPostSuccess());
+            console.log(res);
+            return dispatch(createPostSuccess(res.data));
           }
         })
         .catch(error => {
-          return dispatch(createPostFailure({ error: 'Oops! What a poop, Something went wrong and we couldn\'t create your post'}));
+          return dispatch(createPostFailure({ error: 'Oops! What a poop, Something went wrong and we couldn\'t create your post '+error}));
         });
   };
 }
 
-function createNewPostRequest(data){
+function createNewPostRequest(){
     return {
     type: types.CREATE_POST_REQUEST
   };
@@ -67,11 +68,10 @@ export function invalidatePort(port) {
 }
 
 export function votePost(index,id,subport,voted){
-  let link = /p/+id;
   if(voted === true){
     return dispatch => {
       dispatch(disvotedPost(index));
-      return makePostRequest('put', undefined,{voted: true},link)
+      return makePostRequest('put', id,{voted: true})
       .then(function(response) {
         console.log("UnVote Success!", response.status);
       }, function(error) {
@@ -81,7 +81,7 @@ export function votePost(index,id,subport,voted){
   }else{
     return dispatch => {
       dispatch(votedPost(index));
-      return makePostRequest('put', undefined,{voted: false},link)
+      return makePostRequest('put', id,{voted: false})
             .then(function(response) {
         console.log("Vote Success!", response.status);
       }, function(error) {
@@ -105,4 +105,33 @@ export function fetchPosts(page='0',api='top') {
         type: types.POSTS_GET,
         promise: (client) => client.get(`/p/${api}/${page}/.json`)
     };
+}
+
+
+export function deletePost(id,index){
+    return dispatch => {
+      dispatch(deleteRequest());
+      return makePostRequest('delete', id)
+      .then(function(response) {
+        if(response.status === 200){dispatch(deleteSuccess(index))
+          return true;
+        }
+        else{dispatch(deleteFailure())
+          return false;
+        }
+      }, function(error) {
+        dispatch(deleteFailure());
+        console.error("delete Failed ", error);
+      });
+    }
+}
+
+function deleteRequest(){
+  return {type: types.POSTS_DELETE_REQUEST};
+}
+function deleteSuccess(index){
+  return {type: types.POSTS_DELETE_SUCCESS, index};
+}
+function deleteFailure(){
+  return {type: types.POSTS_DELETE_FAILURE};
 }

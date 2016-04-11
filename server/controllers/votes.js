@@ -24,8 +24,8 @@ exports.votedPost = function(req, res, next) {
         });
     }
 };
-exports.voteOnCreation =function(postid,userid,next,cb){
-    postAddVote(postid,userid,next,cb);
+exports.voteOnCreation = function(postid,userid,next){
+    postAddVote(postid,userid,next,function(){});
 }
 
 

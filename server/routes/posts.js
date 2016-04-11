@@ -5,13 +5,12 @@ var posts = require('../controllers/posts');
 var votes = require('../controllers/votes');
 
 module.exports = router;
-
+/*
     router.param(['subport','page', 'id','title'], function (req, res, next, value) {
         console.log("ROUter.PARAM CAN SEE: " + value);
     next();
     });
-    
-
+    */
   router.put('/:id',users.userAuthenticated, function(req, res, next) {
     console.log('votedPost running');
     votes.votedPost(req, res, next);
@@ -22,7 +21,7 @@ module.exports = router;
     posts.update(req, res);
   });
 
-  router.delete('/post', function(req, res) {
+  router.delete('/:id',users.userAuthenticated, function(req, res) {
     posts.remove(req, res);
   });
   
