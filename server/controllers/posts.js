@@ -3,6 +3,7 @@ var _ = require('lodash');
 var Post = mongoose.model('Post');
 var PostThing = mongoose.model('PostThing');
 var votes = require('../controllers/votes');
+var Vote = mongoose.model('Vote');
 
 
 /**
@@ -40,6 +41,7 @@ exports.create = function(req, res, next) {
   if(req.body.type === 0){
   var post = new Post({
       kind: req.body.type,
+      score: 1,
       data: {
           tags: req.body.tags,
           subport: subport,
@@ -49,14 +51,16 @@ exports.create = function(req, res, next) {
           url: req.body.url
       }
   });
-  console.dir(post);
   }
-  post.save(function (err, post, state){
+  post.save(req.user._id, function (err, post, state){
       if(err){
+          console.log('post save error: '+err);
           return next(err);
       }
-      votes.voteOnCreation(post._id, req.user._id,next);
-      console.log("success");
+      //need saving through somewhere else
+      //voteOnCreation
+      votes.voteOnCreation(post._id,req.user._id,next);
+      console.log("post save success");
       return res.status(200).json(post);
   });
 };
@@ -119,7 +123,10 @@ exports.remove = function(req, res) {
 
 
 exports.match = function (req,res,next){
-   PostThing.match(res.locals.posts, req.user._id, function(posts){
+  console.log('votematch func user object');
+  console.log(req.user);
+  console.log('votematch func user object END')
+   Vote.match(res.locals.posts, req.user._id, function(posts){
      var respons = posts;
             res.json(respons);
        

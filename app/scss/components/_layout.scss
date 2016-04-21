@@ -1,3 +1,11 @@
 .mdl-layout__container{
   position: relative;
 }
+
+.mdl-layout--fixed-header > header {
+    position: fixed;
+}
+
+.mdl-layout--fixed-header > header + * {
+    padding-top: 64px;
+}

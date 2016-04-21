@@ -1,21 +1,24 @@
 @import '~material-design-lite/src/_variables.scss';
 @import '~material-design-lite/src/_mixins.scss';
 
+.closing > .menu{
+  //transform: scale(0);
+  //transition: transform $menu-fade-duration $animation-curve-default;
+  }
+
 .menu{
   position: absolute;
   list-style: none;
-  //top: 0;
-  //right: 0;
   height: auto;
   width: auto;
   min-width: 124px;
   padding: 0 0;
   max-width:200px;
   margin: 0;
-  transform-origin: top right;
+  transform-origin: 0 0;
   background: $default-dropdown-bg-color;
   @include shadow-2dp();
-  animation: menuOpen $menu-fade-duration $animation-curve-default;
+ //animation:menuOpen $menu-fade-duration $animation-curve-default;
 }
 
 .menu__container{

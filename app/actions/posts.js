@@ -67,11 +67,49 @@ export function invalidatePort(port) {
   };
 }
 
-export function votePost(index,id,subport,voted){
-  if(voted === true){
+//add type or smh(switch function again?)
+
+//if voted true, do unvote
+export function vote(data){
     return dispatch => {
-      dispatch(disvotedPost(index));
-      return makePostRequest('put', id,{voted: true})
+      dispatch(voteAction(data.index,data.vote));
+      postAction(data.id,data.vote);
+    };
+}
+
+function voteAction(index,vote) {
+  if(vote.v != undefined){
+    if(vote.v){
+      return { type: types.POSTS_VOTE, index};
+    }else{
+      return { type: types.POSTS_UNVOTE, index};
+    }
+  }else if(vote.s != undefined){
+    if(vote.s){
+      return { type: types.POSTS_SAVE, index};
+    }else {
+      return { type: types.POSTS_UNSAVE, index};
+    }
+  }
+}
+
+function postAction(id,vote){
+    return makePostRequest('put', `p/${id}`,vote)
+      .then(function(response) {
+        console.log("UnVote Success!", response.status);
+      }, function(error) {
+        console.error("Vote Failed! ", error);
+      });
+}
+
+
+/*
+export function votedPost(index,id,subport,voted){
+  console.log("votePost insideWHERE IS THIS: "+voted);
+  if(voted === 1){
+    return dispatch => {
+      dispatch(unvotePost(index,voted));
+      return makePostRequest('put', id,{voted: voted})
       .then(function(response) {
         console.log("UnVote Success!", response.status);
       }, function(error) {
@@ -80,8 +118,8 @@ export function votePost(index,id,subport,voted){
     }
   }else{
     return dispatch => {
-      dispatch(votedPost(index));
-      return makePostRequest('put', id,{voted: false})
+      dispatch(upvotePost(index,voted));
+      return makePostRequest('put', id,{voted: voted})
             .then(function(response) {
         console.log("Vote Success!", response.status);
       }, function(error) {
@@ -90,14 +128,8 @@ export function votePost(index,id,subport,voted){
     }
   }
 }
+*/
 
-function votedPost(index) {
-  return { type: types.POSTS_VOTE, index };
-}
-
-function disvotedPost(index) {
-  return { type: types.POSTS_UNVOTE, index };
-}
 
 
 export function fetchPosts(page='0',api='top') {
@@ -108,19 +140,19 @@ export function fetchPosts(page='0',api='top') {
 }
 
 
-export function deletePost(id,index){
+export function deletePost(id,index,cb){
     return dispatch => {
       dispatch(deleteRequest());
       return makePostRequest('delete', id)
       .then(function(response) {
         if(response.status === 200){dispatch(deleteSuccess(index))
-          return true;
+          if(cb){cb()}
         }
         else{dispatch(deleteFailure())
-          return false;
+         if(cb){cb()}
         }
       }, function(error) {
-        dispatch(deleteFailure());
+        //dispatch(deleteFailure());
         console.error("delete Failed ", error);
       });
     }

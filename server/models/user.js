@@ -226,6 +226,7 @@ UserSchema.statics = {
     console.dir(options.criteria);
     console.dir(options.select);
     return this.findOne(options.criteria)
+      .lean(true)
       .select(options.select)
       .exec(cb);
   }

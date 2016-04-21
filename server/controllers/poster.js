@@ -26,11 +26,28 @@ osmosis.get('http://www.delfi.lt/')
                     type: 0,
                     funny: false,
                     title: title,
-                    text: bodyText
+                    text: bodyText,
+                    tags: ['naujienos']
             }
         };    
-        console.dir(req);   
-        posts.create(req);
-        next(context,data);
+        //console.dir(req);   
+        return posts.create(req,res,next);
+        //next(context,data);
     });
 };
+
+/*
+  var post = new Post({
+      kind: req.body.type,
+      score: 1,
+      data: {
+          tags: req.body.tags,
+          subport: subport,
+          title: req.body.title,
+          bodytext: req.body.text,
+          author: req.user.name,
+          url: req.body.url
+      }
+  });
+  
+  */

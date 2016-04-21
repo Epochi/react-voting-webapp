@@ -16,7 +16,7 @@ export const ShareModal = () => {
 
 export const AreYouSure = ({closeParent,closeNow,callback,text}) => {
     //console.log(callback);
-    let yes = closeParent ? ()=>{callback(), closeNow(),closeParent()} : ()=>{if(callback() === true){closeNow()}};
+    let yes = closeParent ? ()=>{callback(), closeNow(),closeParent()} : ()=>{callback(closeNow)};
     let no =  closeParent ? ()=>{closeNow(),closeParent()} : closeNow;
     
         return (

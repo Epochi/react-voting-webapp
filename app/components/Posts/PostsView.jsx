@@ -15,7 +15,8 @@ const cx = classNames.bind(Object.assign(styles, layout, grid));
 class PostsView extends Component {
   constructor(props) {
     super(props);
-    this.handleVotePost = this.handleVotePost.bind(this);
+    //this.handleVote = this.handleVote.bind(this);
+    this.handleFun = this.handleFun.bind(this);
     this.handleMenu = this.handleMenu.bind(this);
     this.scrollListener = this.scrollListener.bind(this);
     this.handleNewPosts = this.handleNewPosts.bind(this);
@@ -30,35 +31,46 @@ class PostsView extends Component {
   }
   
   
-  handleMenu(e,post,index){
+  handleMenu (e,post,index){
   var props = {event:e};
   if(this.props.username){
     props.id = post._id;
     props.username = this.props.username;
     if(this.props.username === post.data.author){
       props.author = post.data.author;
-      props.funcs = {del: ()=>{this.handleDeletePost(post._id,post.data.author,index)}};
+      props.funcs = {del: (cb)=>{this.handleDeletePost(post._id,post.data.author,index,cb)}};
     }
   }
   
   MenuPortal(PostDropdown,props);
   }  
   
-  handleDeletePost(id,author,index){
+  handleDeletePost(id,author,index,cb){
     //console.log(arguments);
     if(this.props.username){
       if(author === this.props.username){
-      return this.props.deletePost(id,index);
+       this.props.deletePost(id,index,cb);
       }
     }
   }
+  handleFun (){
+    var that = this;
+    console.log('arguments');
+    console.log(arguments);
+    var arro = (function(){()=>{console.log('cokcy '+this)}})
+    return arro()
+
+  }
   
-  handleVotePost(post, i){
+  handleVote = (i,p) => {
+    console.log('handleVote')
+    console.log(i);
+    //console.log(this);
+    //console.log(arguments);
+    console.log('handleVote END')
    if(this.props.username){
-      let voted = post.voted ? true : false;
       console.log('voted or nat');
-      console.log(voted);
-      this.props.votePost(i, post._id, post.data.subport, voted);
+      //this.props.vote({index: i, id: p._id });
     }
   }
 
@@ -76,7 +88,7 @@ class PostsView extends Component {
         this.handleNewPosts();
         return;
       }
-      console.log('scrolls fine brop')
+      console.log('scrolls fine brop');
     }.bind(this);
     var throttle = scrollThrottle(list, 1000,{trailing: true});
 
@@ -114,7 +126,7 @@ class PostsView extends Component {
                               <Post
                                 key={i}
                                 post={post}
-                                onClick={() => this.handleVotePost(post, i)}
+                                handleVote={this.handleFun}
                                 onMenuClick={(event) => this.handleMenu(event,post,i)}
                             />
                         )}

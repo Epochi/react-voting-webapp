@@ -1,10 +1,9 @@
 import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import classNames from 'classnames/bind';
-import styles from 'material-design-lite/src/menu/_menu';
 import stylesCustom from 'scss/components/_dropdownmenu';
 import {Modal} from 'components/utils/Modal';
-const cx = classNames.bind(Object.assign(styles,stylesCustom));
+const cx = classNames.bind(stylesCustom);
 
  
 function portalListeners(portal, button){
@@ -37,9 +36,10 @@ function portalClose(portal,close,event){
       portal.removeEventListener('click',close);
       portal.removeEventListener('click',portal.listener);
       if(close.item){close.item.removeEventListener('click',close);}
-      unmountComponentAtNode(portal);
-      //console.log(portal);
-      portal.parentElement.removeChild(portal);
+      //try making classnames react to 'closing' parent
+      
+      portal.className += cx('closing');
+      setTimeout(function(){unmountComponentAtNode(portal);portal.parentElement.removeChild(portal); }, 200);
       window.removeEventListener('click',close);
     }  
 
@@ -69,14 +69,20 @@ export const MenuPortal = (Element, props) => {
     
     var { event, ...other } = props;
     var rekt = event.currentTarget.getBoundingClientRect();
+    console.log(event.currentTarget.getBoundingClientRect());
     var target = event.currentTarget;
     var style = { 
       top: (window.pageYOffset+rekt.bottom)+"px",
       left: rekt.left+"px",
       zIndex: event.currentTarget.style.zIndex+2,
     };
+    if(rekt.right < 300){
+        style.transformOrigin="0 100"
+        style.transform="translateX(-100%)"
+    }
     var close = portalListeners(port,target);
-    portalDOM(Element,port,{closeNow: close,style: style,...other});
+    
+    return portalDOM(Element,port,{closeNow: close,style: style,...other});
 
 };
 

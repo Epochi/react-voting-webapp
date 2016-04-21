@@ -25,7 +25,7 @@ module.exports = function (app, passport, config) {
   })
 
   passport.deserializeUser(function(id, done) {
-    User.load({ criteria: { _id: id }, select: 'name id' }, function (err, user) {
+    User.load({ criteria: { _id: id }, select: 'name _id' }, function (err, user) {
       done(err,user);
     });
   });

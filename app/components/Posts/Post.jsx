@@ -7,12 +7,17 @@ import card from 'material-design-lite/src/card/_card';
 import {dateCompare} from 'components/utils.jsx';
 const cx = classNames.bind(Object.assign(styles, card));
 
-const Post = ({post, onClick,onMenuClick}) => {
-  let voted = post.voted ? true : false;
+const Post = ({post, handleVote,onMenuClick,key}) => {
+  let onVote = () =>{
+    console.log('inside post')
+    console.log(arguments);
+   //handleVote(key,{id:post._id,vote: {v:post.v?1:0}})
+  }
   let hide = post.data.hidden ? 'n':false;
+  let saved = post.s ? "saved" : false;
   let vote = cx({
     "vote__button": true,
-    "voted": voted,
+    "voted": post.v,
     "tooltip": true
   });
   let date = dateCompare(post.data.date);
@@ -33,14 +38,14 @@ const Post = ({post, onClick,onMenuClick}) => {
                   </a>
                 </div>
                 <div>
-                  <a onClick={onClick} className={vote}>
+                  <a onClick={handleVote} className={vote}>
                     <i className={"material-icons"}>arrow_upward</i>
                     <span>{post.score}</span>
                     <span className={cx('tooltip-text')}>Balsuoti</span>
                   </a>
                 </div>
                 <div>
-                  <a className={cx('tooltip')}>
+                  <a onClick={handleVote}className={cx('tooltip',saved)}>
                     <i className={"material-icons"}>favorite</i>
                     <span className={cx('tooltip-text')}>Išsaugoti</span>
                   </a>
@@ -60,13 +65,13 @@ const Post = ({post, onClick,onMenuClick}) => {
                   
               </div>
               <div className={cx("mdl-card__actions","mdl-card--border")}>
-              <div className={cx("post__author", "no-p")}>
-                <a>
-                  {post.data.author}
-                </a>
-                <br/>
-                  <span><i className={"material-icons"}>access_time</i> {date}</span>
-              </div>
+                <div className={cx("post__author", "no-p")}>
+                  <a>
+                    {post.data.author}
+                  </a>
+                  <br/>
+                    <span><i className={"material-icons"}>access_time</i> {date}</span>
+                </div>
               </div>
               <div className={cx("mdl-card__actions","mdl-card--border")}>
                 <a className={cx("mdl-button","mdl-button--colored","mdl-js-button","mdl-js-ripple-effect")}>

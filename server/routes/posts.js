@@ -13,7 +13,7 @@ module.exports = router;
     */
   router.put('/:id',users.userAuthenticated, function(req, res, next) {
     console.log('votedPost running');
-    votes.votedPost(req, res, next);
+    votes.voteSwitch(req, res, next);
   });
   router.post('/post', users.userAuthenticated, posts.create);
 

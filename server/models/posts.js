@@ -12,6 +12,7 @@ var postSchema = new mongoose.Schema({
      _id: {type: String},
     kind: Number,
     score: { type: Number, default: 0 },
+    votes: { type: Number, default: 0 },
     data: {
         tags: [],
         date: { type: Date, default: Date.now},
@@ -38,6 +39,9 @@ var postSchema = new mongoose.Schema({
 });
 /*, {  toObject: {getters: true, virtuals: true}, toJSON: {getters: true, virtuals: true }}*/
 
+//index strategy for scores
+//https://docs.mongodb.org/v2.6/tutorial/control-results-of-text-search/
+
 postSchema.index({ _id: -1});
 postSchema.index({ score: -1});
 /* doesnt work with lean
@@ -61,16 +65,7 @@ postSchema.pre('save', function (next) {
     });
  });
 
-//save postThing with the same id as postid
-postSchema.pre('save', function (next) {
-  var post = this;
-  var PostThing = mongoose.model('PostThing');
-  var postThing = new PostThing({
-      _id: post._id
-  });
-  postThing.save();
-  next();
- });
+//SAVE TO USERTHING TOO
  
  
 
@@ -78,6 +73,8 @@ postSchema.statics = {
      top: function(page,cb) {
          Post.find().sort({score:-1}).skip(page * 20).limit(20).lean(true).exec(cb)
      }
+ 
+     
 };
  
 Post = mongoose.model('Post', postSchema);

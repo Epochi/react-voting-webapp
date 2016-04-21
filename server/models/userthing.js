@@ -1,9 +1,15 @@
 var mongoose = require('mongoose');
 
+//v=postVpte
+//s=postSave
+//c=commentVote
+//e=commentSave
 
 var userThingSchema = new mongoose.Schema({
     _id: {type: mongoose.Schema.Types.ObjectId, unique: true },
-    postVotes: [String]
+    v: [String],
+    s: [String],
+    posts:[String]
 },{autoIndex: false});
 
 
