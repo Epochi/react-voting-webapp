@@ -1,11 +1,15 @@
+'use stric'
 var express = require('express');
 var fs = require('fs');
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var passport = require('passport');
 var secrets = require('./config/secrets');
 var webpack = require('webpack');
 var app = express();
+var pgp = require('pg-promise')();
+var db = pgp(secrets.db);
 
+/*
 // Find the appropriate database to connect to, default to localhost if not found.
 var connect = function() {
   mongoose.connect(secrets.db, function(err, res) {
@@ -18,14 +22,16 @@ var connect = function() {
 };
 connect();
 
+
 mongoose.connection.on('error', console.log);
 mongoose.connection.on('disconnected', connect);
-
+*/
 // Bootstrap models
+/*
 fs.readdirSync(__dirname + '/models').forEach(function(file) {
   if(~file.indexOf('.js')) require(__dirname + '/models/' + file);
 });
-
+*/
 var isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) {
@@ -40,6 +46,7 @@ if (isDev) {
 }
 
 
+require('./config/postgres');
 // Bootstrap passport config
 require('./config/passport')(app, passport);
 

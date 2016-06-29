@@ -1,70 +1,55 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var _ = require('lodash');
-var Post = mongoose.model('Post');
-var PostThing = mongoose.model('PostThing');
+//var Post = mongoose.model('Post');
+//var PostThing = mongoose.model('PostThing');
 var votes = require('../controllers/votes');
-var Vote = mongoose.model('Vote');
-
+//var Vote = mongoose.model('Vote');
+var Post = require('../models/posts');
 
 /**
  * List
  */
+ 
+
 exports.top = function(req,res,next) {
   console.log('CLUser exports.top');
-  Post.top(req.params.page, function(err, posts){
+  console.log(req.params.page);
+  Post.postsLoad({type: 0, page: req.params.page, user: req.user}, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
-    res.locals.posts = posts;
-    next();
+    return res.json(posts);
   });
 }; 
 
 
-
-
-exports.all = function(req, res) {
-  Post.find({}).exec(function(err, posts) {
-    if(!err) {
-      res.json(posts);
-    }else {
-      console.log('Error in first query');
-    }
-  });
-};
-
 /**
  * Add a Post
  */
+
+
 exports.create = function(req, res, next) {
   console.log('creation start');
-  var subport = req.body.funny ? "linksmi" : "idomus"; 
+  /*if(!req.isAuthenticated()){
+          return next({message: "Not authenticated"});
+  }*/
   if(req.body.type === 0){
-  var post = new Post({
+  var post = {
       kind: req.body.type,
-      score: 1,
-      data: {
-          tags: req.body.tags,
-          subport: subport,
-          title: req.body.title,
-          bodytext: req.body.text,
-          author: req.user.name,
-          url: req.body.url
-      }
-  });
+      tags: req.body.tags,
+      subport: req.body.subport,
+      title: req.body.title,
+      author: req.user.name,
+      data: req.body.data
+    };
   }
-  post.save(req.user._id, function (err, post, state){
-      if(err){
-          console.log('post save error: '+err);
-          return next(err);
-      }
-      //need saving through somewhere else
-      //voteOnCreation
-      votes.voteOnCreation(post._id,req.user._id,next);
-      console.log("post save success");
-      return res.status(200).json(post);
+  
+  Post.create(post,function(err,post){
+     if(err){return next(err);}
+      console.log('inside Post.create')
+     return res.status(200).json(post);
   });
+  
 };
-
 
 /**
  * Update a post
@@ -119,17 +104,4 @@ exports.remove = function(req, res) {
     
     
   });
-};
-
-
-exports.match = function (req,res,next){
-  console.log('votematch func user object');
-  console.log(req.user);
-  console.log('votematch func user object END')
-   Vote.match(res.locals.posts, req.user._id, function(posts){
-     var respons = posts;
-            res.json(respons);
-       
-    });
-
 };

@@ -11,3 +11,8 @@ exports.sanitizeTitle = function (string){
     var sanitized = string.toLowerCase().split(" ",8).join("_");
     return sanitized;
 }
+
+
+exports.makeSalt = function (){
+  return Math.round((new Date().valueOf() * Math.random())) + '';
+}

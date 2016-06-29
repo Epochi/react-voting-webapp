@@ -1,7 +1,7 @@
 'use strict'
 var axios = require('axios');
 var osmosis = require('osmosis');
-var posts = require('../controllers/posts');
+var posts = require('./posts.js');
 
 exports.fetchReddit = function(req,res,next) {
 console.log('fetch user ' + req.user);
@@ -22,12 +22,14 @@ osmosis.get('http://www.delfi.lt/')
         let req = { 
             user: user,
             body: {
-                    url: url,
                     type: 0,
-                    funny: false,
                     title: title,
-                    text: bodyText,
-                    tags: ['naujienos']
+                    subport: 'news',
+                    tags: ['naujienos'],
+                    data: {
+                        url: url,
+                        bodytext: bodyText
+                    }
             }
         };    
         //console.dir(req);   

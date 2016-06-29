@@ -1,13 +1,13 @@
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var wrap = require('co-express');
-var User = mongoose.model('User');
-var UserThing = mongoose.model('UserThing');
+//var User = mongoose.model('User');
+var User = require('../models/user');
 
 /**
  * Load
  */
 
-exports.load = wrap(function* (req, res, next, _id) {
+exports.loadOld = wrap(function* (req, res, next, _id) {
   console.log('muh name  is controller load');
   var criteria = { _id };
   req.profile = yield User.load({ criteria });
@@ -19,7 +19,7 @@ exports.load = wrap(function* (req, res, next, _id) {
  * Create user
  */
 
-exports.create = wrap(function* (req, res, next) {
+exports.createOld = wrap(function* (req, res, next) {
   /*if(req.body.password !== req.body.passwordConfirmation){
    next({stack: 'ValidationError', errors: { passwordConfirmation: {path: "passwordConfirmation", message: "Slaptažodžiai turi būti vienodi" }, hashed_password: {path: "hashed_password", message: "Slaptažodžiai turi būti vienodi"} }  }) ;
   }
@@ -101,3 +101,51 @@ function login (req, res) {
   console.log("DAS IST THE SUCCES LOGINZER FUNCTION");
   res.status(200).send("Authenticated");
 }
+
+
+
+exports.load = wrap(function* (req, res, next, username) {
+  console.log('muh name  is controller load');
+  console.log(username);
+    User.load(username,function(err,profile){
+      if(err){return next(err);}
+      req.profile = profile;
+      next();
+  });
+
+  next();
+});
+
+
+
+
+
+exports.createLocal = wrap(function* (req, res, next) {
+  console.log('/signup this is req body');
+  console.log(req.body);
+   User.validation(req.body,function(err){
+     if(err){return next(err);}
+        console.log('/signup validated');
+        User.create(req,function(err,user){
+         if(err){return next(err);}
+         console.log('/signup create');
+          console.log(user);
+          console.log('/signup create user end');
+         User.createLocal(req,function(err){
+           if(err){return next(err);}
+            console.log('/signup createLocal sucess');
+            req.logIn(user, function(err) {
+              if (err) {
+                console.log ('passport SignUp > login error');
+                return next(err); }
+                console.log ('passport iz happi inside login creator');
+                console.log(user);
+              return res.status(200).send({username: user.name});
+            });
+         });
+       });
+   });
+});
+
+
+

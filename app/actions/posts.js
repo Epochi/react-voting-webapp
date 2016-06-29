@@ -72,31 +72,22 @@ export function invalidatePort(port) {
 //if voted true, do unvote
 export function vote(data){
     return dispatch => {
-      dispatch(voteAction(data.index,data.vote));
-      postAction(data.id,data.vote);
+      dispatch(voteAction(data.index,data.vote.vote));
+      postAction(data);
     };
 }
 
 function voteAction(index,vote) {
-  if(vote.v != undefined){
-    if(vote.v){
-      return { type: types.POSTS_VOTE, index};
-    }else{
-      return { type: types.POSTS_UNVOTE, index};
-    }
-  }else if(vote.s != undefined){
-    if(vote.s){
-      return { type: types.POSTS_SAVE, index};
-    }else {
-      return { type: types.POSTS_UNSAVE, index};
-    }
-  }
+  return { type: types.POSTS_VOTE, data: {index: index, vote: vote}};
 }
 
-function postAction(id,vote){
-    return makePostRequest('put', `p/${id}`,vote)
+function postAction(data){
+    console.log('pA args');
+    console.log(arguments);
+    console.log('pA args');
+    return makePostRequest('put', 'vote',{vote: {type: 0, state: data.state,post_id: data.id}})
       .then(function(response) {
-        console.log("UnVote Success!", response.status);
+        console.log("Vote Success!", response.status);
       }, function(error) {
         console.error("Vote Failed! ", error);
       });

@@ -5,7 +5,7 @@ import axios from 'axios';
 export default function ApiClient(){
   const client = axios.create({
     //Set baseURL to what the user will be accessing
-    baseURL: `https://yp-dev-2-miauwi.c9users.io/`
+    baseURL: `https://yp-dev-postgres-miauwi.c9users.io/`
   });
   
   

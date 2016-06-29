@@ -1,35 +1,56 @@
 'use strict';
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 var _ = require('lodash');
-var Post = mongoose.model('Post');
-var Vote = mongoose.model('Vote');
-var UserThing = mongoose.model('UserThing');
+//var Post = mongoose.model('Post');
+var Vote = require('../models/votes');
+
+//var UserThing = mongoose.model('UserThing');
 
 //v=postVpte
 //s=postSave
 //c=commentVote
-//e=commentSave
+//a=commentSave
 //need to test Object.keys speed versus != undefined
 //extra for archived posts to control 'save' or mb not
+
+//body.vote.type = 0 post, 1 comment
+//body.vote.state = 0 insert, 1 comment
 exports.voteSwitch = function (req,res,next){
-    let type = Object.keys(req.body.vote)[0];
-    if(type === 'v'){
-        postVote(req, res, next,type);
-    } else if(type === 's'){
-        postVote(req,res,next,type);
-     } else if(type === 'c'){
-        
-     } else if(type === 'e'){
-        
-    }else {
-        return res.sendStatus(500);
+    if(req.body.vote.type === 0){
+        postVote(req, res, next);
+    } else {
+        //commentVote(req,res,next);
     }
 };
+
+//0 for insert, 1 for update
+function postVote(req, res, next) {
+    console.log('did i lik? ' + req.body.vote);
+    if(req.body.vote.state === 0){
+        Vote.createPostVote({username: req.user.username,post_id: req.body.vote.post_id, post_vote: req.body.vote.data},function(err,cb){
+            if(err){res.sendStatus(500); return next(err);}
+            res.sendStatus(200);
+        });
+    } else{
+        Vote.updatePostVote({username: req.user.username,post_id: req.body.vote.post_id, post_vote: req.body.vote.data},function(err,cb){
+            if(err){res.sendStatus(500); return next(err);}
+            res.sendStatus(200);
+        });
+    }
+}
+
+
+
+
+
+
+
+
 
 
 
 // Try to add a vote, if vote was already found, delete the vote
-function postVote(req, res, next,type) {
+function postVotOlD(req, res, next,type) {
     console.log('did i lik? ' + req.body.vote[type]);
     //if user has not voted the post, add like, else if user has voted the post, delete the like
     //pass callback along the vote flow
@@ -68,13 +89,13 @@ function postAddVote(id, user,a, next,cb){
             else{cb(true);}
             });
        } else {
-           postDeleteVote(id,user,next,cb);
+           postDeleteVote(id,user,a,next,cb);
        }
    });
 }
 
 function postDeleteVote(id,user,a, next,cb){
-        let uSet = {"$set":{[a]: 1}};
+        let uSet = {"$set":{[a]: 0}};
         Vote.update({_id: id,u: user},uSet, function (err, result){
             if (err) return next(err);
              console.log("Deleting Vote Try");
@@ -85,7 +106,7 @@ function postDeleteVote(id,user,a, next,cb){
                 let uP = {"$pull":{[a]: id}};
                 UserThing.update({_id: user},uP, function(err, result){
                     if (err) return next(err);
-               if(a==="v"){postScoreControl(id, 1, next,cb)}
+               if(a==="v"){postScoreControl(id, -1, next,cb)}
                 else{cb(true);}
                 });
             } else{

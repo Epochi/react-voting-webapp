@@ -1,11 +1,12 @@
 /* Initializing passport.js */
 //var User = require('../models/user');
-var mongoose = require('mongoose');
+//var mongoose = require('mongoose');
 
 var LocalStrategy = require('passport-local').Strategy;
-var User = mongoose.model('User');
-var UserThing = mongoose.model('UserThing');
+//var User = mongoose.model('User');
+//var UserThing = mongoose.model('UserThing');
 var local = require('./passport/local');
+var user = require('../models/user');
 /*
 var google = require('./passport/google');
 var facebook = require('./passport/facebook');
@@ -21,11 +22,13 @@ var github = require('./passport/github');
 module.exports = function (app, passport, config) {
   // serialize sessions
   passport.serializeUser(function(user, done) {
-    done(null, user.id)
+    console.log('serializeUser ' + user)
+    done(null, user.username)
   })
 
-  passport.deserializeUser(function(id, done) {
-    User.load({ criteria: { _id: id }, select: 'name _id' }, function (err, user) {
+  passport.deserializeUser(function(username, done) {
+    user.load(username, function (err, user) {
+      console.log('deserializeUser ' + user);
       done(err,user);
     });
   });

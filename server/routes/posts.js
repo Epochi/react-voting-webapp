@@ -11,8 +11,8 @@ module.exports = router;
     next();
     });
     */
-  router.put('/:id',users.userAuthenticated, function(req, res, next) {
-    console.log('votedPost running');
+  router.put('/vote',users.userAuthenticated, function(req, res, next) {
+    console.log('/vote express');
     votes.voteSwitch(req, res, next);
   });
   router.post('/post', users.userAuthenticated, posts.create);
@@ -27,14 +27,4 @@ module.exports = router;
   
   router.get('/top/:page/.json', function(req,res,next){
     posts.top(req,res,next);
-  });
-  //get routes above this
-  router.use(function(req,res,next){
-    console.log('router use for posts');
-    if(req.user){
-      posts.match(req,res,next);
-    } else{
-      res.json(res.locals.posts);
-    }
-    
   });

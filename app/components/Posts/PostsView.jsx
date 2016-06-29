@@ -15,8 +15,6 @@ const cx = classNames.bind(Object.assign(styles, layout, grid));
 class PostsView extends Component {
   constructor(props) {
     super(props);
-    //this.handleVote = this.handleVote.bind(this);
-    this.handleFun = this.handleFun.bind(this);
     this.handleMenu = this.handleMenu.bind(this);
     this.scrollListener = this.scrollListener.bind(this);
     this.handleNewPosts = this.handleNewPosts.bind(this);
@@ -53,24 +51,17 @@ class PostsView extends Component {
       }
     }
   }
-  handleFun (){
-    var that = this;
-    console.log('arguments');
-    console.log(arguments);
-    var arro = (function(){()=>{console.log('cokcy '+this)}})
-    return arro()
 
-  }
-  
   handleVote = (i,p) => {
     console.log('handleVote')
     console.log(i);
+    console.log(p);
     //console.log(this);
     //console.log(arguments);
     console.log('handleVote END')
    if(this.props.username){
       console.log('voted or nat');
-      //this.props.vote({index: i, id: p._id });
+      this.props.vote({index: i, vote: p});
     }
   }
 
@@ -125,8 +116,9 @@ class PostsView extends Component {
                           {posts.map((post, i) =>
                               <Post
                                 key={i}
+                                k={i}
                                 post={post}
-                                handleVote={this.handleFun}
+                                handleVote={this.handleVote}
                                 onMenuClick={(event) => this.handleMenu(event,post,i)}
                             />
                         )}
