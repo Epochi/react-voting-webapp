@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import Button from 'components/utils/Button'
 //import PostButton from 
+import {Link} from 'react-router';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_post';
 import card from 'material-design-lite/src/card/_card';
 import {dateCompare} from 'components/utils.jsx';
-const cx = classNames.bind(Object.assign(styles, card));
+const cx = classNames.bind(Object.assign(card, styles));
 
 const Post = ({post, handleVote,onMenuClick,k}) => {
   let hide = post.data.hidden ? 'n':false;
@@ -14,11 +15,18 @@ const Post = ({post, handleVote,onMenuClick,k}) => {
     "voted":  post.post_vote >= 20 ? true : false,
     "tooltip": true
   });
+  let saveClass = cx({
+  "tooltip": true,
+  "saved": post.post_vote % 2 ? false:true
+    
+  });
   let date = dateCompare(post.date);
     return(
              <div className={cx("mdl-card","post",hide)}>
               <div className={cx("mdl-card__title")}>
-                <a><h2 className={cx("mdl-card__title-text")}>{post.title}</h2></a>
+                <Link to={{pathname: `/${post.subport}/${post.post_id}`, state : {index: k}}}>
+                  <h2 className={cx("mdl-card__title-text")}>{post.title}</h2>
+                </Link>
               </div>
               <div className={cx("mdl-card__supporting-text")}>
                 {post.data.bodytext}
@@ -32,14 +40,14 @@ const Post = ({post, handleVote,onMenuClick,k}) => {
                   </a>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id,state: post.post_vote ? 1 : 0,data: post.post_vote >= 20 ? post.post_vote - 10 : post.post_vote + 10})}} className={voteClass}>
+                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote >= 20 ? post.post_vote - 10 : post.post_vote + 10})}} className={voteClass}>
                     <i className={"material-icons"}>arrow_upward</i>
-                    <span>{post.score}</span>
+                    <span>{post.voteup}</span>
                     <span className={cx('tooltip-text')}>Balsuoti</span>
                   </a>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id,state: post.post_vote ? 1 : 0,vote: post.post_vote % 2 ? post.post_vote + 1 : post.post_vote - 1})}} className={cx('tooltip',post.post_vote % 2 ? false:true)}>
+                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote % 2 ? post.post_vote - 1 : post.post_vote + 1})}} className={saveClass}>
                     <i className={"material-icons"}>favorite</i>
                     <span className={cx('tooltip-text')}>Išsaugoti</span>
                   </a>

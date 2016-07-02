@@ -1,4 +1,5 @@
 import {
+  SELECT_PORT,
   LOCAL_LOGIN_USER,
   LOCAL_LOGIN_SUCCESS_USER,
   LOGIN_SUCCESS_USER,
@@ -22,7 +23,7 @@ export default function ui(state={
   isWaiting: false,
   messageOpen: false,
   message: null,
-  selectedPort: 'top',
+  selectedPort: 'all',
   postsLoad: false
   }, action={}) {
   switch (action.type) {
@@ -50,6 +51,8 @@ export default function ui(state={
       return Object.assign({},state,{
         postsLoad: false
       });
+    case SELECT_PORT:
+      return action.port
     default:
       return state;
   }

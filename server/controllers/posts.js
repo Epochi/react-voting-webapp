@@ -10,11 +10,16 @@ var Post = require('../models/posts');
  * List
  */
  
-
-exports.top = function(req,res,next) {
+//'/:port/:page/:sort/.json'
+exports.load = function(req,res,next) {
   console.log('CLUser exports.top');
-  console.log(req.params.page);
-  Post.postsLoad({type: 0, page: req.params.page, user: req.user}, function(err, posts){
+  console.log(req.params.sort);
+  console.log( Number.isInteger(req.params.sort));
+  var loadParams = {};
+    
+
+  
+  Post.postsLoad({type: Number(req.params.sort), page: Number(req.params.page), port: req.params.port, user: req.user}, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
     return res.json(posts);

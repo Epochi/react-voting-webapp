@@ -4,20 +4,17 @@ var qrm = db.pgp.queryResult;
 
 
 exports.createPostVote = function(data, cb){
-  db.db.one({
+  db.db.none({
         name: "vote_post_create",
         text: "INSERT INTO post_vote (username, post_id, post_vote) VALUES ($1, $2, $3);",
         values: [data.username, data.post_id, data.post_vote]
       }).then(result => {
       console.log('create result');
-      console.log(result);
       return cb();
     })
     .catch(error => {return cb(error)});
 };
 
-//post_vote first number vote, second number save
-//neutral 22, 32 means user has voted 23 means user saved
 
 exports.updatePostVote = function(data, cb){
   db.db.one({

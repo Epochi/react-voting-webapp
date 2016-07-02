@@ -1,8 +1,9 @@
 import React from 'react';
-import { Route, IndexRoute } from 'react-router';
+import { Route, IndexRoute, Redirect } from 'react-router';
 import App from 'containers/App';
 import Profile from 'containers/Profile';
 import Posts from 'containers/Posts';
+import Post from 'containers/Post';
 
 /*
  * @param {Redux Store}
@@ -33,9 +34,12 @@ export default (store) => {
   };
   return (
     <Route path="/" component={App}>
-      <IndexRoute component={Posts} />
+      <IndexRoute component={Posts}/>
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
-
+      <Route path=":port" component={Posts} >
+        <Route path=":postId" component={Post} />
+      </Route>
+      
     </Route>
   );
 };

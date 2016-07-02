@@ -17,6 +17,10 @@ const initialState = {
     posts: []
 };
 
+
+
+
+
 function posts(state = initialState.posts, action) {
   switch (action.type) {
   case POSTS_GET_SUCCESS:
@@ -48,9 +52,12 @@ export function postsByPort(state = initialState, action) {
       postsArray = data.map(post => post);
     }
     return {
-        posts: posts(state.posts, {posts: postsArray, type: action.type})
+        [action.port]: posts(state[action.port], {posts: postsArray, type: action.type})
       } ;
     case POSTS_VOTE:
+          console.log('pARED args');
+    console.log(action.data);
+    console.log('pARED args');
        return {
          posts: posts(state.posts, {index: action.data.index,vote: action.data.vote, type: action.type})
        };
@@ -71,3 +78,39 @@ export function postsByPort(state = initialState, action) {
 }
 
 
+export function postOpen(state={
+ post: null,
+ comments: null
+}, action) {
+  switch (action.type) {
+  case POSTS_GET_SUCCESS:
+    let postsArray = [];
+    if(action.req && action.req.data){
+      let data = action.req.data;
+      postsArray = data.map(post => post);
+    }
+    return {
+      
+      } ;
+    case POSTS_VOTE:
+          console.log('pARED args');
+    console.log(action.data);
+    console.log('pARED args');
+       return {
+         posts: posts(state.posts, {index: action.data.index,vote: action.data.vote, type: action.type})
+       };
+    case CREATE_POST_SUCCESS:
+      let post = {...action.data,
+        post_vote: 10
+      };
+       return {
+         posts: posts(state.posts, {post: post, type: action.type})
+       };  
+    case POSTS_DELETE_SUCCESS:
+       return {
+         posts: posts(state.posts, {index: action.index, type: action.type})
+       };  
+  default:
+    return state;
+  }
+}

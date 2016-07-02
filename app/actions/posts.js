@@ -72,8 +72,8 @@ export function invalidatePort(port) {
 //if voted true, do unvote
 export function vote(data){
     return dispatch => {
-      dispatch(voteAction(data.index,data.vote.vote));
-      postAction(data);
+      dispatch(voteAction(data.index,data.vote.state ? data.vote.data : 10 + data.vote.data ));
+      postAction(data.vote);
     };
 }
 
@@ -83,9 +83,9 @@ function voteAction(index,vote) {
 
 function postAction(data){
     console.log('pA args');
-    console.log(arguments);
+    console.log(data);
     console.log('pA args');
-    return makePostRequest('put', 'vote',{vote: {type: 0, state: data.state,post_id: data.id}})
+    return makePostRequest('put', 'vote',{vote: {type: 0, state: data.state,post_id: data.id, data:data.data}})
       .then(function(response) {
         console.log("Vote Success!", response.status);
       }, function(error) {
@@ -123,11 +123,29 @@ export function votedPost(index,id,subport,voted){
 
 
 
-export function fetchPosts(page='0',api='top') {
+export function fetchPosts({port: port="all",page: page=0,sortBy: sortBy=1}) {
+    console.log('in fetchPosts');
     return {
-        type: types.POSTS_GET,
-        promise: (client) => client.get(`/p/${api}/${page}/.json`)
-    };
+          type: types.POSTS_GET,
+          port: port,
+          promise: (client) => client.get(`/p/${port}/${page}/${sortBy}/.json`)
+      };
+}
+
+export function fetchPost(postId) {
+    console.log('in fetchPost');
+    return {
+          type: types.POST_GET,
+          promise: (client) => client.get(`/post/${postId}/.json`)
+      };
+}
+
+export function fetchPostComments(port='all',postId) {
+    console.log('in fetchPostComments');
+    return {
+          type: types.POST_COMMENTS_GET,
+          promise: (client) => client.get(`/p/${postId}/.json`)
+      };
 }
 
 

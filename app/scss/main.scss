@@ -6,6 +6,7 @@ body {
   font-smoothing: antialiased;
   margin: 0;
   position:relative;
+  overflow-y: hidden;
 }
 
 
@@ -15,4 +16,8 @@ body {
 a{
   cursor: pointer;
   text-decoration:none;
+}
+
+a:link{
+  color: inherit;
 }

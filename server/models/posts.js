@@ -1,6 +1,6 @@
 var utils = require('../config/utils');
 var db = require('../config/postgres');
-var box = {0: {type: 'top', order: 'voteup' },1: {type: 'all', order: 'score'},2:{type:'new', order: 'date' }};
+var box = {0: {type: 'hot', order: 'score' },1: {type: 'top', order: 'voteup'},2:{type:'new', order: 'date' }};
 
 
 
@@ -9,11 +9,11 @@ var box = {0: {type: 'top', order: 'voteup' },1: {type: 'all', order: 'score'},2
 exports.postsLoad = function(data, cb){
    var query = {
      name: "post_"+box[data.type].type,
-     text: "select * from post ORDER BY "+box[data.type].order+" DESC LIMIT 20 OFFSET ($1 * 20)",
+     text: "select * from post ORDER BY "+box[data.type].order+" DESC LIMIT 5 OFFSET ($1 * 5)",
      values: [data.page]
    };
    if(data.user != null){
-     query.text ="SELECT * FROM (" +query.text + ") q LEFT JOIN post_vote ON q.post_id = post_vote.post_id  AND post_vote.username = '"+data.user.username+"'";
+     query.text ="SELECT q.*, j.post_vote FROM (" +query.text + ") q LEFT JOIN post_vote j ON q.post_id = j.post_id  AND j.username = '"+data.user.username+"' ORDER BY q."+box[data.type].order+" DESC";
    }
     console.log('inside models/post/top');
       db.db.manyOrNone(query)
@@ -41,4 +41,18 @@ exports.create = function(data,cb){
       return cb(null,result);
     })
     .catch(error => {return cb(error)});
+}
+
+exports.postVote = function(data, cb){
+    
+      db.db.none({
+        name: "post_score_update",
+        text: "UPDATE post SET "+data.vote+" = "+data.vote+"+1 WHERE post_id = $1;",
+        values: [data.post_id]
+      }).then(result => {
+      console.log('post score update');
+      return cb();
+    })
+    .catch(error => {return cb(error)});
+    
 }

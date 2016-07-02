@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import user from 'reducers/user';
-import { postsByPort } from 'reducers/posts';
+import { postsByPort, postOpen } from 'reducers/posts';
 import emailSignUp from 'reducers/emailsignup';
 import locallogin from 'reducers/locallogin';
 import ui from 'reducers/ui';
@@ -13,6 +13,7 @@ const rootReducer = combineReducers({
   emailSignUp,
   locallogin,
   postsByPort,
+  postOpen,
   ui,
   routing
 });

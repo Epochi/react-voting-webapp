@@ -3,15 +3,10 @@
 var _ = require('lodash');
 //var Post = mongoose.model('Post');
 var Vote = require('../models/votes');
+var Post = require('../models/posts');
 
 //var UserThing = mongoose.model('UserThing');
 
-//v=postVpte
-//s=postSave
-//c=commentVote
-//a=commentSave
-//need to test Object.keys speed versus != undefined
-//extra for archived posts to control 'save' or mb not
 
 //body.vote.type = 0 post, 1 comment
 //body.vote.state = 0 insert, 1 comment
@@ -24,16 +19,39 @@ exports.voteSwitch = function (req,res,next){
 };
 
 //0 for insert, 1 for update
+//Voted up is 20
+//Neutral is 10
+//Voted down is 0
+//Saved %2 returns false
+//notsaved % returns true
+
+
 function postVote(req, res, next) {
-    console.log('did i lik? ' + req.body.vote);
+    console.log('voted before?' + req.body.vote.state);
     if(req.body.vote.state === 0){
-        Vote.createPostVote({username: req.user.username,post_id: req.body.vote.post_id, post_vote: req.body.vote.data},function(err,cb){
+        Vote.createPostVote({username: req.user.username,post_id: req.body.vote.post_id, post_vote: 10 + req.body.vote.data},function(err,cb){
             if(err){res.sendStatus(500); return next(err);}
+            console.log('create vote success');
+            
+            if(req.body.vote.data === 10){
+                Post.postVote({post_id: req.body.vote.post_id, vote: "voteup"},function(err,cb){
+                    if(err){res.sendStatus(500); return next(err);}
+                    console.log('update post voteup success');
+                    res.sendStatus(200);
+                });   
+            } else if(req.body.vote.data === -10){
+                Post.postVote({post_id: req.body.vote.post_id, vote: "votedown"},function(err,cb){
+                    if(err){res.sendStatus(500); return next(err);}
+                    console.log('update post voteup success');
+                    res.sendStatus(200);
+                });   
+            }  
             res.sendStatus(200);
         });
     } else{
         Vote.updatePostVote({username: req.user.username,post_id: req.body.vote.post_id, post_vote: req.body.vote.data},function(err,cb){
             if(err){res.sendStatus(500); return next(err);}
+            console.log('update vote success');
             res.sendStatus(200);
         });
     }

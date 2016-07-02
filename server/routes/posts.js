@@ -25,6 +25,6 @@ module.exports = router;
     posts.remove(req, res);
   });
   
-  router.get('/top/:page/.json', function(req,res,next){
-    posts.top(req,res,next);
+  router.get('/:port/:page/:sort/.json', function(req,res,next){
+    posts.load(req,res,next);
   });

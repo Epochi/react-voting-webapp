@@ -8,7 +8,7 @@ import PostDropdown from 'components/Posts/PostDropdown';
 import {MenuPortal} from 'components/utils/Portal';
 import {scrollThrottle} from 'components/utils.jsx';
 
-const cx = classNames.bind(Object.assign(styles, layout, grid));
+const cx = classNames.bind(Object.assign(layout, grid, styles));
 
 
 
@@ -53,6 +53,7 @@ class PostsView extends Component {
   }
 
   handleVote = (i,p) => {
+    //LINK TO LOGIN IF NOT LOGGED IN
     console.log('handleVote')
     console.log(i);
     console.log(p);
@@ -67,15 +68,19 @@ class PostsView extends Component {
 
   
   handleNewPosts(page='0'){
-    this.props.fetchPosts(page);
+    this.props.fetchPosts({page});
+  }
+  
+  handleScroll(){
+    console.log(this)
   }
   
   scrollListener(){
-    var bot = document.body.scrollHeight - window.innerHeight *2;
+    var bot = this.postList.scrollHeight - window.innerHeight *2;
     var list = function list(e){
-      if(document.body.scrollTop > bot){
+      if(this.postList.scrollTop > bot){
         console.log('it iz lol,scrolly');
-        window.removeEventListener('scroll', throttle);
+        this.postList.removeEventListener('scroll', throttle);
         this.handleNewPosts();
         return;
       }
@@ -91,7 +96,9 @@ class PostsView extends Component {
     this.props.fetchPosts();
   }
   componentDidMount(){
-    window.addEventListener('scroll',this.scrollListener());
+    console.log('Postlist');
+    console.log(this.postList);
+    this.postList.addEventListener('scroll',this.scrollListener());
   }
   componentDidUpdate(prevProps,n){
     console.log('prevprops');
@@ -99,31 +106,58 @@ class PostsView extends Component {
     console.log('nextting');
     console.log(n);
     if(prevProps.posts.length !== this.props.posts.length){
-    //console.log('PostsView didupdate add scrollListener');
-    window.addEventListener('scroll',this.scrollListener());
+    console.log('PostsView didupdate add scrollListener');
+    this.postList.addEventListener('scroll',this.scrollListener());
     return;
     }
   }
   componentWillUnmount() {
-     window.removeEventListener('scroll',this.scrollListener());
+     this.postList.removeEventListener('scroll',this.scrollListener());
   }
 
   render () {
+        const split = this.props.children ? "split-on":false;
          const {posts} = this.props;
                 return (
                 <main className={cx('mdl-layout__content',"main-view")}>
-                    <div className={cx('mdl-grid','main-grid')}>
-                          {posts.map((post, i) =>
-                              <Post
-                                key={i}
-                                k={i}
-                                post={post}
-                                handleVote={this.handleVote}
-                                onMenuClick={(event) => this.handleMenu(event,post,i)}
-                            />
-                        )}
+                  <div className={cx("page-split-wrapper",split)}>
+                    <div ref={(ref) => this.postList = ref} id="post-list" className={cx('page-post-list')}>
+                          <div className={cx("main-sidebar","left")}>
+                          Hot, Top, New
+                          <br/>
+                          #naujienos
+                          <br/>
+                          #juokuciai
+                        </div>
+                        <div className={cx("main-sidebar","right")}>
+                                              Hot, Top, New
+                          <br/>
+                          #naujienos
+                          <br/>
+                          #juokuciai
+                      </div>
+                    
+                      <div className={cx('mdl-grid','main-grid')}>
+                            {posts.map((post, i) =>
+                                <Post
+                                  key={i}
+                                  k={i}
+                                  post={post}
+                                  handleVote={this.handleVote}
+                                  onMenuClick={(event) => this.handleMenu(event,post,i)}
+                              />
+                          )}
+                      </div>
                     </div>
+                    {this.props.children ? (
+                    <div className={cx('page-post')}>
+                       {this.props.children}
+                     </div>
+                      ) : (null)
+                    }
+                  </div>    
                 </main>
+                
             );
   }
 }
