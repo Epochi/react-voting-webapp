@@ -9,11 +9,11 @@ var box = {0: {type: 'hot', order: 'score' },1: {type: 'top', order: 'voteup'},2
 exports.postsLoad = function(data, cb){
    var query = {
      name: "post_"+box[data.type].type,
-     text: "select * from post ORDER BY "+box[data.type].order+" DESC LIMIT 5 OFFSET ($1 * 5)",
+     text: "select * from post ORDER BY "+box[data.type].order+" DESC LIMIT 5 OFFSET ($1 * 15)",
      values: [data.page]
    };
    if(data.user != null){
-     query.text ="SELECT q.*, j.post_vote FROM (" +query.text + ") q LEFT JOIN post_vote j ON q.post_id = j.post_id  AND j.username = '"+data.user.username+"' ORDER BY q."+box[data.type].order+" DESC";
+     query.text ="SELECT q.*, j.* FROM (" +query.text + ") q LEFT JOIN votes j ON q.post_id = j.post_id  AND j.username = '"+data.user.username+"' ORDER BY q."+box[data.type].order+" DESC";
    }
     console.log('inside models/post/top');
       db.db.manyOrNone(query)

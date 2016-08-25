@@ -11,12 +11,15 @@ function mapStateToProps(state, ownProps) {
   console.log('this ownprops')
   console.dir(ownProps);
   const {postsByPort, user, ui } = state;
-  const selectedPort = ui.selectedPort;
-  const posts = postsByPort[selectedPort];
+  const posts = postsByPort
   const username = user.username;
+  const selectedPort = ui.selectedPort;
+  const authenticated = user.authenticated;
   return {
     posts,
-    username
+    username,
+    selectedPort,
+    authenticated
   };
 }
 

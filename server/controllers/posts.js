@@ -14,8 +14,8 @@ var Post = require('../models/posts');
 exports.load = function(req,res,next) {
   console.log('CLUser exports.top');
   console.log(req.params.sort);
-  console.log( Number.isInteger(req.params.sort));
-  var loadParams = {};
+  console.log(Number.isInteger(req.params.sort));
+  //var loadParams = {};
     
 
   

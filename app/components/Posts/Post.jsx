@@ -10,16 +10,13 @@ const cx = classNames.bind(Object.assign(card, styles));
 
 const Post = ({post, handleVote,onMenuClick,k}) => {
   let hide = post.data.hidden ? 'n':false;
-  let voteClass = cx({
-    "vote__button": true,
-    "voted":  post.post_vote >= 20 ? true : false,
-    "tooltip": true
-  });
-  let saveClass = cx({
-  "tooltip": true,
-  "saved": post.post_vote % 2 ? false:true
-    
-  });
+  let voteClass = false;
+  let saveClass = false;
+  if(post.post_vote != null){
+  voteClass =  post.post_vote >= 20 ? "voted" : false;
+  //mb +1, dont know how to proceed yet
+  saveClass = post.post_vote % 2 ? "saved" : false;
+  }
   let date = dateCompare(post.date);
     return(
              <div className={cx("mdl-card","post",hide)}>
@@ -40,14 +37,14 @@ const Post = ({post, handleVote,onMenuClick,k}) => {
                   </a>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote >= 20 ? post.post_vote - 10 : post.post_vote + 10})}} className={voteClass}>
+                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote >= 20 ? post.post_vote - 10 : post.post_vote + 10})}} className={cx('vote__button','tooltip', voteClass)}>
                     <i className={"material-icons"}>arrow_upward</i>
                     <span>{post.voteup}</span>
                     <span className={cx('tooltip-text')}>Balsuoti</span>
                   </a>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote % 2 ? post.post_vote - 1 : post.post_vote + 1})}} className={saveClass}>
+                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote % 2 ? post.post_vote - 1 : post.post_vote + 1})}} className={cx('tooltip',saveClass)}>
                     <i className={"material-icons"}>favorite</i>
                     <span className={cx('tooltip-text')}>Išsaugoti</span>
                   </a>

@@ -52,7 +52,9 @@ export default function ui(state={
         postsLoad: false
       });
     case SELECT_PORT:
-      return action.port
+      return Object.assign({},state,{
+        selectedPort: action.port
+      });
     default:
       return state;
   }

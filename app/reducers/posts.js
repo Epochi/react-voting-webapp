@@ -24,7 +24,7 @@ const initialState = {
 function posts(state = initialState.posts, action) {
   switch (action.type) {
   case POSTS_GET_SUCCESS:
-  return state = update(state, {$push: action.posts});
+    return state = update(state, {$push: action.posts});
   case POSTS_VOTE:
      return state = update(state, {[action.index]: {post_vote: {$set: action.vote}, score: {$apply: (x) => {return x+1;}}}});
   case POSTS_UNVOTE:
@@ -51,6 +51,7 @@ export function postsByPort(state = initialState, action) {
       let data = action.req.data;
       postsArray = data.map(post => post);
     }
+    console.log('postsbyport action ')
     return {
         [action.port]: posts(state[action.port], {posts: postsArray, type: action.type})
       } ;
@@ -59,7 +60,7 @@ export function postsByPort(state = initialState, action) {
     console.log(action.data);
     console.log('pARED args');
        return {
-         posts: posts(state.posts, {index: action.data.index,vote: action.data.vote, type: action.type})
+         [action.data.port]: posts(state[action.data.port], {index: action.data.index,vote: action.data.vote, type: action.type})
        };
     case CREATE_POST_SUCCESS:
       let post = {...action.data,
@@ -77,7 +78,7 @@ export function postsByPort(state = initialState, action) {
   }
 }
 
-
+/*
 export function postOpen(state={
  post: null,
  comments: null
@@ -114,3 +115,8 @@ export function postOpen(state={
     return state;
   }
 }
+*/
+
+
+
+//     return state = update(state, {[action.index]: {post_vote: {$set: action.vote}, score: {$apply: (x) => {return x+1;}}}});

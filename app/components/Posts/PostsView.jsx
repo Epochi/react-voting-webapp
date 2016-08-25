@@ -62,7 +62,7 @@ class PostsView extends Component {
     console.log('handleVote END')
    if(this.props.username){
       console.log('voted or nat');
-      this.props.vote({index: i, vote: p});
+      this.props.vote({port: this.props.selectedPort ,index: i, vote: p});
     }
   }
 
@@ -92,8 +92,8 @@ class PostsView extends Component {
     //window.addEventListener('scroll', throttle);
   }
   componentWillMount(){
-    if(this.props.posts < 10)
-    this.props.fetchPosts();
+    if(this.props.posts[this.props.selectedPort] < 10)
+    this.props.fetchPosts(this.props.selectedPort);
   }
   componentDidMount(){
     console.log('Postlist');
@@ -105,7 +105,7 @@ class PostsView extends Component {
     console.log(prevProps);
     console.log('nextting');
     console.log(n);
-    if(prevProps.posts.length !== this.props.posts.length){
+    if(prevProps.posts[this.props.selectedPort].length !== this.props.posts[this.props.selectedPort].length){
     console.log('PostsView didupdate add scrollListener');
     this.postList.addEventListener('scroll',this.scrollListener());
     return;
@@ -117,9 +117,10 @@ class PostsView extends Component {
 
   render () {
         const split = this.props.children ? "split-on":false;
+        const auth = this.props.authenticated ? "loggedin":false
          const {posts} = this.props;
                 return (
-                <main className={cx('mdl-layout__content',"main-view")}>
+                <main className={cx('mdl-layout__content',"main-view",auth)}>
                   <div className={cx("page-split-wrapper",split)}>
                     <div ref={(ref) => this.postList = ref} id="post-list" className={cx('page-post-list')}>
                           <div className={cx("main-sidebar","left")}>
@@ -138,7 +139,7 @@ class PostsView extends Component {
                       </div>
                     
                       <div className={cx('mdl-grid','main-grid')}>
-                            {posts.map((post, i) =>
+                            {posts[this.props.selectedPort].map((post, i) =>
                                 <Post
                                   key={i}
                                   k={i}
@@ -164,8 +165,10 @@ class PostsView extends Component {
 
 
 PostsView.propTypes = {
-  posts: PropTypes.array.isRequired,
-  username: PropTypes.string
+  posts: PropTypes.object.isRequired,
+  username: PropTypes.string,
+  selectedPort: PropTypes.string,
+  authenticated: PropTypes.bool
 };
 
 export default PostsView;

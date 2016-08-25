@@ -19,7 +19,6 @@ class App extends Component {
       this.previousChildren = this.props.children
     }
   }
-
   
     render() {
     let { location } = this.props

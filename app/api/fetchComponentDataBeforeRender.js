@@ -11,6 +11,9 @@ export function fetchComponentDataBeforeRender(dispatch, components, params) {
       .concat(prev);
     }, []);
     if(Object.keys(params).length === 0){params = undefined}
+    console.log('fetchComponentDataBeforeRender');
+    console.log(params);
+    console.log('fetchComponentDataBeforeRender END');
     const promises = needs.map(need => dispatch(need(params)));
     return Promise.all(promises);
 }

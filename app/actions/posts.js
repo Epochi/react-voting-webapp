@@ -70,15 +70,17 @@ export function invalidatePort(port) {
 //add type or smh(switch function again?)
 
 //if voted true, do unvote
+//postAction goes to server
+//voteAction goes to store
 export function vote(data){
     return dispatch => {
-      dispatch(voteAction(data.index,data.vote.state ? data.vote.data : 10 + data.vote.data ));
+      dispatch(voteAction(data.index, data.port,data.vote.state ? data.vote.data : 10 + data.vote.data ));
       postAction(data.vote);
     };
 }
 
-function voteAction(index,vote) {
-  return { type: types.POSTS_VOTE, data: {index: index, vote: vote}};
+function voteAction(index,port, vote) {
+  return { type: types.POSTS_VOTE, data: {index: index, port: port, vote: vote}};
 }
 
 function postAction(data){
@@ -122,8 +124,8 @@ export function votedPost(index,id,subport,voted){
 */
 
 
-
-export function fetchPosts({port: port="all",page: page=0,sortBy: sortBy=1}) {
+//port has to be an object, because SSR uses it as one
+export function fetchPosts({port="all",page=0,sortBy=1} = {port:"all",page:0,sortBy:1}) {
     console.log('in fetchPosts');
     return {
           type: types.POSTS_GET,
@@ -144,7 +146,7 @@ export function fetchPostComments(port='all',postId) {
     console.log('in fetchPostComments');
     return {
           type: types.POST_COMMENTS_GET,
-          promise: (client) => client.get(`/p/${postId}/.json`)
+          promise: (client) => client.get(`/post/${postId}/.json`)
       };
 }
 

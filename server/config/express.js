@@ -3,7 +3,8 @@ var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 //var MongoStore =  require('connect-mongo')(session);
-var PostgreStore = require('connect-pg-simple')(session);
+//var PostgreStore = require('connect-pg-simple')(session);
+var RedisStore = require('connect-redis')(session);
 var path = require('path');
 var secrets = require('./secrets');
 var flash = require('express-flash');
@@ -38,12 +39,12 @@ module.exports = function (app, passport) {
       httpOnly: true,
       secure: false
     },
-    store: new PostgreStore(
-      { 
-        db: db,
-        conString: secrets.db
-      }
-    )
+  store: new RedisStore({
+    host: process.env.HOSTNAME,
+    port: 6379,
+    pass: '',
+    ttl: 6000
+  })
   };
   var node_env = process.env.NODE_ENV;
   console.log('--------------------------');
