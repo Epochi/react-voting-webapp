@@ -126,6 +126,7 @@ export function votedPost(index,id,subport,voted){
 
 //port has to be an object, because SSR uses it as one
 export function fetchPosts({port="all",page=0,sortBy=1} = {port:"all",page:0,sortBy:1}) {
+  
     console.log('in fetchPosts');
     return {
           type: types.POSTS_GET,
@@ -134,11 +135,11 @@ export function fetchPosts({port="all",page=0,sortBy=1} = {port:"all",page:0,sor
       };
 }
 
-export function fetchPost(postId) {
+export function fetchPost({postId}) {
     console.log('in fetchPost');
     return {
           type: types.POST_GET,
-          promise: (client) => client.get(`/post/${postId}/.json`)
+          promise: (client) => client.get(`/p/all/${postId}/.json`)
       };
 }
 
@@ -146,7 +147,7 @@ export function fetchPostComments(port='all',postId) {
     console.log('in fetchPostComments');
     return {
           type: types.POST_COMMENTS_GET,
-          promise: (client) => client.get(`/post/${postId}/.json`)
+          promise: (client) => client.get(`/p/${postId}/.json`)
       };
 }
 

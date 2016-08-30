@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
   app.use('/p', posts);
   
   app.get('/poster', poster.fetchReddit);
-  app.get('/users/:userId', users.show);
+  app.get('/u/:userId', users.show);
   
   app.get('*', function (req, res, next) {
     App.default(req, res);
@@ -68,4 +68,4 @@ module.exports = function(app, passport) {
   app.use(function(req, res) {
     res.status(404).send('Page Not Found')
   });
-};;
+};

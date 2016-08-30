@@ -20,7 +20,7 @@ var commonLoaders = [
     exclude: path.join(__dirname, '/node_modules/')
   },
   {
-    test: /\.(png|jpg|svg)$/,
+    test: /\.(png|jpg|svg|ico)$/,
     loader: 'url?limit=10000'
   },
   { test: /\.html$/, loader: 'html-loader' }

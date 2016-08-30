@@ -8,7 +8,7 @@ import {fetchPost} from 'actions/posts';
 
 
 function mapStateToProps(state, ownProps) {
-    const {postsByPort, user, ui, postOpen} = state;
+  const {postsByPort, user, ui, postOpen} = state;
   const post = ownProps.location.state === "index" ? postsByPort[selectedPort][ownProps.location.state.index] : postOpen.post;
   console.log('post prop');
   console.log(post);

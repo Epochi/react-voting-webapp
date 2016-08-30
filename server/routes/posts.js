@@ -16,7 +16,11 @@ module.exports = router;
     votes.voteSwitch(req, res, next);
   });
   router.post('/post', users.userAuthenticated, posts.create);
-
+  
+  router.get('/:port/:postid', function(req,res,next){
+    posts.loadPost(req,res,next);
+  });
+  
   router.put('/post', function(req, res) {
     posts.update(req, res);
   });

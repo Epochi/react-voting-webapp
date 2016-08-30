@@ -1,6 +1,7 @@
 var utils = require('../config/utils');
-var db = require('../config/postgres');
-var box = {0: {type: 'hot', order: 'score' },1: {type: 'top', order: 'voteup'},2:{type:'new', order: 'date' }};
+var db = require('../config/postgres').db;
+var box = {0: {type: 'hot', order: 'score' },1: {type: 'top', order: 'vote_up'},2:{type:'new', order: 'date' }};
+var sql = require('../sql/sql.js').posts; // our sql for users;
 
 
 
@@ -16,24 +17,34 @@ exports.postsLoad = function(data, cb){
      query.text ="SELECT q.*, j.* FROM (" +query.text + ") q LEFT JOIN votes j ON q.post_id = j.post_id  AND j.username = '"+data.user.username+"' ORDER BY q."+box[data.type].order+" DESC";
    }
     console.log('inside models/post/top');
-      db.db.manyOrNone(query)
+      db.manyOrNone(query)
         .then(result => {
           console.log('post/top result');
-          console.log(result);
+          //console.log(result);
           return cb(null,result);
         })
         .catch(error => {console.log('post/top error');console.log(error);return cb(error)});
 };
 
 
-
-
 exports.create = function(data,cb){
+     console.log('inside models/post/create');
+   //text: "INSERT INTO user_data (username, name, email) VALUES ($1, $2, $3) RETURNING username", // can also be a QueryFile object
+  db.any(sql.create,data).then(result => {
+      console.log('create result');
+      console.log(result);
+      return cb(null,result);
+    })
+    .catch(error => {return cb(error)});
+}
+
+
+/*exports.create = function(data,cb){
      console.log('inside models/post/create');
    //text: "INSERT INTO user_data (username, name, email) VALUES ($1, $2, $3) RETURNING username", // can also be a QueryFile object
   db.db.any({
         name: "post_create",
-        text: "INSERT INTO post (kind, author, title, subport,tags, data) VALUES ($1, $2, $3, $4, ARRAY[$5], $6) RETURNING *", // can also be a QueryFile object
+        text: "INSERT INTO post (kind, author, title, subport,tags, data) VALUES ($1, $2, $3, $4, to_jsonb([$5]), to_json($6)) RETURNING *", // can also be a QueryFile object
         values: [data.kind, data.author, data.title, data.subport, data.tags, JSON.stringify(data.data)]
       }).then(result => {
       console.log('create result');
@@ -41,7 +52,7 @@ exports.create = function(data,cb){
       return cb(null,result);
     })
     .catch(error => {return cb(error)});
-}
+}*/
 
 exports.postVote = function(data, cb){
     

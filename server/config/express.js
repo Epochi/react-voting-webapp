@@ -9,7 +9,7 @@ var path = require('path');
 var secrets = require('./secrets');
 var flash = require('express-flash');
 var methodOverride = require('method-override');
-var db = require('./postgres');
+var favicon = require('serve-favicon');
 
 module.exports = function (app, passport) {
   app.set('port', (process.env.PORT || 8080));
@@ -26,7 +26,9 @@ module.exports = function (app, passport) {
   app.use(bodyParser.urlencoded({extended: true})); // for parsing application/x-www-form-urlencoded
   app.use(methodOverride());
   app.use(express.static(path.join(__dirname, '../..', 'public')));
-
+  app.use(favicon(path.join(__dirname, '../..', 'public', 'assets' , 'favicon.ico')));
+  
+  
   var sess = {
     resave: false,
     saveUninitialized: false,
@@ -39,12 +41,7 @@ module.exports = function (app, passport) {
       httpOnly: true,
       secure: false
     },
-  store: new RedisStore({
-    host: process.env.HOSTNAME,
-    port: 6379,
-    pass: '',
-    ttl: 6000
-  })
+  store: new RedisStore(secrets.redisdb)
   };
   var node_env = process.env.NODE_ENV;
   console.log('--------------------------');
@@ -62,5 +59,7 @@ module.exports = function (app, passport) {
   app.use(passport.session());
 
   app.use(flash());
+  
+  
 
 };

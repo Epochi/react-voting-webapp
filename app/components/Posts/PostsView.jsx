@@ -139,7 +139,10 @@ class PostsView extends Component {
                       </div>
                     
                       <div className={cx('mdl-grid','main-grid')}>
-                            {posts[this.props.selectedPort].map((post, i) =>
+                            {posts[this.props.selectedPort].length === 0 ?
+                            (<div>Kažkas nutiko :(</div>)
+                            :
+                            (posts[this.props.selectedPort].map((post, i) =>
                                 <Post
                                   key={i}
                                   k={i}
@@ -147,7 +150,7 @@ class PostsView extends Component {
                                   handleVote={this.handleVote}
                                   onMenuClick={(event) => this.handleMenu(event,post,i)}
                               />
-                          )}
+                          ))}
                       </div>
                     </div>
                     {this.props.children ? (
@@ -168,6 +171,7 @@ PostsView.propTypes = {
   posts: PropTypes.object.isRequired,
   username: PropTypes.string,
   selectedPort: PropTypes.string,
+  uiSort: PropTypes.string,
   authenticated: PropTypes.bool
 };
 

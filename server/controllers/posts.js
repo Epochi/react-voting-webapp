@@ -47,7 +47,6 @@ exports.create = function(req, res, next) {
       data: req.body.data
     };
   }
-  
   Post.create(post,function(err,post){
      if(err){return next(err);}
       console.log('inside Post.create')

@@ -29,7 +29,7 @@ var commonLoaders = [
   },
   { test: /\.json$/, loader: "json-loader" },
   {
-    test: /\.(png|jpg|svg)$/,
+    test: /\.(png|jpg|svg|ico)$/,
     loader: 'url?limit=10000'
   },
   { test: /\.scss$/,

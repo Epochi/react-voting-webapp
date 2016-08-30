@@ -13,12 +13,11 @@
 import chromecon from 'file!images/chrome-ninja192-precomposed.png';
 import applecon from 'file!images/apple-ninja152-precomposed.png';
 import mscon from 'file!images/ms-ninja144-precomposed.png';
-import favicon from 'file!images/favicon.png';
+import favicon from 'file?name=favicon.ico!images/favicon.ico';
 
 const config = {
   link: [
     // Add to homescreen for Chrome on Android
-    { "rel": "icon", "href": favicon },
     { "rel": "icon", "sizes": "192x192", "href": chromecon },
     // Add to homescreen for Safari on IOS 
     { "rel": "apple-touch-icon", "sizes": "152x152", applecon },

@@ -4,7 +4,7 @@
 * As seen in: https://github.com/caljrimmer/isomorphic-redux-app
 */
 
-export function fetchComponentDataBeforeRender(dispatch, components, params) {
+export function fetchComponentDataBeforeRender(dispatch, components, params, renderProps) {
   const needs = components.reduce( (prev, current) => {
     return (current.need || [])
       .concat((current.WrappedComponent ? current.WrappedComponent.need : []) || [])
@@ -12,6 +12,7 @@ export function fetchComponentDataBeforeRender(dispatch, components, params) {
     }, []);
     if(Object.keys(params).length === 0){params = undefined}
     console.log('fetchComponentDataBeforeRender');
+    console.log(renderProps)
     console.log(params);
     console.log('fetchComponentDataBeforeRender END');
     const promises = needs.map(need => dispatch(need(params)));

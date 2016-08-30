@@ -3,11 +3,11 @@ var express = require('express');
 var fs = require('fs');
 //var mongoose = require('mongoose');
 var passport = require('passport');
-var secrets = require('./config/secrets');
+/*var secrets = require('./config/secrets');*/
 var webpack = require('webpack');
 var app = express();
-var pgp = require('pg-promise')();
-var db = pgp(secrets.db);
+/*var pgp = require('pg-promise')();
+var db = pgp(secrets.db);*/
 
 /*
 // Find the appropriate database to connect to, default to localhost if not found.

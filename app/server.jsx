@@ -2,6 +2,7 @@ import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { RouterContext, match, createMemoryHistory } from 'react-router'
 import axios from 'axios';
+import favicon from 'serve-favicon';
 import { Provider } from 'react-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
@@ -55,9 +56,8 @@ function renderFullPage(renderedContent, initialState, head={
  */
 export default function render(req, res) {
     const history = createMemoryHistory();
-    console.log('this is inside server.render');
     const authenticated =  req.isAuthenticated();
-    console.log(authenticated);
+    console.log("render-> req.isAuthenticated?: "+authenticated);
     const client = ApiServer(req, authenticated);
     const user = authenticated ? req.user.name : null;
     const store = configureStore({
@@ -69,6 +69,9 @@ export default function render(req, res) {
     }, history,client);
     console.log('This is render uzr: ' + user);
     const routes = createRoutes(store);
+    console.log('this is inside server.render');
+    console.log(req);
+    console.log('this is inside server.render History of my peple');
     
   /*
    * From the react-router docs:
@@ -103,7 +106,7 @@ export default function render(req, res) {
         </Provider>
       );
       //This method waits for all render component promises to resolve before returning to browser
-      fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params)
+      fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params, renderProps)
       .then(html => {
         const componentHTML = renderToString(InitialView);
         const initialState = store.getState();

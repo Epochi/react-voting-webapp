@@ -31,9 +31,9 @@ exports.validation = function(body,cb){
 };
 
 
-
+//THIS IS NOT USED YET
 exports.create = function(req, cb){
-  
+
   var user = {
     username: req.body.username.toLowerCase(),
     name: req.body.username,
@@ -52,21 +52,22 @@ exports.create = function(req, cb){
     .catch(error => {return cb(error)});
 };
 
+
 exports.createLocal = function(req, cb){
   var csalt = utils.makeSalt();
   var chashed_password = encryptPassword(req.body.password, csalt);
   console.log('createLocal inside');
   var data = {
-    username: req.body.username.toLowerCase(),
     email: req.body.email.toLowerCase(),
+    name: req.body.username,
     salt:  csalt,
     hashed_password: chashed_password
   };
   
-  db.db.none({
+  db.db.one({
         name: "user_auth_create",
-        text: "INSERT INTO user_auth (username,email, salt, hashed_password) VALUES ($1, $2, $3, $4)", // can also be a QueryFile object
-        values: [data.username,data.email, data.salt, data.hashed_password]
+        text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4) RAISE '% jau egzistuoja', user_id USING ERRCODE = 'unique_violation';", // can also be a QueryFile object
+        values: [data.username,data.name, data.email, data.salt, data.hashed_password]
       }).then(result => {
       console.log('createLocal result');
       console.log(result);

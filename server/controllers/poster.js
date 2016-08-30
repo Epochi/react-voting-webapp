@@ -8,7 +8,7 @@ console.log('fetch user ' + req.user);
 var user = req.user;
 osmosis.get('http://www.delfi.lt/')
     .config('concurrency',1)
-    .find('h3>a.article-title:limit(5)')
+    .find('h3>a.article-title:limit(1)')
     .follow('@href')
     .find('h1')
     .set('title')

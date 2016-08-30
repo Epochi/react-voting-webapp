@@ -15,10 +15,12 @@ function mapStateToProps(state, ownProps) {
   const username = user.username;
   const selectedPort = ui.selectedPort;
   const authenticated = user.authenticated;
+  const sort = ui.sort;
   return {
     posts,
     username,
     selectedPort,
+    sort,
     authenticated
   };
 }

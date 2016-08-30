@@ -10,7 +10,9 @@ import {SELECT_PORT,
   POSTS_DELETE_SUCCESS,
   POSTS_DELETE_FAILURE,
   POSTS_SAVE,
-  POSTS_UNSAVE
+  POSTS_UNSAVE,
+  POST_GET_SUCCESS,
+  COMMENTS_GET_SUCCESS
 } from 'constants/index';
 
 const initialState = {
@@ -54,7 +56,7 @@ export function postsByPort(state = initialState, action) {
     console.log('postsbyport action ')
     return {
         [action.port]: posts(state[action.port], {posts: postsArray, type: action.type})
-      } ;
+      };
     case POSTS_VOTE:
           console.log('pARED args');
     console.log(action.data);
@@ -78,44 +80,26 @@ export function postsByPort(state = initialState, action) {
   }
 }
 
-/*
+
+
 export function postOpen(state={
  post: null,
  comments: null
 }, action) {
   switch (action.type) {
-  case POSTS_GET_SUCCESS:
-    let postsArray = [];
-    if(action.req && action.req.data){
-      let data = action.req.data;
-      postsArray = data.map(post => post);
-    }
-    return {
-      
-      } ;
-    case POSTS_VOTE:
-          console.log('pARED args');
-    console.log(action.data);
-    console.log('pARED args');
-       return {
-         posts: posts(state.posts, {index: action.data.index,vote: action.data.vote, type: action.type})
-       };
-    case CREATE_POST_SUCCESS:
-      let post = {...action.data,
-        post_vote: 10
-      };
-       return {
-         posts: posts(state.posts, {post: post, type: action.type})
-       };  
-    case POSTS_DELETE_SUCCESS:
-       return {
-         posts: posts(state.posts, {index: action.index, type: action.type})
-       };  
+  case POST_GET_SUCCESS:
+    return Object.assign({}, state, {
+      post: action.post
+    });
+    case COMMENTS_GET_SUCCESS:
+    return Object.assign({}, state, {
+      comments: action.comments
+    });
   default:
     return state;
   }
 }
-*/
+
 
 
 

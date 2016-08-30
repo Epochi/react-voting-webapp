@@ -24,6 +24,7 @@ export default function ui(state={
   messageOpen: false,
   message: null,
   selectedPort: 'all',
+  uiSort: 'top',
   postsLoad: false
   }, action={}) {
   switch (action.type) {
