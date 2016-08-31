@@ -11,12 +11,16 @@ import {SELECT_PORT,
   POSTS_DELETE_FAILURE,
   POSTS_SAVE,
   POSTS_UNSAVE,
+  POST_GET,
   POST_GET_SUCCESS,
-  COMMENTS_GET_SUCCESS
+  COMMENTS_GET_SUCCESS,
+  POST_OPEN_STATE,
+  POSTS_NEW_PAGE
 } from 'constants/index';
 
 const initialState = {
-    posts: []
+    posts: [],
+    pages: {}
 };
 
 
@@ -54,15 +58,17 @@ export function postsByPort(state = initialState, action) {
       postsArray = data.map(post => post);
     }
     console.log('postsbyport action ')
+    console.log(postsArray[0]);
+        console.log('postsbyWHERE IS ITEM  action ')
     return {
-        [action.port]: posts(state[action.port], {posts: postsArray, type: action.type})
+        [action.subport]: posts(state[action.subport], {posts: postsArray, type: action.type})
       };
     case POSTS_VOTE:
           console.log('pARED args');
     console.log(action.data);
     console.log('pARED args');
        return {
-         [action.data.port]: posts(state[action.data.port], {index: action.data.index,vote: action.data.vote, type: action.type})
+         [action.data.subport]: posts(state[action.data.subport], {index: action.data.index,vote: action.data.vote, type: action.type})
        };
     case CREATE_POST_SUCCESS:
       let post = {...action.data,
@@ -74,7 +80,9 @@ export function postsByPort(state = initialState, action) {
     case POSTS_DELETE_SUCCESS:
        return {
          posts: posts(state.posts, {index: action.index, type: action.type})
-       };  
+       };
+    case POSTS_NEW_PAGE:
+      return  state.pages = update(state.pages, {[action.data.subport]: {$apply: (x) => {return x+1;}}})
   default:
     return state;
   }
@@ -83,17 +91,25 @@ export function postsByPort(state = initialState, action) {
 
 
 export function postOpen(state={
+ open: false,
  post: null,
  comments: null
 }, action) {
   switch (action.type) {
   case POST_GET_SUCCESS:
+    console.log('SINGLE POST GET SUCCESS');
+    //console.log(action)
+    console.log('SINGLE POST GET ACTION ITEM');
     return Object.assign({}, state, {
-      post: action.post
+      post: action.req.data
     });
-    case COMMENTS_GET_SUCCESS:
+  case COMMENTS_GET_SUCCESS:
     return Object.assign({}, state, {
       comments: action.comments
+    });
+  case POST_OPEN_STATE:
+    return Object.assign({}, state, {
+      open: action.bool
     });
   default:
     return state;

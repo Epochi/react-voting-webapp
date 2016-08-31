@@ -13,7 +13,10 @@ var App = require(compiled_app_module_path);
 
 
 module.exports = function(app, passport) {
-
+  app.use('*', function(req,res,next){
+    console.log('URL HUNTER FROM ROUTES.js.....:' + req.originalUrl);
+    next();
+  })
   app.use('/auth', auth(passport));
   app.use('/p', posts);
   

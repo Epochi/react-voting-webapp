@@ -17,9 +17,7 @@ module.exports = router;
   });
   router.post('/post', users.userAuthenticated, posts.create);
   
-  router.get('/:port/:postid', function(req,res,next){
-    posts.loadPost(req,res,next);
-  });
+
   
   router.put('/post', function(req, res) {
     posts.update(req, res);
@@ -29,6 +27,10 @@ module.exports = router;
     posts.remove(req, res);
   });
   
-  router.get('/:port/:page/:sort/.json', function(req,res,next){
+  router.get('/post/:postid/.json', function(req,res,next){
+    posts.loadPostSingle(req,res,next);
+  });
+  
+  router.get('/:subport/:page/:sort/.json', function(req,res,next){
     posts.load(req,res,next);
   });

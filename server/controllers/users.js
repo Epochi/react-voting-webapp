@@ -126,12 +126,7 @@ exports.createLocal = wrap(function* (req, res, next) {
    User.validation(req.body,function(err){
      if(err){return next(err);}
         console.log('/signup validated');
-        User.create(req,function(err,user){
-         if(err){return next(err);}
-         console.log('/signup create');
-          console.log(user);
-          console.log('/signup create user end');
-         User.createLocal(req,function(err){
+         User.createLocal(req,function(err,user){
            if(err){return next(err);}
             console.log('/signup createLocal sucess');
             req.logIn(user, function(err) {
@@ -143,7 +138,7 @@ exports.createLocal = wrap(function* (req, res, next) {
               return res.status(200).send({username: user.name});
             });
          });
-       });
+
    });
 });
 

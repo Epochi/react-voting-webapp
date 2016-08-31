@@ -4,7 +4,7 @@ import App from 'containers/App';
 import Profile from 'containers/Profile';
 import Posts from 'containers/Posts';
 import Post from 'containers/Post';
-import {selectPort} from 'actions/posts';
+import {selectPort, postOpenState} from 'actions/posts';
 
 /*
  * @param {Redux Store}
@@ -34,12 +34,17 @@ export default (store) => {
     callback();
   };
   
+  const postViewOpen = (nextState, replace, callback) => {
+      store.dispatch(postOpenState(true));
+      callback();
+  };
+  
   const selectedPort = (nextState, replace, callback) => {
       console.log('nextstate');
       console.log(nextState);
       console.log('nextstate eh');
-    if(nextState.params.hasOwnProperty('port')){
-      store.dispatch(selectPort(nextState.params.port))
+    if(nextState.params.hasOwnProperty('subport')){
+      store.dispatch(selectPort(nextState.params.subport))
       console.log('nextStore');
       console.log(store);
       console.log('nextStore eh');
@@ -51,7 +56,7 @@ export default (store) => {
     <Route path="/" component={App} onEnter={selectedPort}>
       <IndexRoute component={Posts}/>
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
-      <Route path=":port(/new)(/top)" component={Posts} >
+      <Route path=":subport" component={Posts} >
         <Route path=":postId" component={Post} />
       </Route>
     </Route>

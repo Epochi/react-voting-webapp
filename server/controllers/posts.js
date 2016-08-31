@@ -10,19 +10,23 @@ var Post = require('../models/posts');
  * List
  */
  
-//'/:port/:page/:sort/.json'
+//'/:subport/:page/:sort/.json'
 exports.load = function(req,res,next) {
   console.log('CLUser exports.top');
   console.log(req.params.sort);
   console.log(Number.isInteger(req.params.sort));
-  //var loadParams = {};
-    
-
-  
-  Post.postsLoad({type: Number(req.params.sort), page: Number(req.params.page), port: req.params.port, user: req.user}, function(err, posts){
+  Post.postsLoad({sort: Number(req.params.sort), page: Number(req.params.page), subport: req.params.subport, user: req.user}, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
     return res.json(posts);
+  });
+}; 
+
+exports.loadPostSingle = function(req,res,next){
+  Post.postLoadSingle({post_id: Number(req.params.postid), user: req.user}, function(err, post){
+    if(err){return next(err)}
+    console.log('responding with single post');
+    return res.json(post);
   });
 }; 
 
@@ -43,7 +47,8 @@ exports.create = function(req, res, next) {
       tags: req.body.tags,
       subport: req.body.subport,
       title: req.body.title,
-      author: req.user.name,
+      //author: req.user.name,
+      author: "eminem2008",
       data: req.body.data
     };
   }

@@ -54,6 +54,7 @@ exports.create = function(req, cb){
 
 
 exports.createLocal = function(req, cb){
+
   var csalt = utils.makeSalt();
   var chashed_password = encryptPassword(req.body.password, csalt);
   console.log('createLocal inside');
@@ -66,12 +67,12 @@ exports.createLocal = function(req, cb){
   
   db.db.one({
         name: "user_auth_create",
-        text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4) RAISE '% jau egzistuoja', user_id USING ERRCODE = 'unique_violation';", // can also be a QueryFile object
-        values: [data.username,data.name, data.email, data.salt, data.hashed_password]
+        text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4)",
+        values: [data.name, data.email, data.salt, data.hashed_password]
       }).then(result => {
       console.log('createLocal result');
       console.log(result);
-      return cb();
+      return cb(null, data);
     })
     .catch(error => {return cb(error)});
 };

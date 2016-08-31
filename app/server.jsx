@@ -1,8 +1,7 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { RouterContext, match, createMemoryHistory } from 'react-router'
+import { RouterContext, match, createMemoryHistory } from 'react-router';
 import axios from 'axios';
-import favicon from 'serve-favicon';
 import { Provider } from 'react-redux';
 import createRoutes from 'routes.jsx';
 import configureStore from 'store/configureStore';
@@ -55,6 +54,12 @@ function renderFullPage(renderedContent, initialState, head={
  * and pass it into the Router.run function.
  */
 export default function render(req, res) {
+  /*
+  const memoryHistory = createHistory(req.originalUrl);
+  const store = createStore(memoryHistory, client);
+  const history = syncHistoryWithStore(memoryHistory, store);
+  */
+  
     const history = createMemoryHistory();
     const authenticated =  req.isAuthenticated();
     console.log("render-> req.isAuthenticated?: "+authenticated);
@@ -70,7 +75,6 @@ export default function render(req, res) {
     console.log('This is render uzr: ' + user);
     const routes = createRoutes(store);
     console.log('this is inside server.render');
-    console.log(req);
     console.log('this is inside server.render History of my peple');
     
   /*
@@ -94,7 +98,7 @@ export default function render(req, res) {
    * If all three parameters are `undefined`, this means that there was no route found matching the
    * given location.
    */
-  match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+  match({ routes: routes, location: req.url }, (error, redirectLocation, renderProps) => {
     if (error) {
       res.status(500).send(error.message);
     } else if (redirectLocation) {
@@ -106,7 +110,7 @@ export default function render(req, res) {
         </Provider>
       );
       //This method waits for all render component promises to resolve before returning to browser
-      fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params, renderProps)
+      fetchComponentDataBeforeRender(store.dispatch, renderProps.components, renderProps.params, renderProps.location.query)
       .then(html => {
         const componentHTML = renderToString(InitialView);
         const initialState = store.getState();

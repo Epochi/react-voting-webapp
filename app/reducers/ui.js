@@ -54,7 +54,7 @@ export default function ui(state={
       });
     case SELECT_PORT:
       return Object.assign({},state,{
-        selectedPort: action.port
+        selectedPort: action.subport
       });
     default:
       return state;

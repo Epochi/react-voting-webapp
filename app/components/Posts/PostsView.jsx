@@ -67,8 +67,8 @@ class PostsView extends Component {
   }
 
   
-  handleNewPosts(page='0'){
-    this.props.fetchPosts({page});
+  handleNewPosts(subport=this.props.selectedPort, page=this.props.posts.pages[this.props.selectedPort]){
+    this.props.fetchPosts({subport: subport}, {p:page});
   }
   
   handleScroll(){
@@ -93,7 +93,7 @@ class PostsView extends Component {
   }
   componentWillMount(){
     if(this.props.posts[this.props.selectedPort] < 10)
-    this.props.fetchPosts(this.props.selectedPort);
+    this.handleNewPosts(this.props.selectedPort);
   }
   componentDidMount(){
     console.log('Postlist');
@@ -140,7 +140,7 @@ class PostsView extends Component {
                     
                       <div className={cx('mdl-grid','main-grid')}>
                             {posts[this.props.selectedPort].length === 0 ?
-                            (<div>Kažkas nutiko :(</div>)
+                            (<div>Kažkas nutiko...</div>)
                             :
                             (posts[this.props.selectedPort].map((post, i) =>
                                 <Post
@@ -168,11 +168,12 @@ class PostsView extends Component {
 
 
 PostsView.propTypes = {
-  posts: PropTypes.object.isRequired,
+  posts: PropTypes.object,
   username: PropTypes.string,
   selectedPort: PropTypes.string,
   uiSort: PropTypes.string,
-  authenticated: PropTypes.bool
+  authenticated: PropTypes.bool,
+  children: PropTypes.object
 };
 
 export default PostsView;

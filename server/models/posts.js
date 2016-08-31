@@ -8,23 +8,36 @@ var sql = require('../sql/sql.js').posts; // our sql for users;
 
 
 exports.postsLoad = function(data, cb){
-   var query = {
-     name: "post_"+box[data.type].type,
-     text: "select * from post ORDER BY "+box[data.type].order+" DESC LIMIT 5 OFFSET ($1 * 15)",
-     values: [data.page]
-   };
-   if(data.user != null){
-     query.text ="SELECT q.*, j.* FROM (" +query.text + ") q LEFT JOIN votes j ON q.post_id = j.post_id  AND j.username = '"+data.user.username+"' ORDER BY q."+box[data.type].order+" DESC";
-   }
-    console.log('inside models/post/top');
-      db.manyOrNone(query)
-        .then(result => {
-          console.log('post/top result');
-          //console.log(result);
-          return cb(null,result);
-        })
-        .catch(error => {console.log('post/top error');console.log(error);return cb(error)});
+    // sort hot top date
+    var sort = ['score', "vote_up", 'date'];
+    if(data.subport === 'all'){
+        db.manyOrNone(sql.loadAll, {sort: sort[data.sort],page: data.page})
+            .then(result => {
+                console.log('p/all Succesfully returnred');
+                //console.log(result);
+                return cb(null,result);
+            })
+            .catch(error => {console.log('p/all/ error');console.log(error);return cb(error)});
+    }else{
+        db.manyOrNone(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
+            .then(result => {
+                console.log('p/category Succesfully returned');
+                //console.log(result);
+                return cb(null,result);
+            })
+            .catch(error => {console.log('p/subport/ error');console.log(error);return cb(error)});
+    }
 };
+
+exports.postLoadSingle = function(data, cb){
+        db.one(sql.loadSingle, data.post_id)
+            .then(result => {
+                console.log('post/single returnred');
+                //console.log(result);
+                return cb(null,result);
+            })
+            .catch(error => {console.log('post/single/ error');console.log(error);return cb(error)});
+}
 
 
 exports.create = function(data,cb){

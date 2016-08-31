@@ -53,10 +53,10 @@ function createPostFailure(data) {
   };
 }
 
-export function selectPort(port) {
+export function selectPort(subport) {
   return {
     type: types.SELECT_PORT,
-    port
+    subport
   };
 }
 
@@ -125,13 +125,26 @@ export function votedPost(index,id,subport,voted){
 
 
 //port has to be an object, because SSR uses it as one
-export function fetchPosts({port="all",page=0,sortBy=1} = {port:"all",page:0,sortBy:1}) {
+//send query{p: #page} object
+export function fetchPosts(params = {}, query = {}) {
+    var subport =  params.hasOwnProperty('subport') ? params.subport : 'all'; 
+    //LEAVE PAGE AT 0 WHILE THERE ARE NO POSTS
+    var page = query.hasOwnProperty('p') ? query.p : 0;
+    //CRASHES EVERYTHING
+    var sort = query.hasOwnProperty('s') ? query.s : 'top';
+    if(sort === 'top'){
+      sort = 1;
+    }else if(sort === 'hot'){
+      sort = 0;
+    } else if(sort === 'new'){
+      sort = 2;
+    }
   
     console.log('in fetchPosts');
     return {
           type: types.POSTS_GET,
-          port: port,
-          promise: (client) => client.get(`/p/${port}/${page}/${sortBy}/.json`)
+          subport: subport,
+          promise: (client) => client.get(`/p/${subport}/0/${sort}/.json`)
       };
 }
 
@@ -139,7 +152,7 @@ export function fetchPost({postId}) {
     console.log('in fetchPost');
     return {
           type: types.POST_GET,
-          promise: (client) => client.get(`/p/all/${postId}/.json`)
+          promise: (client) => client.get(`/p/post/${postId}/.json`)
       };
 }
 
@@ -178,4 +191,8 @@ function deleteSuccess(index){
 }
 function deleteFailure(){
   return {type: types.POSTS_DELETE_FAILURE};
+}
+
+export function postOpenState(bool){
+  return {type: types.POST_OPEN_STATE, bool}; 
 }
