@@ -5,6 +5,7 @@ var _ = require('lodash');
 var votes = require('../controllers/votes');
 //var Vote = mongoose.model('Vote');
 var Post = require('../models/posts');
+var PostAuth = require('../models/postsauth');
 
 /**
  * List
@@ -58,6 +59,9 @@ exports.loadPostSingle = function(req,res,next){
     return res.json(post);
   });
 }; 
+
+
+
 
 
 /**
@@ -157,3 +161,45 @@ exports.remove = function(req, res) {
     
   });
 };
+
+
+
+
+
+
+/****/
+/*For Logged In;*/
+/***/
+
+exports.loadUser = function(req,res,next) {
+  console.log('/api/post/ router LoadAuthenticated');
+  req.query.sort = Number(req.query.sort);
+  req.query.page = Number(req.query.page);
+  console.log(req.query);
+  console.log(req.user);
+  var LoadPromises = [[]];
+  
+  
+  if(req.query.hasOwnProperty('post')){
+  LoadPromises.push(
+    PostAuth.postLoadSingle({post_id: Number(req.query.post), username: req.user.username})
+    );
+  }
+  
+  if(req.params.subport === "visi"){
+  LoadPromises.push(
+    PostAuth.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, username: req.user.username})
+    );
+  }
+  console.log("load promises with param");
+
+  Promise.all(LoadPromises)
+    .then(result => {
+      console.dir(result);
+      return res.json(result.reduce(function(a, b) {
+        return a.concat(b)})
+      );
+    })
+    .catch(err => {return next(err)});
+
+}; 

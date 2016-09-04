@@ -170,9 +170,13 @@ class PostsView extends Component {
                     {this.props.children ? (
                     <div className={cx('page-post')}>
                        {React.cloneElement(this.props.children, {
-                       post: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],
-                       handleVote: this.handleVote,
-                       onMenuClick:(event) => this.handleMenu(event) })}
+                         post: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],
+                         currentSubport: this.props.selectedPort,
+                         onMenuClick: (event) => this.handleMenu(event,this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],0),
+                         handleVote: this.handleVote,
+                         votes: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]].votes ? this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]].votes : {},
+                         authenticated: this.props.authenticated
+                       })}
                      </div>
                       ) : (null)
                     }

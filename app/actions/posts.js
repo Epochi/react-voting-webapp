@@ -21,7 +21,7 @@ export function createNewPost(data){
   return (dispatch, getState) => {
     dispatch(createNewPostRequest(data));
     
-    return makePostRequest('post',undefined ,data,'/p/post')
+    return makePostRequest('post','/create' ,data)
         .then(res => {
           if(res.status === 200) {
             console.log(res);

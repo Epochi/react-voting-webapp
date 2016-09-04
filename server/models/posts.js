@@ -10,17 +10,8 @@ exports.postsLoadAll = function(data){
     return guest.many(sql.loadAll, {sort: sort[data.sort],page: data.page});
 };
 
-exports.postsLoad = function(data, cb){
+exports.postsLoadCategory = function(data, cb){
     // sort hot top date
-    if(data.subport === 'all'){
-        guest.many(sql.loadAll, {sort: sort[data.sort],page: data.page})
-            .then(result => {
-                console.log('p/all Succesfully returnred');
-                //console.log(result);
-                return cb(null,result);
-            })
-            .catch(error => {console.log('p/all/ error');console.log(error);return cb(error)});
-    }else{
         guest.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
             .then(result => {
                 console.log('p/category Succesfully returned');
@@ -28,7 +19,7 @@ exports.postsLoad = function(data, cb){
                 return cb(null,result);
             })
             .catch(error => {console.log('p/subport/ error');console.log(error);return cb(error)});
-    }
+
 };
 
 exports.postLoadSingle = function(data, cb){

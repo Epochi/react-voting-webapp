@@ -20,10 +20,15 @@ var sqlProvider = {
     },
     // external queries for Products:
     posts: {
-        create: sql('posts/postCreate.sql'),
         loadCategory: sql('posts/postsLoadCategory.sql'), 
         loadAll: sql('posts/postsLoadAll.sql'), 
         loadSingle: sql('posts/postLoadSingle.sql')
+    },
+    postsAuth: {
+        create: sql('postsAuth/postCreate.sql'),
+        loadCategory: sql('postsAuth/postsLoadCategory.sql'), 
+        loadAll: sql('postsAuth/postsLoadAll.sql'), 
+        loadSingle: sql('postsAuth/postLoadSingle.sql')
     }
 };
 
