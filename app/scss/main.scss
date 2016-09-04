@@ -21,3 +21,12 @@ a{
 a:link{
   color: inherit;
 }
+
+::-webkit-scrollbar
+{
+	width: 6px;
+}
+::-webkit-scrollbar-thumb
+{
+  border-left:4px solid rgba(0, 0, 0, 0.35);
+}

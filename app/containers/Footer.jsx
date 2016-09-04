@@ -6,8 +6,7 @@ const mapStateToProps = (state) => {
   return {
     isWaiting: state.ui.isWaiting,
     messageOpen: state.ui.messageOpen,
-    message: state.ui.message,
-    postsLoad: state.ui.postsLoad
+    message: state.ui.message
   }
 }
 

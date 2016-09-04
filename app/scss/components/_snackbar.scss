@@ -11,11 +11,17 @@
     overflow: hidden;
 }
 
-.posts-footer{
-    position:absolute;
+.post-list-footer{
+    min-height: 110px;
     z-index:2;
-    bottom: 30px;
-    left:0;
-    right:0;
+    margin: 30px 0;
     text-align:center;
+    width: 100%;
+}
+.post-list-refresh{
+    min-height: 110px !important;
+    margin: 0 !important;
+}
+.posts-loader{
+    margin-top: 30px;
 }

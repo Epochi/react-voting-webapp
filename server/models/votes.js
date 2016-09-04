@@ -1,10 +1,11 @@
 var utils = require('../config/utils');
-var db = require('../config/postgres');
-var qrm = db.pgp.queryResult;
+var user = require('../config/postgres').user;
+var sql = require('../sql/sql.js').votes; 
+
 
 
 exports.createPostVote = function(data, cb){
-  db.db.none({
+  user.none({
         name: "vote_post_create",
         text: "INSERT INTO post_vote (username, post_id, post_vote) VALUES ($1, $2, $3);",
         values: [data.username, data.post_id, data.post_vote]
@@ -16,15 +17,22 @@ exports.createPostVote = function(data, cb){
 };
 
 
-exports.updatePostVote = function(data, cb){
-  db.db.one({
-        name: "vote_post_update",
-        text: "UPDATE post_vote SET post_vote = $3 WHERE post_id = $2 AND username = $1;",
-        values: [data.username, data.post_id, data.post_vote]
-      }).then(result => {
+//creates vote item
+exports.votePost = function(data, cb){
+  user.one(sql.onPost,data).then(result => {
       console.log('update post vote result');
       console.log(result);
-      return cb();
+      return cb(null, result);
+    })
+    .catch(error => {return cb(error)});
+};
+
+//updates post vote_up count
+exports.postVoteCountUpdate = function(data,cb){
+    user.none(sql.postVoteCountUpdate,{post: data.post, operator: data.operator ? 1 : -1}).then(result => {
+      console.log('post vote_up update');
+      console.log(result);
+      return cb(null, result);
     })
     .catch(error => {return cb(error)});
 };

@@ -10,17 +10,19 @@ var pgp = require('pg-promise')(options);
 
 
 //var cn = "postgres://postgres_user:password@0.0.0.0:5432/my_postgres_db";
-var db = pgp(secrets.postgresdb);
+var guest = pgp(secrets.postgresGuest);
+var user = pgp(secrets.postgresUser);
+var auth = pgp(secrets.postgresAuth);
 
 
 
 module.exports = {
-    pgp, db
+    pgp, guest, auth, user
 };
 
 
 exports.query = function(sql, params, cb) {
-  db.any(sql,params, function(err, result){
+  guest.any(sql,params, function(err, result){
     if (err) { return err;}
     console.log('rezalt');
     return result;

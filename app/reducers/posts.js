@@ -15,7 +15,9 @@ import {SELECT_PORT,
   POST_GET_SUCCESS,
   COMMENTS_GET_SUCCESS,
   POST_OPEN_STATE,
-  POSTS_NEW_PAGE
+  POSTS_NEW_PAGE,
+  POSTS_CLEAR_STATE,
+  POST_OPEN_INDEX
 } from 'constants/index';
 
 const initialState = {
@@ -32,13 +34,8 @@ function posts(state = initialState.posts, action) {
   case POSTS_GET_SUCCESS:
     return state = update(state, {$push: action.posts});
   case POSTS_VOTE:
-     return state = update(state, {[action.index]: {post_vote: {$set: action.vote}, score: {$apply: (x) => {return x+1;}}}});
-  case POSTS_UNVOTE:
-     return state = update(state, {[action.index]: {v: {$set: 0}, score:{$apply: (x) => {return x-1;}}}});
-  case POSTS_SAVE:
-     return state = update(state, {[action.index]: {s: {$set: 1}}});
-  case POSTS_UNSAVE:
-     return state = update(state, {[action.index]: {s: {$set: 0}}});
+     //let newVotes = Object.assign({},state[action.index].votes, action.votes);
+     return state = update(state, {[action.index]: {votes: {$apply: function(x) {return Object.assign({},x,action.vote);}}}});
   case CREATE_POST_SUCCESS:
      return state = update(state, {$unshift: [action.post] });
   case POSTS_DELETE_SUCCESS:
@@ -48,6 +45,14 @@ function posts(state = initialState.posts, action) {
   }
 }
 
+function pages(state = initialState.pages, action) {
+  switch (action.type) {
+  case POSTS_GET_SUCCESS:
+    return state = update(state, {[action.subport]: {$apply: (x) => {return ~~x+1;}}});
+  default:
+    return state;
+  }
+}
 
 export function postsByPort(state = initialState, action) {
   switch (action.type) {
@@ -55,20 +60,21 @@ export function postsByPort(state = initialState, action) {
     let postsArray = [];
     if(action.req && action.req.data){
       let data = action.req.data;
-      postsArray = data.map(post => post);
+      postsArray = data.map(posts => posts.posts);
     }
-    console.log('postsbyport action ')
-    console.log(postsArray[0]);
-        console.log('postsbyWHERE IS ITEM  action ')
+    //console.log('PBP STATE START');
+    //console.log(postsArray);
+    //console.log('PBP STATE END');
     return {
+        pages: pages(state["pages"], {subport: action.subport, type: action.type}),
         [action.subport]: posts(state[action.subport], {posts: postsArray, type: action.type})
       };
     case POSTS_VOTE:
-          console.log('pARED args');
+    console.log('POSTS_VOTE args');
     console.log(action.data);
-    console.log('pARED args');
+    console.log('POSTS_VOTE args END');
        return {
-         [action.data.subport]: posts(state[action.data.subport], {index: action.data.index,vote: action.data.vote, type: action.type})
+         [action.data.subport]: posts(state[action.data.subport], {index: action.data.index, vote: action.data.vote.votes, type: action.type})
        };
     case CREATE_POST_SUCCESS:
       let post = {...action.data,
@@ -81,8 +87,8 @@ export function postsByPort(state = initialState, action) {
        return {
          posts: posts(state.posts, {index: action.index, type: action.type})
        };
-    case POSTS_NEW_PAGE:
-      return  state.pages = update(state.pages, {[action.data.subport]: {$apply: (x) => {return x+1;}}})
+    case POSTS_CLEAR_STATE:
+      return state = initialState;
   default:
     return state;
   }
@@ -91,7 +97,7 @@ export function postsByPort(state = initialState, action) {
 
 
 export function postOpen(state={
- open: false,
+ index: false,
  post: null,
  comments: null
 }, action) {
@@ -107,9 +113,9 @@ export function postOpen(state={
     return Object.assign({}, state, {
       comments: action.comments
     });
-  case POST_OPEN_STATE:
+  case POST_OPEN_INDEX:
     return Object.assign({}, state, {
-      open: action.bool
+      index: action.index
     });
   default:
     return state;

@@ -23,9 +23,10 @@ export default function ui(state={
   isWaiting: false,
   messageOpen: false,
   message: null,
-  selectedPort: 'all',
+  selectedPort: 'visi',
   uiSort: 'top',
-  postsLoad: false
+  postsLoad: false,
+  postsError: false
   }, action={}) {
   switch (action.type) {
     case LOGOUT_USER_REQUEST:
@@ -45,12 +46,17 @@ export default function ui(state={
       });
     case POSTS_GET_REQUEST:
       return Object.assign({},state,{
-        postsLoad: true
+        postsLoad: true,
+        postsError: false
       });
     case POSTS_GET_SUCCESS:
-    case POSTS_GET_FAILURE:
       return Object.assign({},state,{
         postsLoad: false
+      });
+    case POSTS_GET_FAILURE:
+      return Object.assign({},state,{
+        postsLoad: false,
+        postsError: action.error.data.err.message
       });
     case SELECT_PORT:
       return Object.assign({},state,{

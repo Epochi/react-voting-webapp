@@ -10,16 +10,45 @@ var Post = require('../models/posts');
  * List
  */
  
-//'/:subport/:page/:sort/.json'
+
 exports.load = function(req,res,next) {
-  console.log('CLUser exports.top');
-  console.log(req.params.sort);
+  console.log('/api/post/ router Load');
+  req.query.sort = Number(req.query.sort);
+  req.query.page = Number(req.query.page - 1);
+  console.log(req.query);
+  var LoadPromises = [[]];
+  
+  
+  if(req.query.hasOwnProperty('post')){
+  LoadPromises.push(
+    Post.postLoadSingle({post_id: Number(req.query.post)})
+    );
+  }
+  
+  if(req.params.subport === "visi"){
+  LoadPromises.push(
+    Post.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, user: req.user})
+    );
+  }
+  console.log("load promises with param");
+
+  Promise.all(LoadPromises)
+    .then(result => {
+      console.dir(result);
+      return res.json(result.reduce(function(a, b) {
+        return a.concat(b)})
+      );
+    })
+    .catch(err => {return next(err)});
+  
+  /*.reduce(function(a, b) {
+  return a.concat(b)})
   console.log(Number.isInteger(req.params.sort));
-  Post.postsLoad({sort: Number(req.params.sort), page: Number(req.params.page), subport: req.params.subport, user: req.user}, function(err, posts){
+  Post.postsLoad({sort: Number(req.query.sort), page: Number(req.query.page -1), subport: req.params.subport, user: req.user}, function(err, posts){
     if(err){return next(err)}
     console.log('responding with posts');
     return res.json(posts);
-  });
+  });*/
 }; 
 
 exports.loadPostSingle = function(req,res,next){
@@ -29,6 +58,20 @@ exports.loadPostSingle = function(req,res,next){
     return res.json(post);
   });
 }; 
+
+
+/**
+ * Load All
+ */
+ /*
+function loadAll(sort,page,user){
+    Post.postsLoad({sort: req.query.sort, page: Number(req.query.page -1), subport: req.params.subport, user: req.user}, function(err, posts){
+      if(err){return err}
+      console.log('responding with posts');
+    return posts;
+  });
+}
+*/
 
 
 /**

@@ -37,13 +37,14 @@
         display:inline-block;
         color:$color-black-fade;
         text-align: left;
-        &.voted i,&.voted span{
+        &.vote i,&.vote span{
             color:#4CAF50;
         } 
+        &.save i,.save span{
+            color: #e81c4f;
+        }
     }
-    & .saved i,.saved span{
-        color: #e81c4f;
-    }
+
     
     & .more-icon>i{
     font-size: 26px;
@@ -97,3 +98,25 @@
         transition-delay:1s;
     }
 }
+
+.post__open{
+    margin: 20px auto;
+    background: white;
+    flex-grow: 1;
+    width:inherit;
+    &.n{
+        display:none;
+    }
+    &.mdl-card{
+        width:inherit;
+    }
+    & .supporting-text{
+        color: rgba(0,0,0, 0.54);
+        font-size: 1rem;
+        line-height: 18px;
+        overflow: hidden;
+        padding: 16px 16px;
+    }
+    
+}
+

@@ -10,8 +10,8 @@ export function fetchComponentDataBeforeRender(dispatch, components, params, que
       .concat((current.WrappedComponent ? current.WrappedComponent.need : []) || [])
       .concat(prev);
     }, []);
-    if(Object.keys(params).length === 0){params = undefined}
-    if(Object.keys(query).length === 0){query = undefined}
+    if(Object.keys(params).length === 0){params = undefined};
+    if(Object.keys(query).length === 0){query = undefined};
     console.log('fetchComponentDataBeforeRender Query and Params');
     console.dir(query);
     console.log(params);

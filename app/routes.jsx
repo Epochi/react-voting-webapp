@@ -3,8 +3,8 @@ import { Route, IndexRoute, Redirect } from 'react-router';
 import App from 'containers/App';
 import Profile from 'containers/Profile';
 import Posts from 'containers/Posts';
-import Post from 'containers/Post';
-import {selectPort, postOpenState} from 'actions/posts';
+import PostOpen from 'components/Posts/PostOpen';
+import {selectPort,setPostOpenIndex} from 'actions/posts';
 
 /*
  * @param {Redux Store}
@@ -34,11 +34,6 @@ export default (store) => {
     callback();
   };
   
-  const postViewOpen = (nextState, replace, callback) => {
-      store.dispatch(postOpenState(true));
-      callback();
-  };
-  
   const selectedPort = (nextState, replace, callback) => {
       console.log('nextstate');
       console.log(nextState);
@@ -49,6 +44,9 @@ export default (store) => {
       console.log(store);
       console.log('nextStore eh');
     }
+    if(nextState.params.hasOwnProperty('postId')){
+      store.dispatch(setPostOpenIndex({[nextState.params.subport]: 0}));
+    }
     callback();
   };
   
@@ -57,7 +55,7 @@ export default (store) => {
       <IndexRoute component={Posts}/>
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
       <Route path=":subport" component={Posts} >
-        <Route path=":postId" component={Post} />
+        <Route path=":postId" component={PostOpen} />
       </Route>
     </Route>
   );

@@ -12,17 +12,18 @@ var User = require('../../models/user');
 
 
 module.exports = new LocalStrategy({
-    username: "email",
-    password: "password"
+    username: 'email',
+    password: 'password'
   },
   function (email, password, done) {
     console.log('LocalStrategy RAPART ZIEG HAIL: ' + arguments);
     console.dir(arguments);
     const options = {
-      criteria: (email.indexOf('@') === -1) ? "username" : "email",
+      criteria: (email.indexOf('@') === -1) ? 'username' : 'email',
       select: email,
       password: password
     };
+    console.log(options);
     User.loadLocal(options, function (err, username) {
     if (err) return done(err, false);
     console.log('Inside local strategy atm');

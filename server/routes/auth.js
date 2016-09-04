@@ -10,6 +10,7 @@ module.exports = function(passport){
             passport.authenticate('local', function(err, user, info) {
               if (err) {
                 console.log('passport calling error');
+                console.log(err);
                 return next(err);
               }
               if (!user) {

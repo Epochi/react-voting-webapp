@@ -9,8 +9,14 @@ function sql(file) {
 
 var sqlProvider = {
     // external queries for Users:
-    users: {
+    usersAuth: {
         create: sql('users/create.sql'),
+        load: sql('users/load.sql'),
+        loadLocal: sql('users/loadLocal.sql')
+    },
+    votes: {
+        onPost: sql('votes/onPost.sql'),
+        postVoteCountUpdate: sql('votes/postVoteCountUpdate.sql')
     },
     // external queries for Products:
     posts: {

@@ -6,6 +6,8 @@ import grid from 'material-design-lite/src/grid/_grid';
 import Post from 'components/Posts/Post';
 import PostDropdown from 'components/Posts/PostDropdown';
 import {MenuPortal} from 'components/utils/Portal';
+import PostListFooter from 'containers/PostListFooter';
+import PostListRefresh from 'components/utils/PostListRefresh';
 import {scrollThrottle} from 'components/utils.jsx';
 
 const cx = classNames.bind(Object.assign(layout, grid, styles));
@@ -19,6 +21,7 @@ class PostsView extends Component {
     this.scrollListener = this.scrollListener.bind(this);
     this.handleNewPosts = this.handleNewPosts.bind(this);
     this.handleDeletePost = this.handleDeletePost.bind(this);
+    this.handlePostOpen = this.handlePostOpen.bind(this);
   }
   
   //don't update if username changes
@@ -30,17 +33,17 @@ class PostsView extends Component {
   
   
   handleMenu (e,post,index){
-  var props = {event:e};
-  if(this.props.username){
-    props.id = post._id;
-    props.username = this.props.username;
-    if(this.props.username === post.data.author){
-      props.author = post.data.author;
-      props.funcs = {del: (cb)=>{this.handleDeletePost(post._id,post.data.author,index,cb)}};
+    var props = {event:e};
+    if(this.props.username){
+      props.id = post._id;
+      props.username = this.props.username;
+      if(this.props.username === post.data.author){
+        props.author = post.data.author;
+        props.funcs = {del: (cb)=>{this.handleDeletePost(post._id,post.data.author,index,cb)}};
+      }
     }
-  }
-  
-  MenuPortal(PostDropdown,props);
+    
+    MenuPortal(PostDropdown,props);
   }  
   
   handleDeletePost(id,author,index,cb){
@@ -52,23 +55,27 @@ class PostsView extends Component {
     }
   }
 
-  handleVote = (i,p) => {
+  handleVote = (post,i,vote) =>{
     //LINK TO LOGIN IF NOT LOGGED IN
     console.log('handleVote')
+    console.log(vote);
+    console.log(post);
     console.log(i);
-    console.log(p);
-    //console.log(this);
-    //console.log(arguments);
     console.log('handleVote END')
    if(this.props.username){
       console.log('voted or nat');
-      this.props.vote({port: this.props.selectedPort ,index: i, vote: p});
+       this.props.vote({subport: this.props.selectedPort, index: i,type: vote,post: post});
+    } else{
+       console.log('link to login or register');
     }
   }
 
+  handlePostOpen = (index) =>{
+    this.props.setPostOpenIndex({[this.props.selectedPort]: index})
+  }
   
   handleNewPosts(subport=this.props.selectedPort, page=this.props.posts.pages[this.props.selectedPort]){
-    this.props.fetchPosts({subport: subport}, {p:page});
+    this.props.fetchPosts({subport: subport}, {page:page});
   }
   
   handleScroll(){
@@ -109,7 +116,7 @@ class PostsView extends Component {
     console.log('PostsView didupdate add scrollListener');
     this.postList.addEventListener('scroll',this.scrollListener());
     return;
-    }
+    } 
   }
   componentWillUnmount() {
      this.postList.removeEventListener('scroll',this.scrollListener());
@@ -139,27 +146,37 @@ class PostsView extends Component {
                       </div>
                     
                       <div className={cx('mdl-grid','main-grid')}>
-                            {posts[this.props.selectedPort].length === 0 ?
-                            (<div>Kažkas nutiko...</div>)
+                            {!posts.hasOwnProperty([this.props.selectedPort]) || posts[this.props.selectedPort].length === 0 ?
+                            (
+                            <PostListRefresh postListRefresh={() => this.handleNewPosts()} postsError="Kažkas netaip =/" />
+                            )
                             :
                             (posts[this.props.selectedPort].map((post, i) =>
                                 <Post
                                   key={i}
                                   k={i}
                                   post={post}
-                                  handleVote={this.handleVote}
+                                  currentSubport={this.props.selectedPort}
+                                  handlePostOpen={() => this.handlePostOpen(i)}
                                   onMenuClick={(event) => this.handleMenu(event,post,i)}
+                                  handleVote={this.handleVote}
+                                  votes={post.votes ? post.votes : {}}
+                                  authenticated={this.props.authenticated}
                               />
                           ))}
+                          <PostListFooter postListRefresh={() => this.handleNewPosts()} />
                       </div>
                     </div>
                     {this.props.children ? (
                     <div className={cx('page-post')}>
-                       {this.props.children}
+                       {React.cloneElement(this.props.children, {
+                       post: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],
+                       handleVote: this.handleVote,
+                       onMenuClick:(event) => this.handleMenu(event) })}
                      </div>
                       ) : (null)
                     }
-                  </div>    
+                  </div>  
                 </main>
                 
             );

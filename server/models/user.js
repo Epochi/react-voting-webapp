@@ -1,7 +1,8 @@
 var crypto = require('crypto');
 var utils = require('../config/utils');
-var db = require ('../config/postgres');
-var qrm = db.pgp.queryResult;
+var auth = require ('../config/postgres').auth;
+
+var sql = require('../sql/sql.js').usersAuth;
 
 exports.validation = function(body,cb){
   var errors = [];
@@ -40,7 +41,7 @@ exports.create = function(req, cb){
     email: req.body.email.toLowerCase()
   };
    //text: "INSERT INTO user_data (username, name, email) VALUES ($1, $2, $3) RETURNING username", // can also be a QueryFile object
-  db.db.one({
+  auth.one({
         name: "user_data_create",
         text: "INSERT INTO user_data (username, name, email) VALUES ($1, $2, $3) RETURNING name, username,email, postscore, commentscore", // can also be a QueryFile object
         values: [user.username, user.name, user.email]
@@ -65,7 +66,7 @@ exports.createLocal = function(req, cb){
     hashed_password: chashed_password
   };
   
-  db.db.one({
+  auth.one({
         name: "user_auth_create",
         text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4)",
         values: [data.name, data.email, data.salt, data.hashed_password]
@@ -78,14 +79,16 @@ exports.createLocal = function(req, cb){
 };
 
 
-
-
-exports.loadLocal = function (options ,cb){
+/*
     console.log('inside loadlocal');
     console.log(options);
       var query_text = 'SELECT ARRAY["'+options.criteria +'", "salt", "hashed_password" ] FROM user_auth WHERE '+options.criteria +'= $1 LIMIT 1';
 
-  db.db.query(query_text, [options.select], qrm.one | qrm.none)
+*/
+
+exports.loadLocal = function (options ,cb){
+  
+  auth.one(sql.loadLocal, {criteria: options.criteria, user: options.select})
   .then(result => {
       console.log('loadocal result');
       console.log(result);
@@ -98,26 +101,31 @@ exports.loadLocal = function (options ,cb){
       return cb(null, result.array[0]);
       }
     })
-    .catch(error => {return cb(error)});
+    .catch(error => {console.log('load local error');console.log(error);return cb(error)});
 };
+
+/*
+var query_text = 'SELECT row_to_json(row) FROM (SELECT name, username, post_score, comment_score FROM user_metadata WHERE username = $1 LIMIT 1) AS row';
+  auth.query(query_text, [username], qrm.one | qrm.none)
+*/
+
 
 exports.load = function (username ,cb){
     console.log('inside load');
     console.log(username);
-    var query_text = 'SELECT row_to_json(row) FROM (SELECT name, username, postscore, commentscore FROM user_data WHERE username = $1 LIMIT 1) AS row';
-  db.db.query(query_text, [username], qrm.one | qrm.none)
-  .then(result => {
-      console.log('load result');
-      console.log(result);
-      return cb(null, result.row_to_json );
-    })
-    .catch(error => {return cb(error)});
+    auth.one(sql.load, {username: username})
+      .then(result => {
+          console.log('load result');
+          console.log(result);
+          return cb(null, result.row_to_json );
+        })
+        .catch(error => {return cb(error)});
 };
 
 exports.loadFull = function (options ,cb){
     console.log('inside load');
     console.log(options);
-  db.db.query('SELECT * FROM user_data WHERE username = $1 LIMIT 1', [options.select], qrm.one | qrm.none)
+  auth.query('SELECT * FROM user_data WHERE username = $1 LIMIT 1', [options.select], qrm.one | qrm.none)
   .then(result => {
       console.log('load result');
       console.log(result);

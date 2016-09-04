@@ -1,17 +1,19 @@
 var utils = require('../config/utils');
-var db = require('../config/postgres').db;
-var box = {0: {type: 'hot', order: 'score' },1: {type: 'top', order: 'vote_up'},2:{type:'new', order: 'date' }};
+var guest = require('../config/postgres').guest;
+var sort = ['score', 'vote_up', 'date'];
+
 var sql = require('../sql/sql.js').posts; // our sql for users;
 
 
 
-
+exports.postsLoadAll = function(data){
+    return guest.many(sql.loadAll, {sort: sort[data.sort],page: data.page});
+};
 
 exports.postsLoad = function(data, cb){
     // sort hot top date
-    var sort = ['score', "vote_up", 'date'];
     if(data.subport === 'all'){
-        db.manyOrNone(sql.loadAll, {sort: sort[data.sort],page: data.page})
+        guest.many(sql.loadAll, {sort: sort[data.sort],page: data.page})
             .then(result => {
                 console.log('p/all Succesfully returnred');
                 //console.log(result);
@@ -19,7 +21,7 @@ exports.postsLoad = function(data, cb){
             })
             .catch(error => {console.log('p/all/ error');console.log(error);return cb(error)});
     }else{
-        db.manyOrNone(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
+        guest.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
             .then(result => {
                 console.log('p/category Succesfully returned');
                 //console.log(result);
@@ -30,20 +32,14 @@ exports.postsLoad = function(data, cb){
 };
 
 exports.postLoadSingle = function(data, cb){
-        db.one(sql.loadSingle, data.post_id)
-            .then(result => {
-                console.log('post/single returnred');
-                //console.log(result);
-                return cb(null,result);
-            })
-            .catch(error => {console.log('post/single/ error');console.log(error);return cb(error)});
-}
+        return guest.one(sql.loadSingle, data.post_id);
+};
 
 
 exports.create = function(data,cb){
      console.log('inside models/post/create');
    //text: "INSERT INTO user_data (username, name, email) VALUES ($1, $2, $3) RETURNING username", // can also be a QueryFile object
-  db.any(sql.create,data).then(result => {
+  guest.any(sql.create,data).then(result => {
       console.log('create result');
       console.log(result);
       return cb(null,result);

@@ -5,17 +5,41 @@ var _ = require('lodash');
 var Vote = require('../models/votes');
 var Post = require('../models/posts');
 
+
+
 //var UserThing = mongoose.model('UserThing');
 
 
 //body.vote.type = 0 post, 1 comment
 //body.vote.state = 0 insert, 1 comment
 exports.voteSwitch = function (req,res,next){
-    if(req.body.vote.type === 0){
-        postVote(req, res, next);
-    } else {
-        //commentVote(req,res,next);
-    }
+    console.log("Vote Switch");
+    console.log(req.params.post);
+    console.dir(req.body.votes);
+    req.params.post = Number(req.params.post);
+    if(req.body.votes.hasOwnProperty('vote') || req.body.votes.hasOwnProperty('save'))
+    
+    Vote.votePost({username: req.user.username, post: req.params.post, vote: req.body.votes},function(err,result){
+                    if(err){res.sendStatus(500); return next(err);}
+                    console.log('update post vote success');
+                    console.log(result);
+                    //update post score if it was a vote and it returned results
+                    if(result !== null && req.body.votes.hasOwnProperty('vote')){
+                       Vote.postVoteCountUpdate({post: req.params.post, operator: req.body.votes.vote},function(err,cb){
+                            if(err){res.sendStatus(500); return next(err);}
+                            console.log('update post vote_up success');
+                            res.status(200);
+                        });
+                       
+                    } else {
+                        
+                    console.log('either save or no vote result');
+                    res.status(200);
+                    } 
+                });
+    
+    
+    
 };
 
 //0 for insert, 1 for update

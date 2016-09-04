@@ -18,7 +18,7 @@ module.exports = function(app, passport) {
     next();
   })
   app.use('/auth', auth(passport));
-  app.use('/p', posts);
+  app.use('/api/post', posts);
   
   app.get('/poster', poster.fetchReddit);
   app.get('/u/:userId', users.show);
@@ -59,6 +59,8 @@ module.exports = function(app, passport) {
       console.error(err.stack);
       res.status(422).send(err);
       return;
+    } else if(err.message === 'No data returned from the query.'){
+      res.status(422).send({err: {message: 'Nieko nerasta'}});
     }
 
 

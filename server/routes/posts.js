@@ -11,26 +11,26 @@ module.exports = router;
     next();
     });
     */
-  router.put('/vote',users.userAuthenticated, function(req, res, next) {
+  router.put('/vote/:post',users.userAuthenticated, function(req, res, next) {
     console.log('/vote express');
     votes.voteSwitch(req, res, next);
   });
-  router.post('/post', users.userAuthenticated, posts.create);
+  router.post('/create', users.userAuthenticated, posts.create);
   
 
   
-  router.put('/post', function(req, res) {
+  router.put('/update', function(req, res) {
     posts.update(req, res);
   });
 
-  router.delete('/:id',users.userAuthenticated, function(req, res) {
+  router.delete('/delete/:post_id',users.userAuthenticated, function(req, res) {
     posts.remove(req, res);
   });
-  
+/*  
   router.get('/post/:postid/.json', function(req,res,next){
     posts.loadPostSingle(req,res,next);
   });
-  
-  router.get('/:subport/:page/:sort/.json', function(req,res,next){
+*/
+  router.get('/:subport', function(req,res,next){
     posts.load(req,res,next);
   });

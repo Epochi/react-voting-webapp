@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
-import Button from 'components/utils/Button'
-//import PostButton from 
+import Button from 'components/utils/Button';
+import VoteButton from 'components/utils/VoteButton';
 import {Link} from 'react-router';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_post';
@@ -8,20 +8,15 @@ import card from 'material-design-lite/src/card/_card';
 import {dateCompare} from 'components/utils.jsx';
 const cx = classNames.bind(Object.assign(card, styles));
 
-const Post = ({post, handleVote,onMenuClick,k}) => {
-  let hide = post.data.hidden ? 'n':false;
-  let voteClass = false;
-  let saveClass = false;
-  if(post.post_vote != null){
-  voteClass =  post.post_vote >= 20 ? "voted" : false;
-  //mb +1, dont know how to proceed yet
-  saveClass = post.post_vote % 2 ? "saved" : false;
-  }
+const Post = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,votes,authenticated}) => {
+  let hide = post.data.hasOwnProperty('hidden') ? 'n': post.data.hidden;
   let date = dateCompare(post.date);
+  votes.vote = votes.hasOwnProperty('vote') ? votes.vote : false;
+  votes.save = votes.hasOwnProperty('save') ? votes.save : false;
     return(
              <div className={cx("mdl-card","post",hide)}>
               <div className={cx("mdl-card__title")}>
-                <Link to={{pathname: `/${post.subport}/${post.post_id}`, state : {index: k}}}>
+                <Link onClick={handlePostOpen} to={{pathname: `/${currentSubport}/${post.post_id}`}}>
                   <h2 className={cx("mdl-card__title-text")}>{post.title}</h2>
                 </Link>
               </div>
@@ -37,17 +32,17 @@ const Post = ({post, handleVote,onMenuClick,k}) => {
                   </a>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote >= 20 ? post.post_vote - 10 : post.post_vote + 10})}} className={cx('vote__button','tooltip', voteClass)}>
+                  <VoteButton handleVote={handleVote} id={post.post_id} index={k} votes={votes} authenticated={authenticated} type="vote" >
                     <i className={"material-icons"}>arrow_upward</i>
-                    <span>{post.voteup}</span>
+                    <span>{post.vote_up}</span>
                     <span className={cx('tooltip-text')}>Balsuoti</span>
-                  </a>
+                  </VoteButton>
                 </div>
                 <div>
-                  <a onClick={()=>{handleVote(k,{id:post.post_id, state: post.post_vote ? 1 : 0, data: post.post_vote % 2 ? post.post_vote - 1 : post.post_vote + 1})}} className={cx('tooltip',saveClass)}>
+                  <VoteButton handleVote={handleVote} id={post.post_id} index={k} votes={votes} authenticated={authenticated} type="save" >
                     <i className={"material-icons"}>favorite</i>
                     <span className={cx('tooltip-text')}>Išsaugoti</span>
-                  </a>
+                  </VoteButton>
                 </div>
                 <div>
                   <a className={cx('tooltip')}>
@@ -84,7 +79,8 @@ const Post = ({post, handleVote,onMenuClick,k}) => {
 Post.PropTypes ={
     post: PropTypes.object.isRequired,
     onClick: PropTypes.func,
-    onMenuClick: PropTypes.func
+    onMenuClick: PropTypes.func,
+    currentSubport: PropTypes.string
 };
 
 export default Post; 

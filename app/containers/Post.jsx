@@ -9,8 +9,9 @@ import {fetchPost} from 'actions/posts';
 
 function mapStateToProps(state, ownProps) {
   const {postsByPort, user, ui, postOpen} = state;
-  const post = ownProps.location.state === "index" ? postsByPort[selectedPort][ownProps.location.state.index] : postOpen.post;
+  console.log('#PMPTP');
   const selectedPort = ui.selectedPort;
+  const post = ownProps.location.state.hasOwnProperty("index") ? postsByPort[selectedPort][ownProps.location.state.index] : postOpen.post.post;
   const comments = postOpen.comments;
   const username = user.username;
   return {
@@ -26,8 +27,5 @@ function mapDispatchToProps(dispatch) {
 }
 
 const Post = connect(mapStateToProps,mapDispatchToProps)(PostOpen);
-Post.need = [
-  fetchPost
-  ];
 export default Post;
 

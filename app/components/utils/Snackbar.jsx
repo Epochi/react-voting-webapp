@@ -16,20 +16,13 @@ const Snackbar = ({messageOpen, message, isWaiting,postsLoad}) => {
                 </div> 
                 ) : (null)
             }
-            {postsLoad ? (
-                <div className={cx('posts-footer')}>
-                    <Spinner />
-                </div>
-            ) : (null)
-            }
         </div>
         )
     
 };
 
 Snackbar.PropTypes = {
-    isWaiting: PropTypes.bool,
-    
+    isWaiting: PropTypes.bool
 }
 
 

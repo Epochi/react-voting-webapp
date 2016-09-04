@@ -4,37 +4,32 @@ import styles from 'material-design-lite/src/button/_button';
 const cx = classNames.bind(styles);
 
 
-
-const Button = ({onClick, children,css}) => {
-
-    return(
-          <a onClick={onClick} className={css}>
-            {children}
-          </a>
+const VoteButton = ({handleVote, type, index, id, votes, children, authenticated}) => {
+if(!authenticated) {
+  return(
+      <a onClick={()=>handleVote()} className={cx('vote__button','tooltip', type)}>
+          {children}
+      </a>
         );
-    };
-
-Button.propTypes = {
-  onTouchTap: PropTypes.func,
-  onClick: PropTypes.func,
-  children: PropTypes.node,
+} else{ 
+  
+   return(
+      <a onClick={() => handleVote(id, index, {votes: {[type]: !votes[type] }} )} className={cx('vote__button','tooltip', votes[type] ? type : false)}>
+        {children}
+      </a>
+        );
+  }
 };
 
-const VoteButton = ({onClick, vote, children}) => {
-
-return(
-  <a onClick={onClick}>
-    {children}
-  </a>
-    );
-};
 VoteButton.propTypes = {
-  onTouchTap: PropTypes.func,
-  onClick: PropTypes.func,
-  children: PropTypes.node,
+  handleVote: PropTypes.func,
+  authenticated: PropTypes.bool,
+  votes: PropTypes.object,
+  type:PropTypes.string
 };
+
+
 
 export default VoteButton;
-
 
 

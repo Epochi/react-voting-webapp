@@ -7,7 +7,7 @@ import * as types from 'constants/index';
 polyfill();
 
 
-function makePostRequest(method, id, data, api='/p') {
+function makePostRequest(method, id, data, api='/api/post') {
   return request[method](api + (id ? ('/' + id) : ''), data);
 }
 
@@ -74,20 +74,20 @@ export function invalidatePort(port) {
 //voteAction goes to store
 export function vote(data){
     return dispatch => {
-      dispatch(voteAction(data.index, data.port,data.vote.state ? data.vote.data : 10 + data.vote.data ));
-      postAction(data.vote);
+      dispatch(voteAction(data.index, data.subport, data.type ));
+      postAction({post_id: data.post, votes: data.type});
     };
 }
 
-function voteAction(index,port, vote) {
-  return { type: types.POSTS_VOTE, data: {index: index, port: port, vote: vote}};
+function voteAction(index, subport, vote) {
+  return { type: types.POSTS_VOTE, data: {index: index, subport: subport, vote: vote}};
 }
 
 function postAction(data){
     console.log('pA args');
     console.log(data);
     console.log('pA args');
-    return makePostRequest('put', 'vote',{vote: {type: 0, state: data.state,post_id: data.id, data:data.data}})
+    return makePostRequest('put', `vote/${data.post_id}`, data.votes)
       .then(function(response) {
         console.log("Vote Success!", response.status);
       }, function(error) {
@@ -127,11 +127,11 @@ export function votedPost(index,id,subport,voted){
 //port has to be an object, because SSR uses it as one
 //send query{p: #page} object
 export function fetchPosts(params = {}, query = {}) {
-    var subport =  params.hasOwnProperty('subport') ? params.subport : 'all'; 
+    var subport =  params.hasOwnProperty('subport') ? params.subport : 'visi'; 
     //LEAVE PAGE AT 0 WHILE THERE ARE NO POSTS
-    var page = query.hasOwnProperty('p') ? query.p : 0;
+    var page = query.hasOwnProperty('page') ? ~~query.page : page=1;
     //CRASHES EVERYTHING
-    var sort = query.hasOwnProperty('s') ? query.s : 'top';
+    var sort = query.hasOwnProperty('sort') ? query.sort : 'top';
     if(sort === 'top'){
       sort = 1;
     }else if(sort === 'hot'){
@@ -139,22 +139,23 @@ export function fetchPosts(params = {}, query = {}) {
     } else if(sort === 'new'){
       sort = 2;
     }
-  
-    console.log('in fetchPosts');
+    var queryString = `?page=${page}&sort=${sort}`;
+    if(params.hasOwnProperty('postId')){
+      queryString += `&post=${params.postId}`;
+    }
+    console.log('in fetchPosts request');
+    console.log("argument params: " );
+    console.dir(params);
+    console.log("argument query: ");
+    console.dir(query);
+    console.log('before fetchPosts return');
     return {
           type: types.POSTS_GET,
           subport: subport,
-          promise: (client) => client.get(`/p/${subport}/0/${sort}/.json`)
+          promise: (client) => client.get(`/api/post/${subport}/${queryString}`)
       };
 }
 
-export function fetchPost({postId}) {
-    console.log('in fetchPost');
-    return {
-          type: types.POST_GET,
-          promise: (client) => client.get(`/p/post/${postId}/.json`)
-      };
-}
 
 export function fetchPostComments(port='all',postId) {
     console.log('in fetchPostComments');
@@ -193,6 +194,11 @@ function deleteFailure(){
   return {type: types.POSTS_DELETE_FAILURE};
 }
 
-export function postOpenState(bool){
-  return {type: types.POST_OPEN_STATE, bool}; 
+export function setPostOpenIndex(index){
+  return {type: types.POST_OPEN_INDEX, index}; 
 }
+
+export function clearPosts(){
+  return {type: types.POSTS_CLEAR_STATE}
+}
+

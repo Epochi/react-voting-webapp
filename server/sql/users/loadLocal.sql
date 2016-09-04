@@ -1,0 +1,1 @@
+SELECT ARRAY[${criteria~}, salt, hashed_password ] FROM user_auth WHERE ${criteria~}=${user} LIMIT 1;
