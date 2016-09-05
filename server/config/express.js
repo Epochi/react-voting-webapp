@@ -39,7 +39,8 @@ module.exports = function (app, passport) {
     // If secure is set, and you access your site over HTTP, the cookie will not be set
     cookie: {
       httpOnly: true,
-      secure: false
+      secure: false,
+      maxAge: 3600000,
     },
   store: new RedisStore(secrets.redisdb)
   };

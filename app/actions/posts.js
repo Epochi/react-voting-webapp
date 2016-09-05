@@ -129,7 +129,7 @@ export function votedPost(index,id,subport,voted){
 export function fetchPosts(params = {}, query = {}) {
     var subport =  params.hasOwnProperty('subport') ? params.subport : 'visi'; 
     //LEAVE PAGE AT 0 WHILE THERE ARE NO POSTS
-    var page = query.hasOwnProperty('page') ? ~~query.page : page=1;
+    var page = query.hasOwnProperty('page') ? ~~query.page : page=0;
     //CRASHES EVERYTHING
     var sort = query.hasOwnProperty('sort') ? query.sort : 'top';
     if(sort === 'top'){

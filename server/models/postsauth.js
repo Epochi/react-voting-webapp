@@ -6,22 +6,37 @@ var sql = require('../sql/sql.js').postsAuth; // our sql for users;
 
 
 exports.postsLoadAll = function(data){
-    user.many(sql.loadAll, {sort: sort[data.sort],page: data.page, username: data.username});
+    return user.many(sql.loadAll, {sort: sort[data.sort],page: data.page, username: data.username})
+        .then(result => {
+                //console.log('p/category Succesfully returned');
+                //console.log(result);
+                //console.log('p/category Succesfully returned AFTER RESULT');
+                return result[0].posts;
+            })
+            .catch(error => {console.log('p/subport/ error');console.log(error);return error});
 };
 
 exports.postsLoadCategory = function(data, cb){
     // sort hot top date
-        user.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
+       return user.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
             .then(result => {
-                console.log('p/category Succesfully returned');
+                //console.log('p/category Succesfully returned');
                 //console.log(result);
-                return cb(null,result);
+                return result[0].posts
             })
             .catch(error => {console.log('p/subport/ error');console.log(error);return cb(error)});
 };
 
 exports.postLoadSingle = function(data, cb){
-        return user.one(sql.loadSingle, data.post_id);
+        return user.one(sql.loadSingle, data.post_id)
+                .then(result => {
+                    //console.log('p/loadauth signle Succesfully returned');
+                    //console.log(result);
+                    //console.log('p/loadauth signle  returned AFTER RESULT');
+                return [result.posts];
+            })
+            .catch(error => {console.log('p/subport/ error');console.log(error);return error});
+                
 };
 
 
@@ -36,3 +51,4 @@ exports.create = function(data,cb){
     .catch(error => {return cb(error)});
 }
 
+  

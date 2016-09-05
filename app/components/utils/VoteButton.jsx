@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 const VoteButton = ({handleVote, type, index, id, votes, children, authenticated}) => {
 if(!authenticated) {
   return(
-      <a onClick={()=>handleVote()} className={cx('vote__button','tooltip', type)}>
+      <a onClick={()=>handleVote()} className={cx('vote__button','tooltip')}>
           {children}
       </a>
         );

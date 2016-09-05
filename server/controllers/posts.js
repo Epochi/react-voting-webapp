@@ -15,25 +15,26 @@ var PostAuth = require('../models/postsauth');
 exports.load = function(req,res,next) {
   console.log('/api/post/ router Load');
   req.query.sort = Number(req.query.sort);
-  req.query.page = Number(req.query.page - 1);
+  req.query.page = Number(req.query.page);
   console.log(req.query);
-  var LoadPromises = [[]];
+  var promises = [];
+  
   
   
   if(req.query.hasOwnProperty('post')){
-  LoadPromises.push(
+  promises.push(
     Post.postLoadSingle({post_id: Number(req.query.post)})
     );
   }
   
   if(req.params.subport === "visi"){
-  LoadPromises.push(
+  promises.push(
     Post.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, user: req.user})
     );
   }
   console.log("load promises with param");
 
-  Promise.all(LoadPromises)
+  Promise.all(promises)
     .then(result => {
       console.dir(result);
       return res.json(result.reduce(function(a, b) {
@@ -177,29 +178,30 @@ exports.loadUser = function(req,res,next) {
   req.query.page = Number(req.query.page);
   console.log(req.query);
   console.log(req.user);
-  var LoadPromises = [[]];
+  var promises = [];
   
-  
+  //im pushing function call to promise array
+  //PostAuth returns it's functions as promises. result can be modified there
   if(req.query.hasOwnProperty('post')){
-  LoadPromises.push(
-    PostAuth.postLoadSingle({post_id: Number(req.query.post), username: req.user.username})
-    );
+    promises.push(
+      PostAuth.postLoadSingle({post_id: Number(req.query.post), username: req.user.username})
+      )
   }
   
   if(req.params.subport === "visi"){
-  LoadPromises.push(
-    PostAuth.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, username: req.user.username})
-    );
+    promises.push(
+      PostAuth.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, username: req.user.username})
+    )
   }
   console.log("load promises with param");
-
-  Promise.all(LoadPromises)
+  
+  Promise.all(promises)
     .then(result => {
       console.dir(result);
+      console.log('promise result over');
       return res.json(result.reduce(function(a, b) {
         return a.concat(b)})
       );
     })
     .catch(err => {return next(err)});
-
 }; 

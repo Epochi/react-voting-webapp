@@ -54,6 +54,7 @@ exports.create = function(req, cb){
 };
 
 
+//currently active
 exports.createLocal = function(req, cb){
 
   var csalt = utils.makeSalt();
@@ -61,15 +62,15 @@ exports.createLocal = function(req, cb){
   console.log('createLocal inside');
   var data = {
     email: req.body.email.toLowerCase(),
-    name: req.body.username,
+    username: req.body.username,
     salt:  csalt,
     hashed_password: chashed_password
   };
   
   auth.one({
         name: "user_auth_create",
-        text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4)",
-        values: [data.name, data.email, data.salt, data.hashed_password]
+        text: "INSERT INTO user_auth (name,email, salt, hashed_password) VALUES ($1, $2, $3, $4) RETURNING name;",
+        values: [data.username, data.email, data.salt, data.hashed_password]
       }).then(result => {
       console.log('createLocal result');
       console.log(result);

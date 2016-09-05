@@ -30,8 +30,14 @@ function localLoginStart() {
 function localLoginSuccess(username) {
   console.log('login success user');
   console.log(username);
-  return { type: types.LOCAL_LOGIN_SUCCESS_USER, username };
+    dispatch => {[
+      { type: types.LOCAL_LOGIN_SUCCESS_USER, username },
+      { type: types.POSTS_CLEAR_STATE },
+      ]};
+    return window.location.reload();
 }
+
+
 
 export function localLoginError(errors) {
   console.log(errors);

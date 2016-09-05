@@ -32,10 +32,9 @@ module.exports = router;
   });
 */
   router.get('/:subport', function(req,res,next){
-    if(users.userAuthenticated){
+    if(req.isAuthenticated()){
     posts.loadUser(req,res,next);
-    }
-    else{
+    }else{
     posts.load(req,res,next);
     }
   });

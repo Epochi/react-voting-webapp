@@ -11,9 +11,8 @@ SELECT json_agg(
                           'comments_update', p.comments_update,
                           'comments_update_time', p.comments_update_time,
                           'data', p.data,
-                          'votes,', v.votes
+                          'votes', v.votes
                         )
                ) AS posts
 from (SELECT * from post ORDER BY ${sort}::text DESC LIMIT 10 OFFSET ${page}) AS p
 left join votes v on v.username = ${username} AND p.post_id = v.post_id;
-
