@@ -34,6 +34,8 @@ export default (store) => {
     callback();
   };
   
+  //First if checks what category is selected
+  //Second if checks if it's a post
   const selectedPort = (nextState, replace, callback) => {
       console.log('nextstate');
       console.log(nextState);
@@ -54,8 +56,7 @@ export default (store) => {
     <Route path="/" component={App} onEnter={selectedPort}>
       <IndexRoute component={Posts}/>
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
-      <Route path=":subport" component={Posts} >
-        <Route path=":postId" component={PostOpen} />
+      <Route path=":subport(/:postId)" component={Posts} >
       </Route>
     </Route>
   );

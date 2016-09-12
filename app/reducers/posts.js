@@ -2,6 +2,7 @@ var update = require('react-addons-update');
 
 import {SELECT_PORT,
   INVALIDATE_PORT,
+  LOCAL_LOGIN_SUCCESS_USER,
   CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS,
   POSTS_VOTE,
   POSTS_UNVOTE,
@@ -58,15 +59,15 @@ export function postsByPort(state = initialState, action) {
   switch (action.type) {
   case POSTS_GET_SUCCESS:
     let postsArray = [];
-    if(action.req && action.req.data){
-      //console.log('action.req thang');
-      //console.log(action.req.data);
-      let data = action.req.data;
+    if(action.req && action.req.data && action.req.data.posts){
+      console.log('action.req thang');
+      console.log(action.req);
+      let data = action.req.data.posts;
       postsArray = data.map(posts => posts);
     }
-    console.log('PBP STATE START');
-    console.log(postsArray);
-    console.log('PBP STATE END');
+    //console.log('PBP STATE START');
+    //console.log(postsArray);
+    //console.log('PBP STATE END');
     return {
         pages: pages(state["pages"], {subport: action.subport, type: action.type}),
         [action.subport]: posts(state[action.subport], {posts: postsArray, type: action.type})

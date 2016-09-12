@@ -5,6 +5,7 @@ var posts = require('./posts.js');
 
 exports.fetchReddit = function(req,res,next) {
 console.log('fetch user ' + req.user);
+console.dir(req.user);
 var user = req.user;
 osmosis.get('http://www.delfi.lt/')
     .config('concurrency',1)
@@ -53,3 +54,33 @@ osmosis.get('http://www.delfi.lt/')
   });
   
   */
+  
+exports.posttons = function(req,res,next){
+        let user = { name: 'eminem2008',
+              username: 'eminem2008',
+              post_score: 0,
+              comment_score: 0 }
+    
+            let newreq = { 
+            user: user,
+            body: {
+                    type: 0,
+                    title: title,
+                    subport: 'funny',
+                    tags: ['naujienos'],
+                    data: {
+                        url: url,
+                        bodytext: bodyText
+                    }
+            }
+        };    
+        //console.dir(req);   
+        return posts.create(newreq,res,next);
+}
+
+
+var subports = [
+    "juokai",
+    "naujienos",
+    "kriminalai"
+    ]

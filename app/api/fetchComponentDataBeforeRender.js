@@ -13,10 +13,10 @@ export function fetchComponentDataBeforeRender(dispatch, components, params, que
     if(Object.keys(params).length === 0){params = undefined};
     if(Object.keys(query).length === 0){query = undefined};
     console.log('fetchComponentDataBeforeRender Query and Params');
-    console.dir(query);
-    console.log(params);
+    //console.dir(query);
+    //console.log(params);
     needs.reverse();
-    console.log(needs);
+    //console.log(needs);
     console.log('fetchComponentDataBeforeRender END');
     const promises = needs.map(need => dispatch(need(params, query)));
     return Promise.all(promises);

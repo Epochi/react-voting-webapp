@@ -15,7 +15,7 @@ function mapStateToProps(state, ownProps) {
   const username = user.username;
   const selectedPort = ui.selectedPort;
   const authenticated = user.authenticated;
-  const children = ownProps.children;
+  const routeParams = ownProps.routeParams;
   const sort = ui.sort;
   const postOpenIndex = postOpen.index
   return {
@@ -24,7 +24,7 @@ function mapStateToProps(state, ownProps) {
     selectedPort,
     sort,
     authenticated,
-    children,
+    routeParams,
     postOpenIndex
   };
 }

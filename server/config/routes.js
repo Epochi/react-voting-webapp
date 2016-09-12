@@ -21,6 +21,7 @@ module.exports = function(app, passport) {
   app.use('/api/post', posts);
   
   app.get('/poster', poster.fetchReddit);
+  app.get('/posttons', poster.posttons);
   app.get('/u/:userId', users.show);
   
   app.get('*', function (req, res, next) {

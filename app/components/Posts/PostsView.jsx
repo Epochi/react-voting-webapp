@@ -4,6 +4,7 @@ import styles from 'scss/components/_postsview';
 import layout from 'material-design-lite/src/layout/_layout';
 import grid from 'material-design-lite/src/grid/_grid';
 import Post from 'components/Posts/Post';
+import PostOpen from 'components/Posts/PostOpen';
 import PostDropdown from 'components/Posts/PostDropdown';
 import {MenuPortal} from 'components/utils/Portal';
 import PostListFooter from 'containers/PostListFooter';
@@ -123,9 +124,10 @@ class PostsView extends Component {
   }
 
   render () {
-        const split = this.props.children ? "split-on":false;
+        const split = this.props.routeParams.hasOwnProperty("postId") ? "split-on":false;
         const auth = this.props.authenticated ? "loggedin":false
-         const {posts} = this.props;
+        const {posts, postOpenIndex, selectedPort} = this.props;
+        const postOpen = this.props.routeParams.hasOwnProperty('postId') ? posts[selectedPort][postOpenIndex[selectedPort]]: null;
                 return (
                 <main className={cx('mdl-layout__content',"main-view",auth)}>
                   <div className={cx("page-split-wrapper",split)}>
@@ -146,17 +148,17 @@ class PostsView extends Component {
                       </div>
                     
                       <div className={cx('mdl-grid','main-grid')}>
-                            {!posts.hasOwnProperty([this.props.selectedPort]) || posts[this.props.selectedPort].length === 0 ?
+                            {!posts.hasOwnProperty([selectedPort]) || posts[selectedPort].length === 0 ?
                             (
                             <PostListRefresh postListRefresh={() => this.handleNewPosts()} postsError="Kažkas netaip =/" />
                             )
                             :
-                            (posts[this.props.selectedPort].map((post, i) =>
+                            (posts[selectedPort].map((post, i) =>
                                 <Post
                                   key={i}
                                   k={i}
                                   post={post}
-                                  currentSubport={this.props.selectedPort}
+                                  currentSubport={selectedPort}
                                   handlePostOpen={() => this.handlePostOpen(i)}
                                   onMenuClick={(event) => this.handleMenu(event,post,i)}
                                   handleVote={this.handleVote}
@@ -167,17 +169,15 @@ class PostsView extends Component {
                           <PostListFooter postListRefresh={() => this.handleNewPosts()} />
                       </div>
                     </div>
-                    {this.props.children ? (
-                    <div className={cx('page-post')}>
-                       {React.cloneElement(this.props.children, {
-                         post: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],
-                         currentSubport: this.props.selectedPort,
-                         onMenuClick: (event) => this.handleMenu(event,this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]],0),
-                         handleVote: this.handleVote,
-                         votes: this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]].votes ? this.props.posts[this.props.selectedPort][this.props.postOpenIndex[this.props.selectedPort]].votes : {},
-                         authenticated: this.props.authenticated
-                       })}
-                     </div>
+                    {this.props.routeParams.hasOwnProperty('postId') ? (
+                      <PostOpen
+                                  post={postOpen}
+                                  currentSubport={selectedPort}
+                                  onMenuClick={(event) => this.handleMenu(event,postOpen,postOpenIndex.selectedPort)}
+                                  handleVote={this.handleVote}
+                                  votes={postOpen.votes ? postOpen.votes : {}}
+                                  authenticated={this.props.authenticated}
+                              />
                       ) : (null)
                     }
                   </div>  
@@ -193,8 +193,7 @@ PostsView.propTypes = {
   username: PropTypes.string,
   selectedPort: PropTypes.string,
   uiSort: PropTypes.string,
-  authenticated: PropTypes.bool,
-  children: PropTypes.object
+  authenticated: PropTypes.bool
 };
 
 export default PostsView;

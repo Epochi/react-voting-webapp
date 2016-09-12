@@ -18,7 +18,7 @@ exports.postsLoadAll = function(data){
 
 exports.postsLoadCategory = function(data, cb){
     // sort hot top date
-       return user.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport})
+       return user.many(sql.loadCategory,{sort: sort[data.sort], page: data.page, subport: data.subport, username: data.username})
             .then(result => {
                 //console.log('p/category Succesfully returned');
                 //console.log(result);
@@ -28,7 +28,7 @@ exports.postsLoadCategory = function(data, cb){
 };
 
 exports.postLoadSingle = function(data, cb){
-        return user.one(sql.loadSingle, data.post_id)
+        return user.one(sql.loadSingle, {post_id: data.post_id, username: data.username})
                 .then(result => {
                     //console.log('p/loadauth signle Succesfully returned');
                     //console.log(result);
@@ -51,4 +51,14 @@ exports.create = function(data,cb){
     .catch(error => {return cb(error)});
 }
 
-  
+
+exports.commentCreate = function (data,cb){
+    return user.none(sql.commentCreate, {parent_id: data.parent_id, post_id: data.post_id, author: data.username, path: data.path, data: data.data })
+        .then(result => {
+                //console.log('p/category Succesfully returned');
+                //console.log(result);
+                //console.log('p/category Succesfully returned AFTER RESULT');
+                return result;
+            })
+            .catch(error => {return cb(error)});
+}

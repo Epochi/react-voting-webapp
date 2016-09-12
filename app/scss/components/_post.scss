@@ -43,6 +43,15 @@
         &.save i,&.save span{
             color: #e81c4f;
         }
+        &.vote .post__vote-zero{
+            display:none;
+        }
+        &.vote .post__vote-one{
+            display:inline;
+        }
+        & .post__vote-one{
+          display:none;  
+        }
     }
 
     
@@ -119,4 +128,3 @@
     }
     
 }
-

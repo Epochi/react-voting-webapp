@@ -14,5 +14,5 @@ SELECT json_agg(
                           'votes', v.votes
                         )
                ) AS posts
-from (SELECT * from post ORDER BY ${sort}::text DESC LIMIT 10 OFFSET ${page}) AS p
+from (SELECT * from post ORDER BY ${sort^} DESC LIMIT 10 OFFSET ${page}) AS p
 left join votes v on v.username = ${username} AND p.post_id = v.post_id;

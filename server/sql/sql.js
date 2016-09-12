@@ -22,13 +22,16 @@ var sqlProvider = {
     posts: {
         loadCategory: sql('posts/postsLoadCategory.sql'), 
         loadAll: sql('posts/postsLoadAll.sql'), 
-        loadSingle: sql('posts/postLoadSingle.sql')
+        loadSingle: sql('posts/postLoadSingle.sql'),
+        commentLoadAll: sql('comments/commentLoadAll.sql')
     },
     postsAuth: {
         create: sql('postsAuth/postCreate.sql'),
         loadCategory: sql('postsAuth/postsLoadCategory.sql'), 
         loadAll: sql('postsAuth/postsLoadAll.sql'), 
-        loadSingle: sql('postsAuth/postLoadSingle.sql')
+        loadSingle: sql('postsAuth/postLoadSingle.sql'),
+        commentLoadAll: sql('comments/commentLoadAll.sql'),
+        commentCreate: sql('comments/commentCreate')
     }
 };
 

@@ -34,7 +34,7 @@ const Post = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,vote
                 <div>
                   <VoteButton handleVote={handleVote} id={post.post_id} index={k} votes={votes} authenticated={authenticated} type="vote" >
                     <i className={"material-icons"}>arrow_upward</i>
-                    <span>{post.vote_up}</span>
+                    <span className={'post__vote-zero'}>{post.vote_up}</span><span className={'post__vote-one'}>{post.vote_up +1}</span>
                     <span className={cx('tooltip-text')}>Balsuoti</span>
                   </VoteButton>
                 </div>

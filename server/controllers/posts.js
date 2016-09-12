@@ -17,6 +17,7 @@ exports.load = function(req,res,next) {
   req.query.sort = Number(req.query.sort);
   req.query.page = Number(req.query.page);
   console.log(req.query);
+  //nesting indexes because comments will have to have different object, but go out on the same
   var promises = [];
   
   
@@ -34,12 +35,14 @@ exports.load = function(req,res,next) {
   }
   console.log("load promises with param");
 
+
+
   Promise.all(promises)
     .then(result => {
-      console.dir(result);
-      return res.json(result.reduce(function(a, b) {
+      //console.dir(result);
+      return res.json({posts: result.reduce(function(a, b) {
         return a.concat(b)})
-      );
+      });
     })
     .catch(err => {return next(err)});
   
@@ -100,7 +103,7 @@ exports.create = function(req, res, next) {
       data: req.body.data
     };
   }
-  Post.create(post,function(err,post){
+  PostAuth.create(post,function(err,post){
      if(err){return next(err);}
       console.log('inside Post.create')
      return res.status(200).json(post);
@@ -197,11 +200,35 @@ exports.loadUser = function(req,res,next) {
   
   Promise.all(promises)
     .then(result => {
-      console.dir(result);
-      console.log('promise result over');
-      return res.json(result.reduce(function(a, b) {
+      //console.dir(result);
+      return res.json({posts: result.reduce(function(a, b) {
         return a.concat(b)})
-      );
+      });
     })
     .catch(err => {return next(err)});
 }; 
+
+
+
+
+
+exports.commentCreate =function(req,res,next){
+console.log('creation start');
+
+  if(req.body.type === 1){
+  var comment = {
+      parent_id: req.body.comment.parent_id,
+      author: req.user.username,
+      post_id: req.body.comment.post_id,
+      path: req.body.comment.parent_path,
+      data: req.body.comment.data
+    };
+  }
+  
+  PostAuth.createComment(comment,function(err,post){
+     if(err){return next(err);}
+      console.log('inside Post.create')
+     return res.status(200).json(post);
+  });
+  
+}
