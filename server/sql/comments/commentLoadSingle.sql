@@ -1,0 +1,1 @@
+SELECT row_to_json(comment) as comment from comment ORDER BY random() limit 1;

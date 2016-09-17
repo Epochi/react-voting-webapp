@@ -5,20 +5,20 @@ import {SELECT_PORT,
   LOCAL_LOGIN_SUCCESS_USER,
   CREATE_POST, CREATE_POST_REQUEST,CREATE_POST_FAILURE,CREATE_POST_SUCCESS,
   POSTS_VOTE,
-  POSTS_UNVOTE,
   POSTS_GET, POSTS_GET_SUCCESS, POSTS_GET_FAILURE,
   POSTS_DELETE_REQUEST,
   POSTS_DELETE_SUCCESS,
   POSTS_DELETE_FAILURE,
-  POSTS_SAVE,
-  POSTS_UNSAVE,
   POST_GET,
   POST_GET_SUCCESS,
   COMMENTS_GET_SUCCESS,
   POST_OPEN_STATE,
   POSTS_NEW_PAGE,
   POSTS_CLEAR_STATE,
-  POST_OPEN_INDEX
+  POST_OPEN_INDEX,
+  POST_COMMENTS_GET_REQUEST,
+  POST_COMMENTS_GET_FAILURE,
+  POST_COMMENTS_GET_SUCCESS,
 } from 'constants/index';
 
 const initialState = {
@@ -102,13 +102,14 @@ export function postsByPort(state = initialState, action) {
 export function postOpen(state={
  index: false,
  post: null,
+ commentPostId: null,
  comments: null
 }, action) {
   switch (action.type) {
   case POST_GET_SUCCESS:
-    console.log('SINGLE POST GET SUCCESS');
+    //console.log('SINGLE POST GET SUCCESS');
     //console.log(action)
-    console.log('SINGLE POST GET ACTION ITEM');
+    //console.log('SINGLE POST GET ACTION ITEM');
     return Object.assign({}, state, {
       post: action.req.data
     });
@@ -120,12 +121,11 @@ export function postOpen(state={
     return Object.assign({}, state, {
       index: action.index
     });
+  case POST_COMMENTS_GET_REQUEST:
+    return Object.assign({}, state, {
+      commentPostId: action.post_id
+    });
   default:
     return state;
   }
 }
-
-
-
-
-//     return state = update(state, {[action.index]: {post_vote: {$set: action.vote}, score: {$apply: (x) => {return x+1;}}}});

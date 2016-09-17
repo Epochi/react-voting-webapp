@@ -4,6 +4,7 @@ var users = require('../controllers/users');
 var posts = require('../controllers/posts');
 var votes = require('../controllers/votes');
 
+//router path /api/post/
 module.exports = router;
 /*
     router.param(['subport','page', 'id','title'], function (req, res, next, value) {
@@ -26,6 +27,9 @@ module.exports = router;
   router.delete('/delete/:post_id',users.userAuthenticated, function(req, res) {
     posts.remove(req, res);
   });
+  router.get('/comment/:post_id', function(req,res,next){
+    posts.loadComments(req,res,next);
+  })
 /*  
   router.get('/post/:postid/.json', function(req,res,next){
     posts.loadPostSingle(req,res,next);
@@ -38,3 +42,4 @@ module.exports = router;
     posts.load(req,res,next);
     }
   });
+  

@@ -1,6 +1,19 @@
 var utils = require('../config/utils');
-var db = require('../config/postgres');
-var qrm = db.pgp.queryResult;
+var guest = require('../config/postgres').guest;
+var sort = ['score', 'vote_up', 'date'];
+
+var sql = require('../sql/sql.js').posts; // our sql for users;
+
+exports.loadComments = function(postId){
+    return guest.manyOrNone(sql.commentLoadAll, {post_id: postId})
+        .then (result => {
+                console.log('comment/postId RETURN');
+                console.log(result);
+                console.log('c/postId Succesfully returned AFTER RESULT');
+            return result.comments;
+        })
+        .catch(error => {console.log('p/subport/ error');console.log(error);return error});
+}
 
 
 exports.create = function(data,cb){
@@ -25,13 +38,11 @@ exports.create = function(data,cb){
 exports.loadOne = function (data ,cb){
     console.log('inside comment/load');
     console.log(data);
-    db.db.oneOrNone({name: "comment_load_one",
-    text: 'SELECT * FROM comment WHERE comment_id = $1 LIMIT 1',
-    values: [data]})
+    guest.one(sql.commentLoadSingle)
           .then(result => {
               console.log('load result');
               console.log(result);
-              return cb(null, result );
+              return cb(null, result);
             })
             .catch(error => {return cb(error)});
 };

@@ -2,6 +2,8 @@
 var axios = require('axios');
 var osmosis = require('osmosis');
 var posts = require('./posts.js');
+var Comments = require('../models/comment');
+var PostAuth = require('../models/postsauth');
 
 exports.fetchReddit = function(req,res,next) {
 console.log('fetch user ' + req.user);
@@ -84,3 +86,54 @@ var subports = [
     "naujienos",
     "kriminalai"
     ]
+
+
+exports.postDeepComments = function(req,res,next){
+    makeid(function(err, username){
+        if(err){return err}
+         makeid(function(err, postText){
+            if(err){return err}
+            //Math.floor((Math.random() * 100) + 1);
+            Comments.loadOne(null, function(err, result){
+                if(err){return err}
+                console.log('postdeepcomments load one happened');
+                var parentComment = result.comment;
+                var comment = {
+                    parent_id: parentComment.comment_id,
+                    username: username,
+                    post_id: parentComment.post_id,
+                    path: parentComment.path,
+                    data: {bodyText: postText}
+                };
+                console.log(comment);
+                
+           PostAuth.commentCreate(comment, function(err, rez){
+                    if(err){return next(err);}
+                      console.log('poster create comment')
+                     return res.status(200).json(rez);
+           });
+                
+            })
+            
+
+          
+
+        })
+        
+    })
+    
+    
+    
+    
+}
+
+function makeid(cb)
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return cb(null,text);
+}

@@ -1,48 +1,65 @@
-//var mongoose = require('mongoose');
 var _ = require('lodash');
-//var Post = mongoose.model('Post');
-//var PostThing = mongoose.model('PostThing');
-var votes = require('../controllers/votes');
-//var Vote = mongoose.model('Vote');
 var Post = require('../models/posts');
 var PostAuth = require('../models/postsauth');
-
+var Comments = require('../models/comment');
 /**
  * List
  */
  
+/*
+Promise nesting can be more elegant, like using closures.
+Pushing Promise.all into Promise.all array and returining {comments: data}
+so it wouldn't need to evaluate 'comments ? null' each time it doesn't load specific post
+Then again, this is only used on the initial load, so it's not that important
+*/
 
+//I think models are redundant. Mongoose models are the same as Postgres pg-promise /sql/ folder
+//They're just a leftover from mongoose to postgresql migration
+//Should remove them in the future
 exports.load = function(req,res,next) {
   console.log('/api/post/ router Load');
   req.query.sort = Number(req.query.sort);
   req.query.page = Number(req.query.page);
   console.log(req.query);
   //nesting indexes because comments will have to have different object, but go out on the same
-  var promises = [];
-  
+  var postsPromises = [];
+  var commentsPromises = [];
   
   
   if(req.query.hasOwnProperty('post')){
-  promises.push(
+  postsPromises.push(
     Post.postLoadSingle({post_id: Number(req.query.post)})
     );
   }
   
   if(req.params.subport === "visi"){
-  promises.push(
+  postsPromises.push(
     Post.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, user: req.user})
     );
   }
   console.log("load promises with param");
 
 
+  
 
-  Promise.all(promises)
+  Promise.all([Promise.all(postsPromises).then(result => {
+    return result.reduce(function(a, b) {
+        return a.concat(b)});
+  }).catch(err => {return next(err)})
+    ,
+   Promise.all(commentsPromises).then(result => {
+    if(result === undefined){
+      return null
+    }else {
+    return result;
+    }
+  }).catch(err => {return next(err)}) 
+    ])
     .then(result => {
-      //console.dir(result);
-      return res.json({posts: result.reduce(function(a, b) {
-        return a.concat(b)})
-      });
+      console.log("promises top nest with param");
+      console.log(result);
+      console.log("result arr end");
+      return res.json({posts:result[0],comments: result[1] });
     })
     .catch(err => {return next(err)});
   
@@ -63,8 +80,6 @@ exports.loadPostSingle = function(req,res,next){
     return res.json(post);
   });
 }; 
-
-
 
 
 
@@ -181,29 +196,42 @@ exports.loadUser = function(req,res,next) {
   req.query.page = Number(req.query.page);
   console.log(req.query);
   console.log(req.user);
-  var promises = [];
+  var postsPromises = [];
+  var commentsPromises = [];
   
   //im pushing function call to promise array
   //PostAuth returns it's functions as promises. result can be modified there
   if(req.query.hasOwnProperty('post')){
-    promises.push(
+    postsPromises.push(
       PostAuth.postLoadSingle({post_id: Number(req.query.post), username: req.user.username})
       )
   }
   
   if(req.params.subport === "visi"){
-    promises.push(
+    postsPromises.push(
       PostAuth.postsLoadAll({sort: req.query.sort, page: req.query.page, subport: req.params.subport, username: req.user.username})
     )
   }
   console.log("load promises with param");
   
-  Promise.all(promises)
+  Promise.all([Promise.all(postsPromises).then(result => {
+    return result.reduce(function(a, b) {
+        return a.concat(b)});
+  }).catch(err => {return next(err)})
+    ,
+   Promise.all(commentsPromises).then(result => {
+    if(result === undefined){
+      return null
+    }else {
+    return result;
+    }
+  }).catch(err => {return next(err)}) 
+    ])
     .then(result => {
-      //console.dir(result);
-      return res.json({posts: result.reduce(function(a, b) {
-        return a.concat(b)})
-      });
+      console.log("promises top nest with param");
+      console.log(result);
+      console.log("result arr end");
+      return res.json({posts:result[0],comments: result[1] });
     })
     .catch(err => {return next(err)});
 }; 
@@ -231,4 +259,19 @@ console.log('creation start');
      return res.status(200).json(post);
   });
   
+}
+
+exports.loadComments = function(req,res,next){
+  Promise.resolve([loadCommentsModelHelper(Number(req.params.post_id))])
+    .then(result => {
+      console.log("loadComments controller results");
+      console.log(result);
+      console.log("loadComments controller results end");
+      return res.json({comments: result});
+    })
+    .catch(err => {return next(err)});
+};
+
+function loadCommentsModelHelper(postId){
+  Comments.loadComments(postId);
 }

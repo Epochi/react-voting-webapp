@@ -22,6 +22,7 @@ module.exports = function(app, passport) {
   
   app.get('/poster', poster.fetchReddit);
   app.get('/posttons', poster.posttons);
+  app.get('/postdeepcomments', poster.postDeepComments);
   app.get('/u/:userId', users.show);
   
   app.get('*', function (req, res, next) {

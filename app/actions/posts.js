@@ -157,11 +157,12 @@ export function fetchPosts(params = {}, query = {}) {
 }
 
 
-export function fetchPostComments(port='all',postId) {
+export function fetchPostComments(postId) {
     console.log('in fetchPostComments');
     return {
           type: types.POST_COMMENTS_GET,
-          promise: (client) => client.get(`/p/${postId}/.json`)
+          post_id: postId,
+          promise: (client) => client.get(`/api/post/comment/${postId}`)
       };
 }
 

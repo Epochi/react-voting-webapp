@@ -25,7 +25,8 @@ class PostsView extends Component {
     this.handlePostOpen = this.handlePostOpen.bind(this);
   }
   
-  //don't update if username changes
+  //don't update if username changes, only css will change, hiding votes.
+  //important info is inside menuPortal and ui.
   shouldComponentUpdate(nextProps,nextState){
     console.log(arguments);
       if(this.props.username !== nextProps.username){return false}
@@ -43,7 +44,6 @@ class PostsView extends Component {
         props.funcs = {del: (cb)=>{this.handleDeletePost(post._id,post.data.author,index,cb)}};
       }
     }
-    
     MenuPortal(PostDropdown,props);
   }  
   
@@ -177,6 +177,7 @@ class PostsView extends Component {
                                   handleVote={this.handleVote}
                                   votes={postOpen.votes ? postOpen.votes : {}}
                                   authenticated={this.props.authenticated}
+                                  routeParamsPostId={this.props.routeParams.postId}
                               />
                       ) : (null)
                     }

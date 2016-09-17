@@ -53,6 +53,8 @@ exports.create = function(data,cb){
 
 
 exports.commentCreate = function (data,cb){
+    console.log('in comment create')
+    console.log(data);
     return user.none(sql.commentCreate, {parent_id: data.parent_id, post_id: data.post_id, author: data.username, path: data.path, data: data.data })
         .then(result => {
                 //console.log('p/category Succesfully returned');

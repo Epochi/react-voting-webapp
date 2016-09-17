@@ -6,9 +6,10 @@ import classNames from 'classnames/bind';
 import styles from 'scss/components/_post';
 import card from 'material-design-lite/src/card/_card';
 import {dateCompare} from 'components/utils.jsx';
+import CommentsTreeContainer from 'containers/CommentsTree';
 const cx = classNames.bind(Object.assign(card, styles));
 
-const PostOpen = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,votes,authenticated}) => {
+const PostOpen = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,votes,authenticated, routeParamsPostId}) => {
   let hide = post.data.hasOwnProperty('hidden') ? 'n': post.data.hidden;
   let date = dateCompare(post.date);
   votes.vote = votes.hasOwnProperty('vote') ? votes.vote : false;
@@ -65,11 +66,7 @@ const PostOpen = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,
                     <span><i className={"material-icons"}>access_time</i> {date}</span>
                 </div>
               </div>
-              <div className={cx("mdl-card__actions","mdl-card--border")}>
-                <a className={cx("mdl-button","mdl-button--colored","mdl-js-button","mdl-js-ripple-effect")}>
-                  Comments go here
-                </a>
-              </div>
+              <CommentsTreeContainer routeParamsPostId={routeParamsPostId}/>
             </div>       
         );
 };
@@ -78,7 +75,8 @@ PostOpen.PropTypes ={
     post: PropTypes.object.isRequired,
     onClick: PropTypes.func,
     onMenuClick: PropTypes.func,
-    currentSubport: PropTypes.string
+    currentSubport: PropTypes.string,
+    routeParamsPostId: PropTypes.string
 };
 
 export default PostOpen; 
