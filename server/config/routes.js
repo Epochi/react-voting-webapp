@@ -17,12 +17,22 @@ module.exports = function(app, passport) {
     console.log('URL HUNTER FROM ROUTES.js.....:' + req.originalUrl);
     next();
   })
-  app.use('/auth', auth(passport));
-  app.use('/api/post', posts);
+  
+    /* DEBUGGING */
   
   app.get('/poster', poster.fetchReddit);
   app.get('/posttons', poster.posttons);
   app.get('/postdeepcomments', poster.postDeepComments);
+  app.get('/postdeepestcomments', poster.postDeepestComments);
+  app.get('/commentssqltojson', poster.commentsSQLtoJSON);
+  
+  /*DEBUGGING END*/
+  
+  app.use('/auth', auth(passport));
+  app.use('/api/post', posts);
+  
+
+  
   app.get('/u/:userId', users.show);
   
   app.get('*', function (req, res, next) {

@@ -1,3 +1,4 @@
+import React from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -21,3 +22,15 @@ exports.dateCompare = function(creationDate){
 exports.scrollThrottle = function(func, time){
     return _.throttle(func, time);
 };
+
+exports.commentDepth = function(depth, path){
+    var depthspans = [];
+    var pathSplit = path.split(".");
+    for (var i=1; i < depth ; i++) {
+    var pathSource = pathSplit[i];
+    depthspans.push(<span className={"comment-tree__depth-span"} data-source={pathSource}></span>);
+    }
+    return depthspans;
+    
+    
+}

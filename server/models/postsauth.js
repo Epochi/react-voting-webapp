@@ -64,3 +64,15 @@ exports.commentCreate = function (data,cb){
             })
             .catch(error => {return cb(error)});
 }
+
+
+exports.commentLoadAll = function(data){
+    return user.many(sql.commentLoadAll, data.post_id)
+        .then(result => {
+                //console.log('p/category Succesfully returned');
+                //console.log(result);
+                //console.log('p/category Succesfully returned AFTER RESULT');
+                return result;
+            })
+            .catch(error => {console.log('p/commentloadall/ error');console.log(error);return error});
+};

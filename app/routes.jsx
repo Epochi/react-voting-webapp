@@ -56,6 +56,7 @@ export default (store) => {
     <Route path="/" component={App} onEnter={selectedPort}>
       <IndexRoute component={Posts}/>
       <Route path="dashboard" component={Profile} onEnter={requireAuth} />
+      <Route path="/user/:userId" component={Profile}/>
       <Route path=":subport(/:postId)" component={Posts} >
       </Route>
     </Route>

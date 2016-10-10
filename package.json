@@ -1,6 +1,6 @@
 {
   "name": "react-webpack-node",
-  "version": "1.4.1",
+  "version": "0.3.1",
   "description": "A simple Node.js app",
   "repository": "https://github.com/miauwi/react-voting-webapp",
   "main": "index.js",
@@ -18,7 +18,6 @@
     "bdev": "npm run clean && NODE_ENV=development nodemon"
   },
   "author": "Pijus V",
-  "license": "MIT",
   "devDependencies": {
     "expect": "^1.13.4",
     "karma": "^0.13.15",

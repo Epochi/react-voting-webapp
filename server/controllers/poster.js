@@ -127,6 +127,51 @@ exports.postDeepComments = function(req,res,next){
     
 }
 
+
+exports.postDeepestComments = function(req,res,next){
+    var deepestCount =0;
+    while(deepestCount < 10){
+        (function(){
+        makeid(function(err, username){
+            if(err){return err}
+             makeid(function(err, postText){
+                if(err){return err}
+                //Math.floor((Math.random() * 100) + 1);
+                Comments.loadOne(null, function(err, result){
+                    if(err){return err}
+                    console.log('postdeepcomments load one happened');
+                    var parentComment = result.comment;
+                    var comment = {
+                        parent_id: parentComment.comment_id,
+                        username: username,
+                        post_id: parentComment.post_id,
+                        path: parentComment.path,
+                        data: {bodyText: postText}
+                    };
+                    console.log(comment);
+                    
+               PostAuth.commentCreate(comment, function(err, rez){
+                        if(err){return next(err);}
+                          console.log('poster create comment')
+                         deepestCount +=1;
+                         
+               });
+                })
+            })
+            
+        })
+    }())
+}
+            return res.status(200);
+        
+
+}
+
+
+
+
+
+
 function makeid(cb)
 {
     var text = "";
@@ -137,3 +182,13 @@ function makeid(cb)
 
     return cb(null,text);
 }
+
+
+exports.commentsSQLtoJSON = function(req,res,next){
+    
+    Promise.all([Comments.loadComments(4)])
+    .then(result => {
+    return res.json(result[0])})
+    .catch(err => {return next(err)})
+    
+};

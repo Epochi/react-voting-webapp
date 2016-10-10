@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import Button from 'components/utils/Button';
 import VoteButton from 'components/utils/VoteButton';
-import {Link} from 'react-router';
 import classNames from 'classnames/bind';
 import styles from 'scss/components/_post';
 import card from 'material-design-lite/src/card/_card';
@@ -15,7 +14,8 @@ const PostOpen = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,
   votes.vote = votes.hasOwnProperty('vote') ? votes.vote : false;
   votes.save = votes.hasOwnProperty('save') ? votes.save : false;
     return(
-             <div className={cx("mdl-card","post__open")}>
+             <div className={cx("post__open")}>
+             <div className={cx("mdl-card")}>
               <div className={cx("mdl-card__title")}>
                   <h2 className={cx("mdl-card__title-text")}>{post.title}</h2>
               </div>
@@ -67,7 +67,8 @@ const PostOpen = ({post, handleVote,onMenuClick,k,currentSubport,handlePostOpen,
                 </div>
               </div>
               <CommentsTreeContainer routeParamsPostId={routeParamsPostId}/>
-            </div>       
+            </div>  
+            </div>
         );
 };
 

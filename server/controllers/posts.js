@@ -6,6 +6,8 @@ var Comments = require('../models/comment');
  * List
  */
  
+ 
+
 /*
 Promise nesting can be more elegant, like using closures.
 Pushing Promise.all into Promise.all array and returining {comments: data}
@@ -51,7 +53,7 @@ exports.load = function(req,res,next) {
     if(result === undefined){
       return null
     }else {
-    return result;
+    return result[0];
     }
   }).catch(err => {return next(err)}) 
     ])
@@ -262,7 +264,7 @@ console.log('creation start');
 }
 
 exports.loadComments = function(req,res,next){
-  Promise.resolve([loadCommentsModelHelper(Number(req.params.post_id))])
+  Promise.resolve(loadCommentsModelHelper(Number(req.params.post_id)))
     .then(result => {
       console.log("loadComments controller results");
       console.log(result);
@@ -273,5 +275,5 @@ exports.loadComments = function(req,res,next){
 };
 
 function loadCommentsModelHelper(postId){
-  Comments.loadComments(postId);
+  return Comments.loadComments(postId);
 }

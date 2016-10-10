@@ -23,7 +23,8 @@ import {SELECT_PORT,
 
 const initialState = {
     posts: [],
-    pages: {}
+    pages: {},
+    comments: null
 };
 
 
@@ -41,6 +42,19 @@ function posts(state = initialState.posts, action) {
      return state = update(state, {$unshift: [action.post] });
   case POSTS_DELETE_SUCCESS:
      return state = update(state, {[action.index]: {data: {hidden: {$set: true}}}});
+  default:
+    return state;
+  }
+}
+
+function comments(state = initialState.comments,action){
+  switch(action.type){
+  case POSTS_GET_SUCCESS:
+    if(action.comments != null){
+      return state = action.comments
+    }
+  case POST_COMMENTS_GET_SUCCESS:
+    return state = action.comments
   default:
     return state;
   }
@@ -103,20 +117,21 @@ export function postOpen(state={
  index: false,
  post: null,
  commentPostId: null,
- comments: null
+ comments: initialState.comments
 }, action) {
   switch (action.type) {
-  case POST_GET_SUCCESS:
-    //console.log('SINGLE POST GET SUCCESS');
-    //console.log(action)
-    //console.log('SINGLE POST GET ACTION ITEM');
+  case POSTS_GET_SUCCESS:
+  case POST_COMMENTS_GET_SUCCESS:
+    console.log('SINGLE POST  POSTS_GET_SUCCESS');
+    console.log(action)
+    console.log('SINGLE POST POSTS_GET_SUCCESS');
+    let commentsArray = null;
+    if(action.req && action.req.data && action.req.data.comments){
+        commentsArray = action.req.data.comments;
+    }
     return Object.assign({}, state, {
-      post: action.req.data
-    });
-  case COMMENTS_GET_SUCCESS:
-    return Object.assign({}, state, {
-      comments: action.comments
-    });
+        comments: comments(state["comments"], {comments: commentsArray, type: action.type})
+      });
   case POST_OPEN_INDEX:
     return Object.assign({}, state, {
       index: action.index

@@ -1,13 +1,7 @@
 import React, { PropTypes, Component} from 'react';
-import classNames from 'classnames/bind';
-import styles from 'scss/components/_comments-tree';
-import layout from 'material-design-lite/src/layout/_layout';
-import grid from 'material-design-lite/src/grid/_grid';
 import Comment from 'components/Comments/Comment';
 import {MenuPortal} from 'components/utils/Portal';
 import PostDropdown from 'components/Posts/PostDropdown';
-
-const cx = classNames.bind(Object.assign(layout, grid, styles));
 
 
 
@@ -30,9 +24,11 @@ class CommentsTree extends Component {
     MenuPortal(PostDropdown,props);
   }  
   
-  handleReply(commentId){
-    
+  handleReply = (e,key) => {
+    console.log(e.target.username);
+    console.log(key);
   }
+  
   
     shouldComponentUpdate(nextProps,nextState){
     console.log(arguments);
@@ -41,21 +37,26 @@ class CommentsTree extends Component {
   }
   
 componentWillMount(){
+    console.log('comments components will mount?');
     if(this.props.commentPostId !== this.props.routeParamsPostId)
+    console.log('comments components did fetch');
     this.props.fetchPostComments(this.props.routeParamsPostId);
   }
   
 
   render () {
                 return (
-                    <div className={cx('comments-tree__layout')}>
-                        {this.props.comments ? (
+                    <div className={'comment-tree__layout'}>
+                        {this.props.comments ?
+                        (this.props.comments.map((comment,i) =>
                             <Comment
-                              comment={this.props.comments}
+                              key={i}
+                              comment={comment}
+                              username={this.props.username}
                               handleReply={this.handleReply}
-                              //childComments={this.props.comments.childComments}
+                              reply={null}
                               />
-                        ) 
+                        ) )
                             : (null)
                         }
                     </div>

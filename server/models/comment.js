@@ -8,9 +8,10 @@ exports.loadComments = function(postId){
     return guest.manyOrNone(sql.commentLoadAll, {post_id: postId})
         .then (result => {
                 console.log('comment/postId RETURN');
-                console.log(result);
+                //console.log(result);
                 console.log('c/postId Succesfully returned AFTER RESULT');
-            return result.comments;
+                // used to be result.comments
+            return result;
         })
         .catch(error => {console.log('p/subport/ error');console.log(error);return error});
 }

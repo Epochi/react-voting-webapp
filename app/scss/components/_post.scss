@@ -109,22 +109,112 @@
 }
 
 .post__open{
-    margin: 20px auto;
-    background: white;
+    padding-top: 8px;
     flex-grow: 1;
     width:inherit;
-    &.n{
+    overflow-y: scroll;
+    height: calc(100vh - 64px);
+    & .n{
         display:none;
     }
-    &.mdl-card{
-        width:inherit;
+    & .mdl-card{
+    margin: 20px auto;        
+    width:inherit;
     }
     & .supporting-text{
         color: rgba(0,0,0, 0.54);
         font-size: 1rem;
         line-height: 18px;
-        overflow: hidden;
         padding: 16px 16px;
     }
     
 }
+
+
+.comment-tree{
+    &__layout{
+      padding: 16px;
+    }
+    &__depth-span:nth-child(even){
+        width:1em;
+        border-left: 1px solid #4D4AFF;
+    }
+    &__depth-span:nth-child(odd){
+        width:1em;
+        border-left: 1px solid #3AA6FF;
+    
+    }
+}
+
+.comment{
+    width:100%;
+    display:flex;
+    &__body{
+        margin:0.5em 0;
+    }
+    &__author {
+            & a{
+                font-size:14px;
+                font-weight:500;
+            }
+            & span{
+                font-size:14px;
+                color:$color-black-fade;
+            }
+            & i{
+                font-size:16px;
+                height:20px;
+                vertical-align:middle;
+            }
+    }
+    &__buttonNav{
+        font-size:0.9em; 
+        & span{
+             color:$color-black-fade;
+        }
+        > div{
+            display:inline-block;
+            margin-right: 8px;
+        }
+        & i{
+            font-size:16px;
+            height:19px;
+            vertical-align:middle;
+            margin-right:2px;
+            color:$color-black-fade;
+        }
+        & .vote__button{
+            max-width:51px;
+            min-widtH:25px;
+            position:relative;
+            display:inline-block;
+            color:$color-black-fade;
+            text-align: left;
+            & i:hover{
+             content:attr(data-tooltip);   
+            }
+            &.vote i,&.vote span{
+                color:#4CAF50;
+            } 
+            &.save i,&.save span{
+                color: #e81c4f;
+            }
+            &.vote .post__vote-zero{
+                display:none;
+            }
+            &.vote .post__vote-one{
+                display:inline;
+            }
+            & .post__vote-one{
+              display:none;  
+            }
+        }
+        
+        & .more-icon>i{
+            font-size: 26px;
+            line-height: 16px;
+        }
+        
+    }
+}    
+ 
