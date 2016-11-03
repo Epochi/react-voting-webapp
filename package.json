@@ -1,20 +1,18 @@
 {
   "name": "react-webpack-node",
-  "version": "0.3.1",
+  "licence":"UNLICENSED",
+  "version": "0.3.2",
   "description": "A simple Node.js app",
   "repository": "https://github.com/miauwi/react-voting-webapp",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
     "lint": "eslint app",
     "clean": "rimraf public",
     "start": "NODE_ENV=production node server/index.js",
     "dev": "NODE_ENV=development nodemon",
-    "build:dev": "NODE_ENV=development webpack --colors --config ./webpack/webpack.config.dev-server.js",
-    "build:prod": "NODE_ENV=production webpack --colors --config ./webpack/webpack.config.prod.js",
-    "build": "npm run clean && npm run build:prod",
+    "build": "NODE_ENV=production webpack --colors --config ./webpack/webpack.config.prod.js",
     "test": "NODE_ENV=test karma start",
     "test:watch": "NODE_ENV=test npm test -- --watch --no-single-run",
-    "postinstall": "npm run build",
     "bdev": "npm run clean && NODE_ENV=development nodemon"
   },
   "author": "Pijus V",
@@ -37,10 +35,13 @@
     "redux-devtools-dock-monitor": "^1.1.0",
     "redux-devtools-log-monitor": "^1.0.5",
     "redux-mock-store": "0.0.3",
-    "sinon": "^1.17.3"
-  },
-  "engines": {
-    "node": "5.x"
+    "sinon": "^1.17.3",
+    "pg-monitor": "^0.5.11",
+    "osmosis": "^1.1.1",
+    "webpack-dev-middleware": "^1.4.0",
+    "webpack-hot-middleware": "^2.6.0",
+    "redux-devtools": "^2.1.5",
+    "redux-logger": "^2.0.3"
   },
   "dependencies": {
     "axios": "^0.9.1",
@@ -60,7 +61,6 @@
     "body-parser": "^1.14.2",
     "classnames": "^2.2.1",
     "co-express": "^1.2.1",
-    "connect-mongo": "^1.1.0",
     "connect-pg-simple": "^3.1.0",
     "connect-redis": "^3.1.0",
     "css-loader": "^0.23.0",
@@ -80,14 +80,11 @@
     "invariant": "^2.1.2",
     "isomorphic-fetch": "^2.2.0",
     "json-loader": "^0.5.4",
-    "kerberos": "0.0.17",
     "lodash": "^3.9.3",
     "material-design-lite": "=1.1.1",
     "material-ui": "=0.14.4",
     "method-override": "^2.3.5",
     "moment": "^2.12.0",
-    "mongoose": "^4.3.4",
-    "mongoose-int32": "^0.1.0",
     "node-libs-browser": "^0.5.2",
     "node-sass": "^3.4.2",
     "passport": "^0.2.2",
@@ -108,8 +105,6 @@
     "react-transform-hmr": "^1.0.2",
     "redis": "^2.6.2",
     "redux": "^3.3.1",
-    "redux-devtools": "^2.1.5",
-    "redux-logger": "^2.0.3",
     "redux-thunk": "^1.0.0",
     "rimraf": "^2.4.4",
     "sass-loader": "^3.1.2",
@@ -118,8 +113,6 @@
     "style-loader": "^0.13.0",
     "url-loader": "^0.5.6",
     "warning": "^2.0.0",
-    "webpack": "^1.12.9",
-    "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.6.0"
+    "webpack": "^1.12.9"
   }
 }

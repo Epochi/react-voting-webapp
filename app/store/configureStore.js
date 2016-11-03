@@ -2,7 +2,9 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import rootReducer from 'reducers';
 import promiseMiddleware from 'api/promiseMiddleware';
-import createLogger from 'redux-logger';
+
+
+
 
 /*
  * @param {Object} initial state to bootstrap our stores with for server-side rendering
@@ -18,7 +20,8 @@ export default function configureStore(initialState, history,client) {
   // Installs hooks that always keep react-router and redux
   // store in sync
   const reactRouterReduxMiddleware = routerMiddleware(history);
-  if (__DEV__) {
+  if (process.env.NODE_ENV === 'development') {
+    var createLogger = 'redux-logger';
     middleware.push(reactRouterReduxMiddleware, createLogger());
   } else {
     middleware.push(reactRouterReduxMiddleware);

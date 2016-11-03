@@ -1,9 +1,12 @@
-var monitor = require("pg-monitor");
+
 var options = {pgNative: true};
 var secrets = require('./secrets');
 var QueryFile = require('pg-promise').QueryFile;
 var path = require('path');
+if (process.env.NODE_ENV === 'development'){
+var monitor = require("pg-monitor");
 monitor.attach(options);
+}
 
 var pgp = require('pg-promise')(options);
 

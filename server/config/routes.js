@@ -5,7 +5,7 @@ var express = require('express');
 var auth = require('../routes/auth');
 var posts = require('../routes/posts');
 var users = require('../controllers/users');
-var poster = require('../controllers/poster');
+
 //var mongoose = require('mongoose');
 var path = require('path');
 var compiled_app_module_path = path.resolve(__dirname, '../../', 'public', 'assets', 'server.js');
@@ -19,13 +19,14 @@ module.exports = function(app, passport) {
   })
   
     /* DEBUGGING */
-  
+if (process.env.NODE_ENV === 'development'){
+var poster = require('../controllers/poster');
   app.get('/poster', poster.fetchReddit);
   app.get('/posttons', poster.posttons);
   app.get('/postdeepcomments', poster.postDeepComments);
   app.get('/postdeepestcomments', poster.postDeepestComments);
   app.get('/commentssqltojson', poster.commentsSQLtoJSON);
-  
+}
   /*DEBUGGING END*/
   
   app.use('/auth', auth(passport));
